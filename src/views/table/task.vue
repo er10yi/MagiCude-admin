@@ -1,0 +1,1758 @@
+<template>
+  <div>
+    <el-collapse v-model="activeNames">
+      <el-collapse-item name="1">
+        <template slot="title"><i class="header-icon el-icon-info" />菜单栏隐藏与显示</template>
+        <!-- 查询条件 -->
+        <el-form ref="searchform" inline size="small" :model="searchMap">
+          <!-- <el-form-item label="任务父编号"> -->
+          <!-- <el-input v-model="searchMap.taskparentid" prop="taskparentid" clearable placeholder="任务父编号" /></el-form-item> -->
+          <el-form-item prop="projectid" label="父任务">
+            <el-select v-model="searchMap.taskparentid" filterable clearable placeholder="请输入关键词">
+              <el-option
+                v-for="item in list"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <!-- <el-form-item label="项目编号">
+        <el-input v-model="searchMap.projectid" prop="projectid" clearable placeholder="项目编号" /></el-form-item> -->
+          <el-form-item prop="projectid" label="项目">
+            <el-select v-model="searchMap.projectid" filterable clearable placeholder="请输入关键词">
+              <el-option
+                v-for="item in projectList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+
+          <el-form-item prop="name" label="名称">
+            <el-select v-model="searchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameListList" :loading="searchLoading">
+              <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
+          </el-form-item>
+
+          <el-form-item prop="starttime" label="开始时间">
+            <el-date-picker v-model="searchMap.starttime" type="datetimerange" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" range-separator="-" end-placeholder="结束日期" :picker-options="pickerOptions" style="width:350px;" />
+          </el-form-item>
+          <el-form-item prop="endtime" label="结束时间">
+            <el-date-picker v-model="searchMap.endtime" type="datetimerange" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" range-separator="-" end-placeholder="结束日期" :picker-options="pickerOptions" style="width:350px;" />
+          </el-form-item>
+
+          <el-form-item prop="worktype" label="任务类型">
+            <el-select v-model="searchMap.worktype" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getWorktypeList" :loading="searchLoading">
+              <el-option v-for="item in worktypeList" :key="item.id" :label="item.worktype" :value="item.worktype" /></el-select>
+          </el-form-item>
+          <el-form-item prop="checktype" label="检测类型">
+            <el-select v-model="searchMap.checktype" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getChecktypeList" :loading="searchLoading">
+              <el-option v-for="item in checktypeList" :key="item.id" :label="item.checktype" :value="item.checktype" /></el-select>
+          </el-form-item>
+          <el-form-item prop="additionoption" label="附加选项">
+            <el-select v-model="searchMap.additionoption" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getAdditionoptionList" :loading="searchLoading">
+              <el-option v-for="item in additionoptionList" :key="item.id" :label="item.additionoption" :value="item.additionoption" /></el-select>
+          </el-form-item>
+          <el-form-item prop="targetip" label="目标ip">
+            <el-select v-model="searchMap.targetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getTargetipList" :loading="searchLoading">
+              <el-option v-for="item in targetipList" :key="item.id" :label="item.targetip" :value="item.targetip" /></el-select>
+          </el-form-item>
+          <el-form-item prop="targetport" label="目标端口">
+            <el-select v-model="searchMap.targetport" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getTargetportList" :loading="searchLoading">
+              <el-option v-for="item in targetportList" :key="item.id" :label="item.targetport" :value="item.targetport" /></el-select>
+          </el-form-item>
+          <el-form-item prop="excludeip" label="排除ip">
+            <el-select v-model="searchMap.excludeip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getExcludeipList" :loading="searchLoading">
+              <el-option v-for="item in excludeipList" :key="item.id" :label="item.excludeip" :value="item.excludeip" /></el-select>
+          </el-form-item>
+
+          <el-form-item prop="crontask" label="cron任务">
+            <el-switch v-model="searchMap.crontask" />
+          </el-form-item>
+          <el-form-item prop="dbipisexcludeip" label="排除db中ip">
+            <el-switch v-model="searchMap.dbipisexcludeip" />
+          </el-form-item>
+          <el-form-item prop="merge2asset" label="结果合并到资产">
+            <el-switch v-model="searchMap.merge2asset" />
+          </el-form-item>
+
+          <el-form-item label="描述">
+            <el-input v-model="searchMap.description" prop="description" clearable placeholder="描述" />
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="fetchData()"> 查询</el-button>
+            <el-button type="info" @click="resetForm('searchform')">重置</el-button>
+            <el-input v-model="filename" placeholder="默认名字：报告" clearable style="width:180px;" prefix-icon="el-icon-document" />
+            <el-button :loading="downloadLoading" type="success" icon="el-icon-document" @click="handleDownload">导出</el-button>
+            <el-button type="danger" icon="el-icon-delete" @click="handleDeleteAll">删除</el-button>
+            <el-button type="primary" @click="handleEdit('')">新增</el-button>
+          </el-form-item>
+
+        </el-form>
+      </el-collapse-item>
+    </el-collapse>
+
+    <!-- 子任务显示 -->
+    <el-drawer
+      title="子任务"
+      :visible.sync="drawer"
+      :with-header="false"
+      direction="rtl"
+      size="65%"
+      :before-close="handleDrawerClose"
+    >
+
+      <el-collapse v-model="childActiveNames">
+        <el-collapse-item name="1">
+          <template slot="title"><i class="header-icon el-icon-info" />子任务-菜单栏隐藏与显示</template>
+          <!-- 查询条件 -->
+          <el-form ref="searchformchild" inline size="small" :model="childSearchMap">
+            <!-- <el-form-item label="项目编号">
+        <el-input v-model="childSearchMap.projectid" prop="projectid" clearable placeholder="项目编号" /></el-form-item> -->
+            <el-form-item prop="projectid" label="项目">
+              <el-select v-model="childSearchMap.projectid" filterable clearable placeholder="请输入关键词">
+                <el-option
+                  v-for="item in projectList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+
+            <el-form-item prop="name" label="名称">
+              <el-select v-model="childSearchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameListList" :loading="searchLoading">
+                <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
+            </el-form-item>
+
+            <el-form-item prop="starttime" label="开始时间">
+              <el-date-picker v-model="childSearchMap.starttime" type="datetimerange" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" range-separator="-" end-placeholder="结束日期" :picker-options="pickerOptions" style="width:350px;" />
+            </el-form-item>
+            <el-form-item prop="endtime" label="结束时间">
+              <el-date-picker v-model="childSearchMap.endtime" type="datetimerange" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" range-separator="-" end-placeholder="结束日期" :picker-options="pickerOptions" style="width:350px;" />
+            </el-form-item>
+
+            <!-- <el-form-item prop="worktype" label="任务类型">
+              <el-select v-model="childSearchMap.worktype" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getWorktypeList" :loading="searchLoading">
+                <el-option v-for="item in worktypeList" :key="item.id" :label="item.worktype" :value="item.worktype" /></el-select>
+            </el-form-item>
+            <el-form-item prop="additionoption" label="附加选项">
+              <el-select v-model="childSearchMap.additionoption" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getAdditionoptionList" :loading="searchLoading">
+                <el-option v-for="item in additionoptionList" :key="item.id" :label="item.additionoption" :value="item.additionoption" /></el-select>
+            </el-form-item>
+            <el-form-item prop="targetip" label="目标ip">
+              <el-select v-model="childSearchMap.targetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getTargetipList" :loading="searchLoading">
+                <el-option v-for="item in targetipList" :key="item.id" :label="item.targetip" :value="item.targetip" /></el-select>
+            </el-form-item>
+            <el-form-item prop="targetport" label="目标端口">
+              <el-select v-model="childSearchMap.targetport" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getTargetportList" :loading="searchLoading">
+                <el-option v-for="item in targetportList" :key="item.id" :label="item.targetport" :value="item.targetport" /></el-select>
+            </el-form-item>
+            <el-form-item prop="excludeip" label="排除ip">
+              <el-select v-model="childSearchMap.excludeip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getExcludeipList" :loading="searchLoading">
+                <el-option v-for="item in excludeipList" :key="item.id" :label="item.excludeip" :value="item.excludeip" /></el-select>
+            </el-form-item> -->
+
+            <el-form-item>
+              <el-button type="primary" @click="childFetchData()"> 查询</el-button>
+              <el-button type="info" @click="resetForm('searchformchild')">重置</el-button>
+              <el-button type="danger" icon="el-icon-delete" @click="childHandleDeleteAll">删除</el-button>
+              <!-- <el-button type="primary" @click="handleEdit('')">新增</el-button> -->
+            </el-form-item>
+
+          </el-form>
+        </el-collapse-item>
+      </el-collapse>
+      <el-table
+        ref="multipleTable"
+        v-loading="childListLoading"
+        :data="childList"
+        border
+        fit
+        style="width: 100%;"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+        @selection-change="childHandleSelectionChange"
+      >
+
+        <el-table-column type="selection" align="center" />
+        <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
+
+        <el-table-column sortable prop="projectid" label="项目">
+          <template slot-scope="scope">
+            {{ getProjectNameById(scope.row.projectid) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column sortable prop="name" label="名称" />
+
+        <el-table-column sortable prop="starttime" label="开始时间">
+          <template slot-scope="scope">
+            {{ scope.row.starttime | dateformat() }}
+          </template>
+        </el-table-column>
+        <el-table-column sortable prop="endtime" label="结束时间">
+          <template slot-scope="scope">
+            {{ scope.row.endtime | dateformat() }}
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" sortable prop="worktype" label="任务类型" width="100">
+
+          <template slot-scope="scope">
+            <span v-if="scope.row.worktype">
+              {{ scope.row.worktype }}<br>
+              <span v-if="!scope.row.checktype">
+                <el-tooltip placement="top">
+                  <div slot="content">开始</div>
+                  <el-button type="success" size="mini" icon="el-icon-video-play" circle @click="executeTask(scope.row.id)" />
+                </el-tooltip>
+              </span>
+              <!-- <span v-if="scope.row.targetip!=='ipNoPort'&&scope.row.targetip!=='unknownPortSerVer'&&scope.row.targetip!=='ipAllPort'"> -->
+
+              <el-tooltip placement="top">
+                <div slot="content">停止</div>
+                <el-button type="danger" size="mini" icon="el-icon-video-pause" circle @click="stopTask(scope.row.id)" />
+              </el-tooltip>
+              <!-- </span> -->
+              <br>
+              <span v-if="scope.row.worktype!='nse'&&scope.row.worktype!='selfd'&&scope.row.worktype!='httpp'">
+                <el-tooltip placement="top">
+                  <div slot="content">重新开始</div>
+                  <el-button size="mini" icon="el-icon-refresh" circle @click="repeatTask(scope.row.id)" />
+                </el-tooltip>
+              </span>
+
+              <el-tooltip placement="top">
+                <div slot="content">获取状态</div>
+                <el-button type="info" size="mini" icon="el-icon-warning-outline" circle @click="getTaskStatus(scope.row.id)" />
+              </el-tooltip>
+
+            </span>
+          </template>
+
+        </el-table-column>
+
+        <el-table-column sortable prop="threadnumber" label="线程数量" />
+        <!-- <el-table-column sortable prop="singleipscantime" label="ip扫描次数" /> -->
+        <el-table-column sortable prop="additionoption" label="附加选项" />
+        <el-table-column sortable prop="rate" label="扫描速率" />
+        <el-table-column sortable prop="targetip" label="目标ip" show-overflow-tooltip />
+        <el-table-column sortable prop="targetport" label="目标端口" show-overflow-tooltip />
+        <el-table-column sortable prop="excludeip" label="排除ip" show-overflow-tooltip />
+        <el-table-column sortable prop="ipslicesize" label="ip分组大小" />
+        <el-table-column sortable prop="portslicesize" label="端口分组大小" />
+
+        <!-- <el-table-column align="center" sortable label="排除db中ip">
+          <template slot-scope="scope">
+            <span>{{ formatBoolean(scope.row.dbipisexcludeip) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" sortable label="结果合并到资产">
+          <template slot-scope="scope">
+            <span>{{ formatBoolean(scope.row.merge2asset) }}</span>
+          </template>
+        </el-table-column> -->
+        <el-table-column sortable prop="description" label="描述" show-overflow-tooltip />
+        <!-- <el-table-column
+          fixed="right"
+          label="操作"
+          width="100"
+        >
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="handleEdit(scope.row.id)" />
+            <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="handleDelete(scope.row.id)" />
+          </template>
+        </el-table-column> -->
+
+      </el-table>
+
+      <!-- 底部分页 -->
+      <el-pagination
+        :current-page.sync="childCurrentPage"
+        :page-sizes="[10,20,50,200]"
+        :page-size="childPageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="childTotal"
+        @size-change="childHandleSizeChange"
+        @current-change="childFetchData"
+      />
+
+    </el-drawer>
+
+    <!-- 表格数据 -->
+    <el-table
+      ref="multipleTable"
+      v-loading="listLoading"
+      :data="list"
+      border
+      fit
+      style="width: 100%;"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+      @selection-change="handleSelectionChange"
+    >
+
+      <el-table-column type="selection" align="center" />
+      <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
+      <!-- <el-table-column sortable prop="id" label="任务编号" /> -->
+      <!-- <el-table-column sortable prop="taskparentid" label="父任务" /> -->
+
+      <el-table-column sortable prop="taskparentid" label="父任务">
+        <template slot-scope="scope">
+          {{ getTaskNameById(scope.row.taskparentid) }}
+        </template>
+      </el-table-column>
+
+      <el-table-column sortable prop="projectid" label="项目">
+        <template slot-scope="scope">
+          {{ getProjectNameById(scope.row.projectid) }}
+        </template>
+      </el-table-column>
+
+      <!-- <el-table-column sortable prop="projectid" label="项目" /> -->
+
+      <!-- <el-table-column sortable prop="name" label="名称" /> -->
+
+      <el-table-column sortable prop="name" label="名称">
+        <template slot-scope="scope">
+
+          <span v-if="scope.row.taskparentid===null">
+            <el-link :underline="false" @click="handleDrawer(scope.row.id) ">
+              <i class="el-icon-view el-icon--right" />{{ scope.row.name }}
+            </el-link>
+          </span>
+          <span v-else>
+            {{ scope.row.name }}
+          </span>
+
+        </template>
+      </el-table-column>
+      <el-table-column sortable prop="cronexpression" label="cron表达式" />
+
+      <el-table-column align="center" sortable label="cron任务">
+        <template slot-scope="scope">
+          <span v-if="scope.row.crontask ">
+            <span>{{ formatBoolean(scope.row.crontask) }}</span><br>
+            <el-tooltip placement="top">
+              <div slot="content">删除cron任务</div>
+              <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="stopScheduleTask(scope.row.id)" />
+            </el-tooltip>
+          </span>
+        </template>
+      </el-table-column>
+
+      <el-table-column sortable prop="starttime" label="开始时间">
+        <template slot-scope="scope">
+          {{ scope.row.starttime | dateformat() }}
+        </template>
+      </el-table-column>
+      <el-table-column sortable prop="endtime" label="结束时间">
+        <template slot-scope="scope">
+          {{ scope.row.endtime | dateformat() }}
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" sortable prop="worktype" label="任务类型" width="100">
+
+        <template slot-scope="scope">
+          <span v-if="scope.row.worktype">
+            {{ scope.row.worktype }}<br>
+            <span v-if="!scope.row.checktype">
+              <el-tooltip placement="top">
+                <div slot="content">开始</div>
+                <el-button type="success" size="mini" icon="el-icon-video-play" circle @click="executeTask(scope.row.id)" />
+              </el-tooltip>
+            </span>
+            <!-- <span v-if="scope.row.targetip!=='ipNoPort'&&scope.row.targetip!=='unknownPortSerVer'&&scope.row.targetip!=='ipAllPort'"> -->
+
+            <el-tooltip placement="top">
+              <div slot="content">停止</div>
+              <el-button type="danger" size="mini" icon="el-icon-video-pause" circle @click="stopTask(scope.row.id)" />
+            </el-tooltip>
+            <!-- </span> -->
+            <br>
+            <span v-if="scope.row.worktype!='nse'&&scope.row.worktype!='selfd'&&scope.row.worktype!='httpp'">
+              <el-tooltip placement="top">
+                <div slot="content">重新开始</div>
+                <el-button size="mini" icon="el-icon-refresh" circle @click="repeatTask(scope.row.id)" />
+              </el-tooltip>
+            </span>
+
+            <el-tooltip placement="top">
+              <div slot="content">获取状态</div>
+              <el-button type="info" size="mini" icon="el-icon-warning-outline" circle @click="getTaskStatus(scope.row.id)" />
+            </el-tooltip>
+
+          </span>
+        </template>
+
+      </el-table-column>
+
+      <el-table-column align="center" sortable prop="checktype" label="检测类型">
+
+        <template slot-scope="scope">
+          <span v-if="scope.row.checktype">
+            {{ scope.row.checktype }}<br>
+            <span v-if="scope.row.starttime && scope.row.endtime&&!scope.row.taskparentid">
+              <el-tooltip placement="top">
+                <div slot="content">开始</div>
+                <el-button type="success" size="mini" icon="el-icon-video-play" circle @click="executeCheck(scope.row.id)" />
+              </el-tooltip>
+            </span>
+          </span>
+        </template>
+
+      </el-table-column>
+
+      <el-table-column sortable prop="threadnumber" label="线程数量" />
+      <el-table-column sortable prop="singleipscantime" label="ip扫描次数" />
+      <el-table-column sortable prop="additionoption" label="附加选项" />
+      <el-table-column sortable prop="rate" label="扫描速率" />
+      <el-table-column sortable prop="targetip" label="目标ip" show-overflow-tooltip />
+      <el-table-column sortable prop="targetport" label="目标端口" show-overflow-tooltip />
+      <el-table-column sortable prop="excludeip" label="排除ip" show-overflow-tooltip />
+      <el-table-column sortable prop="ipslicesize" label="ip分组大小" />
+      <el-table-column sortable prop="portslicesize" label="端口分组大小" />
+
+      <el-table-column align="center" sortable label="排除db中ip">
+        <template slot-scope="scope">
+          <span>{{ formatBoolean(scope.row.dbipisexcludeip) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" sortable label="结果合并到资产">
+        <template slot-scope="scope">
+          <span>{{ formatBoolean(scope.row.merge2asset) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column sortable prop="description" label="描述" show-overflow-tooltip />
+      <el-table-column
+        fixed="right"
+        label="操作"
+        width="100"
+      >
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="handleEdit(scope.row.id)" />
+          <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="handleDelete(scope.row.id)" />
+        </template>
+      </el-table-column>
+
+    </el-table>
+
+    <!-- 底部分页 -->
+    <el-pagination
+      :current-page.sync="currentPage"
+      :page-sizes="[10,20,50,200,500,1000]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+      @size-change="handleSizeChange"
+      @current-change="fetchData"
+    />
+
+    <!-- 编辑框 -->
+    <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
+      <el-form label-width="100px">
+
+        <!-- <el-form-item label="父任务"><el-input v-model="pojo.taskparentid" /></el-form-item> -->
+        <el-form-item label="父任务">
+          <el-select v-model="pojo.taskparentid" style="width:400px;" filterable clearable placeholder="请输入关键词">
+            <el-option
+              v-for="item in list"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="项目">
+          <el-select v-model="pojo.projectid" style="width:400px;" filterable clearable placeholder="请输入关键词">
+            <el-option
+              v-for="item in projectList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+
+        <!-- <el-form-item label="项目"><el-input v-model="pojo.projectid" /></el-form-item> -->
+
+        <el-form-item label="名称"><el-input v-model="pojo.name" clearable /></el-form-item>
+
+        <span v-if="pojo.id">
+          <el-form-item label="时间">
+            <el-date-picker v-model="pojo.starttime" placeholder="开始时间" type="datetime" />
+            <el-date-picker v-model="pojo.endtime" placeholder="结束时间" type="datetime" />
+          </el-form-item>
+        </span>
+
+        <el-form-item required label="任务类型">
+          <span v-if="pojo.id !=null ">
+            <span>{{ pojo.worktype }}</span>
+          </span>
+          <span v-else>
+            <!-- <el-input v-model="pojo.worktype"  /> -->
+            <el-radio-group v-model="pojo.worktype" size="mini">
+              <el-radio-button label="nmap" />
+              <el-radio-button label="mass" />
+              <el-radio-button label="mass2Nmap" />
+              <el-radio-button label="nse" />
+              <el-radio-button label="selfd" />
+              <el-radio-button label="httpp" />
+            </el-radio-group>
+          </span>
+
+        </el-form-item>
+
+        <!-- <el-form-item> -->
+        <span v-if="pojo.worktype && pojo.worktype == 'mass2Nmap'">
+          <el-form-item label="Nmap配置" size="mini">
+            <!-- <i>{{ getNmapConfigByTaskId(pojo.id) }}</i> -->
+            <el-form-item label="线程数量" size="mini">
+              <el-input-number v-model="nmapPojo.threadnumber" :min="1" placeholder="默认10" />
+              <!-- <el-input v-model="nmapPojo.threadnumber" style="width:400px;" placeholder="默认10" /> -->
+            </el-form-item>
+
+            <el-form-item label="ip扫描次数" size="mini">
+              <el-input-number v-model="nmapPojo.singleipscantime" :min="1" placeholder="默认1" />
+              <!-- <el-input v-model="nmapPojo.singleipscantime" style="width:400px;" placeholder="默认1" /> -->
+
+            </el-form-item>
+            <el-form-item label="附加选项" size="mini"><el-input v-model="nmapPojo.additionoption" placeholder="默认-Pn -n -sV --max-retries=1" /></el-form-item>
+          </el-form-item>
+        </span>
+        <!-- </el-form-item> -->
+
+        <span v-if="!pojo.taskparentid&&(pojo.worktype == 'nmap'||pojo.worktype == 'mass2Nmap')&&(pojo.starttime!=null&&pojo.endtime!=null)">
+          <el-form-item label="检测类型" inline>
+            <el-tooltip placement="top">
+              <div slot="content">保存后再重新编辑, 才能配置插件</div>
+              <el-checkbox-group v-model="checkedChecktypes" size="mini">
+                <el-checkbox-button v-for="check in checks" :key="check" :label="check" />
+              </el-checkbox-group>
+            </el-tooltip>
+
+          </el-form-item></span>
+
+        <el-form-item label="数量" inline>
+          <span v-if="pojo.worktype == 'nse'||pojo.worktype == 'selfd'||pojo.worktype == 'httpp'">
+            <el-tooltip placement="top">
+              <div slot="content">线程数量<br>默认4</div>
+              <el-input-number v-model="pojo.threadnumber" :min="1" size="small" placeholder="线程数量" />
+              <!-- <el-input v-model="pojo.threadnumber" style="width:110px;" clearable placeholder="线程数量" /> -->
+            </el-tooltip>
+          </span>
+          <span v-else>
+            <el-tooltip placement="top">
+              <div slot="content">线程数量<br>默认4</div>
+              <el-input-number v-model="pojo.threadnumber" :min="1" size="small" placeholder="线程数量" />
+              <!-- <el-input v-model="pojo.threadnumber" style="width:110px;" clearable placeholder="线程数量" /> -->
+            </el-tooltip>
+
+            <el-tooltip placement="top">
+              <div slot="content">单ip扫描次数<br>默认1</div>
+              <el-input-number v-model="pojo.singleipscantime" :min="1" size="small" placeholder="单ip扫描次数" />
+              <!-- <el-input v-model="pojo.singleipscantime" style="width:130px;" clearable placeholder="单ip扫描次数" /> -->
+            </el-tooltip>
+
+            <span v-if="pojo.worktype == 'mass2Nmap'||pojo.worktype == 'mass'">
+              <el-tooltip placement="top">
+                <div slot="content">mass扫描速率<br>只对mass,mass2Nmap模式有效<br>默认1000</div>
+                <el-input-number v-model="pojo.rate" :min="100" size="small" :step="1000" placeholder="mass速率" />
+                <!-- <el-input v-model="pojo.rate" style="width:130px;" clearable placeholder="mass速率" /> -->
+              </el-tooltip>
+            </span>
+            <span v-if="pojo.targetip !=='unknownPortSerVer'&&pojo.targetip !=='ipAllPort'">
+              <el-tooltip placement="top">
+                <div slot="content">ip分组大小<br>默认255</div>
+                <el-input-number v-model="pojo.ipslicesize" :min="1" size="small" placeholder="ip分组大小" />
+                <!-- <el-input v-model="pojo.ipslicesize" style="width:120px;" clearable placeholder="ip分组大小" /> -->
+              </el-tooltip>
+            </span>
+
+            <!-- 没有端口的ip全端口扫描 端口分组和附加选项-->
+            <!-- ||pojo.worktype == 'ipNoPort'||pojo.worktype == 'unknownPortSerVer' -->
+            <span v-if="pojo.worktype == 'nmap'&&(pojo.targetport == null||pojo.targetport == '')&&pojo.targetip !=='unknownPortSerVer'&&pojo.targetip !=='ipAllPort'">
+              <el-tooltip placement="top">
+                <div slot="content">端口分组大小<br>只对nmap全端口模式有效<br>范围：1000-10000<br>默认1000</div>
+                <el-input-number v-model="pojo.portslicesize" :min="1000" :max="10000" :step="1000" size="small" placeholder="端口分组大小" />
+                <!-- <el-input v-model="pojo.portslicesize" style="width:140px;" clearable placeholder="端口分组大小" /> -->
+
+              </el-tooltip>
+            </span>
+          </span>
+        </el-form-item>
+
+        <span v-if="pojo.worktype == 'nmap'||pojo.worktype == 'mass2Nmap'||pojo.worktype == 'mass'||pojo.worktype == 'nse'">
+          <el-form-item label="附加选项"><el-input v-model="pojo.additionoption" clearable placeholder="nmap/nse默认-Pn -n -sV --max-retries=1 --open，mass/mass2Nmap无默认" /></el-form-item>
+        </span>
+
+        <span v-if="pojo.worktype == 'nse'||pojo.worktype == 'selfd'||pojo.worktype == 'httpp'">
+          <span v-if="pojo.taskparentid">
+            <el-form-item required label="目标ip">
+              <span>{{ pojo.targetip }}</span>
+            </el-form-item>
+          </span>
+          <span v-else>
+            <el-form-item required label="目标ip">
+              <el-radio-group v-model="pojo.targetip" size="mini">
+                <el-radio-button label="assetip" />
+              </el-radio-group>
+            </el-form-item>
+          </span>
+        </span>
+        <span v-else>
+          <span v-if="pojo.worktype == 'nmap'&&(pojo.targetip == null||pojo.targetip == '')">
+            <el-form-item required label="目标ip">
+              <el-radio-group v-model="pojo.targetip" size="mini">
+                <el-tooltip placement="top">
+                  <div slot="content">数据库中所有没有端口且未下线的ip</div>
+                  <el-radio-button label="ipNoPort" />
+                </el-tooltip>
+
+                <el-tooltip placement="top">
+                  <div slot="content">更新<br>端口service [为空, null, tcpwrapped, unknown, 包含?] 的ip<br>端口version [为空, null] 的ip<br>的service和version</div>
+                  <el-radio-button label="unknownPortSerVer" />
+                </el-tooltip>
+
+                <el-tooltip placement="top">
+                  <div slot="content">更新资产库所有ip的端口信息</div>
+                  <el-radio-button label="ipAllPort" />
+                </el-tooltip>
+              </el-radio-group>
+
+            </el-form-item>
+          </span>
+          <el-tooltip placement="top">
+            <div slot="content">格式1: assetip或ipNoPort或unknownPortSerVer或ipAllPort<br>格式2:192.168.1.1,192.168.2.1-192.168.2.100,192.168.3.0/24
+              <br>格式说明: assetip代表数据库中所有未下线的ip, 仅在nse/selfd/httpp模式下生效<br>如果是assetip或ipNoPort或unknownPortSerVer或ipAllPort, 则不能再配置具体ip
+              <br>ipNoPort及unknownPortSerVer说明见上
+            </div>
+            <el-form-item required label="目标ip">
+              <el-input v-model="pojo.targetip" clearable :autosize="{maxRows: 10}" type="textarea" placeholder="格式:assetip或单个ip,ip段,CIDR, 举例: assetip或192.168.1.1,192.168.2.1-192.168.2.100,192.168.3.0/24" />
+            </el-form-item>
+          </el-tooltip>
+        </span>
+
+        <span v-if="pojo.worktype == 'nmap'&&(pojo.portslicesize == null||pojo.portslicesize == '')&&pojo.targetip !=='unknownPortSerVer'&&pojo.targetip !=='ipAllPort'">
+          <el-tooltip placement="top">
+            <div slot="content">格式1: <br>格式2:regular<br>格式3:80,443,1-1001<br>格式说明: 为空代表所有端口, regular为nmap默认端口</div>
+            <el-form-item label="目标端口"><el-input v-model="pojo.targetport" clearable :autosize="{maxRows: 10}" type="textarea" placeholder="格式: 留空或regular或80,443,1-1001" /></el-form-item>
+          </el-tooltip>
+        </span>
+        <!-- <span v-if="pojo.worktype == 'nmap'&&pojo.id ">
+          <el-tooltip placement="top">
+            <div slot="content">格式1: <br>格式2:regular<br>格式3:80,443,1-1001<br>格式说明: 为空代表所有端口, regular为nmap默认端口</div>
+            <el-form-item label="目标端口"><el-input v-model="pojo.targetport" clearable :autosize="{maxRows: 10}" type="textarea" placeholder="格式: 留空或regular或80,443,1-1001" /></el-form-item>
+          </el-tooltip>
+        </span> -->
+        <span v-if="pojo.worktype == 'mass' || pojo.worktype == 'mass2Nmap'">
+          <el-tooltip placement="top">
+            <div slot="content">格式1: <br>格式2:regular<br>格式3:80,443,1-1001<br>格式说明: 为空代表所有端口, regular为nmap默认端口</div>
+            <el-form-item label="目标端口"><el-input v-model="pojo.targetport" clearable :autosize="{maxRows: 10}" type="textarea" placeholder="格式: 留空或regular或80,443,1-1001" /></el-form-item>
+          </el-tooltip>
+        </span>
+
+        <span v-if="(pojo.worktype == 'nmap'||pojo.worktype == 'mass2Nmap'||pojo.worktype == 'mass')&&pojo.targetip !=='unknownPortSerVer'&&pojo.targetip !=='ipAllPort'">
+          <el-form-item label="排除ip"><el-input v-model="pojo.excludeip" clearable :autosize="{maxRows: 10}" type="textarea" placeholder="格式:单个ip,ip段,CIDR,举例: 192.168.1.1,192.168.2.1-192.168.2.100,192.168.3.0/24" /></el-form-item>
+        </span>
+
+        <el-form-item label="Boolean">
+          <el-tooltip placement="top">
+            <div slot="content">默认false<br>cron任务需要手动点开始</div>
+            <el-switch v-model="pojo.crontask" active-text="cron任务" />
+          </el-tooltip>
+
+          <span v-if="(pojo.worktype == 'nmap'||pojo.worktype == 'mass2Nmap'||pojo.worktype == 'mass')&&pojo.targetip !=='unknownPortSerVer'&&pojo.targetip !=='ipAllPort'&&pojo.targetip !=='ipNoPort'">
+            <el-tooltip placement="top">
+              <div slot="content">默认false</div>
+              <el-switch v-model="pojo.dbipisexcludeip" active-text="排除db中ip" />
+            </el-tooltip>
+          </span>
+
+          <el-tooltip placement="top">
+            <div slot="content">默认true</div>
+            <el-switch v-model="pojo.merge2asset" active-text="结果合并到资产" />
+          </el-tooltip>
+        </el-form-item>
+
+        <span v-if="pojo.crontask===true">
+          <el-form-item required="" label="cron表达式"><el-input v-model="pojo.cronexpression" clearable style="width:400px;" /></el-form-item>
+        </span>
+        <el-form-item label="描述"><el-input v-model="pojo.description" autosize type="textarea" /></el-form-item>
+
+        <span v-if="(pojo.worktype == 'nse'||pojo.worktype == 'selfd')||( pojo.worktype == 'nmap'||pojo.worktype == 'mass2Nmap'||pojo.worktype == 'mass')&&pojo.checktype&&pojo.checktype!='httpp'">
+          <el-divider />
+          <span v-if="pojo.id==null">
+            <el-form-item label="插件">
+              <b>保存任务后才能启用插件</b>
+            </el-form-item>
+          </span>
+
+          <span v-if="pojo.id&&(!pojo.taskparentid||!pojo.checktype)">
+            <el-form-item label="插件">
+              <span v-if="taskPluginPojoList.length==0">
+                <span v-if="pojo.checktype">
+                  <span><b>当前未选择插件, 默认启用 {{ pojo.checktype.replace(',httpp','').replace('httpp,','') }} 类型的所有插件</b></span>
+                </span>
+                <span v-else>
+                  <span><b>当前未选择插件, 默认启用 {{ pojo.worktype }} 类型的所有插件</b></span>
+                </span>
+              </span>
+
+              <!-- 旧的插件显示与禁用 -->
+              <!-- <span v-if="pojo.id">
+                <el-button style="float: right;" type="info" size="mini" @click="refreshPluginName(pojo.id)">显示名称</el-button>
+              </span>
+              <el-form-item>
+                <el-table
+                  ref="multipleTable"
+                  :data="taskPluginPojoList"
+                  :show-header="false"
+                  size="medium"
+                  @selection-change="handleSizeChange"
+                >
+                  <el-table-column width="400" prop="taskid" />
+                  <el-table-column prop="pluginconfigid" label="插件">
+                    <template slot-scope="scope">
+                      {{ getPluginName(scope.row.pluginconfigid) }}
+                    </template>
+                  </el-table-column>
+                  <el-table-column fixed="right" width="80">
+                    <template slot-scope="scope">
+                      <el-button type="danger" size="mini" @click="handleDeleteTaskPlugin(scope.row.id)">禁用</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+
+              </el-form-item>
+              <hr> -->
+
+              <!-- <div> <pluginconfigsingleintask /> </div> -->
+              <el-form ref="searchform2" inline size="mini" :model="searchMap">
+                <!-- <el-form-item label="名称">
+        <el-input v-model="searchMap.name" prop="name" clearable placeholder="名称" /></el-form-item> -->
+
+                <el-form-item prop="name" label="名称">
+                  <el-select v-model="searchMap.name" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" style="width:130px;" :remote-method="getNameList" :loading="searchLoading">
+                    <el-option v-for="item in pluginnameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
+                </el-form-item>
+
+                <el-form-item prop="args" label="参数">
+                  <el-select v-model="searchMap.args" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" style="width:130px;" :remote-method="getArgsList" :loading="searchLoading">
+                    <el-option v-for="item in argsList" :key="item.id" :label="item.args" :value="item.args" /></el-select>
+                </el-form-item>
+
+                <el-form-item label="风险">
+                  <el-select v-model="searchMap.risk" placeholder="请选择" clearable style="width:90px;">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </el-form-item>
+                <span v-if="pojo.checktype">
+                  <el-form-item label="类型">
+                    <el-radio-group v-model="searchMap.type" size="mini">
+                      <el-radio-button label="selfd" />
+                      <el-radio-button label="nse" />
+                    </el-radio-group>
+                  </el-form-item>
+                </span>
+                <!-- <el-form-item label="超时">
+        <el-input v-model="searchMap.timeout" prop="timeout" clearable placeholder="超时" /></el-form-item> -->
+
+                <el-form-item>
+                  <el-button type="primary" size="mini" @click="fetchPluginconfigData()">查询</el-button>
+                  <el-button type="info" size="mini" @click="resetForm('searchform2')">重置</el-button>
+
+                  <!-- 操作 -->
+                  <el-button type="success" size="mini" @click="enablePlugin(pojo.id)">启用</el-button>
+                  <el-tooltip placement="top">
+                    <div slot="content">不选择插件, 则禁用所有已启用插件</div>
+                    <el-button type="danger" size="mini" @click="disablePlugin(pojo.id)">禁用</el-button>
+                  </el-tooltip>
+
+                </el-form-item>
+              </el-form>
+              <!-- 表格数据 -->
+              <el-table
+                ref="multipleTable"
+                :data="pluginconfigList"
+                fit
+                style="width: 100%;"
+                size="medium"
+                @selection-change="handleSelectionChange"
+              >
+                <el-table-column type="selection" align="center" />
+                <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
+                <!-- <el-table-column sortable prop="id" label="插件配置编号" /> -->
+                <el-table-column sortable prop="name" label="名称" />
+                <el-table-column sortable prop="args" label="参数" show-overflow-tooltip />
+                <el-table-column sortable prop="risk" label="风险" />
+                <el-table-column sortable prop="type" label="类型" />
+                <!-- <el-table-column sortable prop="timeout" label="超时(毫秒)" /> -->
+
+                <el-table-column
+                  label="操作"
+                  width="140"
+                >
+                  <template slot-scope="scope">
+                    <span v-if="checkPlugin(scope.row.id)">
+                      <el-button type="success" size="mini" @click="enablePluginById(pojo.id,scope.row.id)">启用</el-button>
+                    </span>
+                    <span v-else>
+                      <el-button type="danger" size="mini" @click="handleDeleteTaskPluginById(pojo.id,scope.row.id)">禁用</el-button>
+                    </span>
+
+                  </template>
+                </el-table-column>
+
+              </el-table>
+
+              <!-- 底部分页 -->
+              <el-pagination
+                :current-page.sync="pluginconfigcurrentPage"
+                :page-sizes="[5,15,20,100,200]"
+                :page-size="pluginconfigpageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="pluginconfigtotal"
+                @size-change="handlePluginconfigSizeChange"
+                @current-change="fetchPluginconfigData"
+              />
+
+            </el-form-item>
+          </span>
+        </span>
+
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleSave()">保存</el-button>
+        <el-button @click="closeDialogForm()">关闭</el-button>
+      </span>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import taskApi from '@/api/task'
+import projectApi from '@/api/project'
+import nmapconfigApi from '@/api/nmapconfig'
+// import pluginconfigsingleintask from '@/views/table/pluginconfigsingleintask'
+import taskpluginconfigApi from '@/api/taskpluginconfig'
+import pluginconfigApi from '@/api/pluginconfig'
+
+import Vue from 'vue'
+import pluginconfig from '../../api/pluginconfig'
+
+const dateformat = Vue.filter('dateformat')
+const checkOptions = ['nse', 'selfd', 'httpp']
+
+export default {
+  // components: {
+  //   pluginconfigsingleintask
+  // },
+
+  data() {
+    return {
+      list: [],
+      total: 0, // 总记录数
+      currentPage: 1, // 当前页
+      pageSize: 10, // 每页大小
+      searchMap: {}, // 查询条件
+      dialogFormVisible: false, // 编辑窗口是否可见
+      pojo: {}, // 编辑表单绑定的实体对象
+      id: '', // 当前用户修改的ID
+      searchLoading: false,
+      filename: '',
+      listLoading: true,
+      multipleSelection: [],
+      downloadLoading: false,
+      checkedChecktypes: [],
+      checks: checkOptions,
+
+      projectList: [],
+      projectnameList: [],
+      taskInMap: new Map(),
+      projectIpMap: new Map(),
+      nameList: [],
+      worktypeList: [],
+      checktypeList: [],
+      additionoptionList: [],
+      targetipList: [],
+      targetportList: [],
+      excludeipList: [],
+      tastStatusList: [],
+      nmapconfigId: '',
+      nmapPojo: {}, // nmap配置
+
+      taskPluginPojoList: [],
+      pluginMap: new Map(),
+      pluginconfigList: [],
+      pluginconfigtotal: 0, // 总记录数
+      pluginconfigcurrentPage: 1, // 当前页
+      pluginconfigpageSize: 5, // 每页大小
+      taskPluginList: [],
+      argsList: [],
+      pluginnameList: [],
+      temptaskid: '',
+      tempList: [],
+
+      activeNames: ['1'],
+
+      drawer: false,
+      childActiveNames: ['1'],
+      childList: [],
+      childListLoading: true,
+      childCurrentPage: 1,
+      childPageSize: 10,
+      childTotal: 0,
+      childMultipleSelection: [],
+      childSearchMap: {}, // 查询条件
+
+      options: [{
+        value: '信息',
+        label: '信息'
+      }, {
+        value: '低危',
+        label: '低危'
+      }, {
+        value: '中危',
+        label: '中危'
+      }, {
+        value: '高危',
+        label: '高危'
+      }, {
+        value: '严重',
+        label: '严重'
+      }, {
+        value: '致命',
+        label: '致命'
+      }],
+      value: '',
+
+      pickerOptions: { // 日期选择
+        disabledDate(time) {
+          return time.getTime() > Date.now()
+        },
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近半年',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 180)
+            picker.$emit('pick', [start, end])
+          }
+        }]
+      }
+    }
+  },
+  created() {
+    this.fetchData()
+    this.getProject()
+  },
+  methods: {
+    handleDrawerClose() {
+      this.drawer = false
+      this.childPageSize = 10
+      this.childCurrentPage = 1
+      this.childMultipleSelection = []
+      this.childSearchMap = {}
+    },
+    handleDrawer(id) {
+      this.id = id
+      this.drawer = true
+      this.childFetchData()
+    },
+    childFetchData() {
+      this.childSearchMap.taskparentid = this.id
+      taskApi.search(this.childCurrentPage, this.childPageSize, this.childSearchMap).then(response => {
+        this.childList = response.data.rows
+        this.childTotal = response.data.total
+        this.childListLoading = false
+        for (let i = 0; i < this.childList.length; i++) {
+          this.taskInMap.set(this.childList[i].id, this.childList[i].name)
+        }
+      })
+    },
+    handleDeleteTaskPluginById(taskId, pluginId) {
+      const tempList = []
+      tempList.push(taskId)
+      tempList.push(pluginId)
+      taskpluginconfigApi.deleteAllIds(tempList).then(response => {
+        this.$message({
+          message: response.message,
+          type: (response.flag ? 'success' : 'error')
+        })
+        if (response.flag) {
+          this.taskPluginList = []
+          this.refreshPluginName() // 刷新数据
+          this.handleEdit(this.id)
+        }
+      })
+    },
+    enablePluginById(taskId, pluginId) {
+      const tempList = []
+      tempList.push(taskId)
+      tempList.push(pluginId)
+      taskpluginconfigApi.addAllByIds(tempList).then(response => {
+        this.$message({
+          message: response.message,
+          type: (response.flag ? 'success' : 'error')
+        })
+        if (response.flag) {
+          this.taskPluginList = []
+          this.refreshPluginName() // 刷新数据
+          this.handleEdit(this.id)
+        }
+      })
+    },
+    checkPlugin(id) {
+      return this.taskPluginList.indexOf(id) === -1
+    },
+    fetchPluginconfigData() {
+      if (!this.pojo.checktype) {
+        this.searchMap.type = this.pojo.worktype
+      }
+      pluginconfigApi.search(this.pluginconfigcurrentPage, this.pluginconfigpageSize, this.searchMap).then(response => {
+        this.pluginconfigList = response.data.rows
+        this.pluginconfigtotal = response.data.total
+      })
+    },
+    getArgsList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          pluginconfigApi.search(1, 10, { 'args': query }).then(response => {
+            this.argsList = response.data.rows.filter(item => {
+              return item.args.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.argsList = []
+      }
+    },
+    getNameList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          pluginconfigApi.search(1, 10, { 'name': query }).then(response => {
+            this.pluginnameList = response.data.rows.filter(item => {
+              return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.pluginnameList = []
+      }
+    },
+
+    enablePlugin(id) {
+      if (this.multipleSelection && this.multipleSelection.length) {
+        console.log(id)
+        const tempList = []
+        tempList.push(id)
+        for (let i = 0; i < this.multipleSelection.length; i++) {
+          tempList.push(this.multipleSelection[i].id)
+        }
+        taskpluginconfigApi.addAllByIds(tempList).then(response => {
+          this.$message({
+            message: response.message,
+            type: (response.flag ? 'success' : 'error')
+          })
+          if (response.flag) {
+            this.taskPluginList = []
+            this.refreshPluginName() // 刷新数据
+            this.handleEdit(this.id)
+          }
+        })
+        this.$refs.multipleTable.clearSelection()
+      } else {
+        this.$message({
+          message: '^_^至少选择一条记录哦~',
+          type: 'info'
+        })
+      }
+    },
+    disablePlugin(id) {
+      this.$confirm('此操作将禁用已选插件, 是否继续?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        if (this.multipleSelection && this.multipleSelection.length) {
+          const tempList = []
+          tempList.push(id)
+          for (let i = 0; i < this.multipleSelection.length; i++) {
+            tempList.push(this.multipleSelection[i].id)
+          }
+          taskpluginconfigApi.deleteAllIds(tempList).then(response => {
+            this.$message({
+              message: response.message,
+              type: (response.flag ? 'success' : 'error')
+            })
+            if (response.flag) {
+              this.taskPluginList = []
+              this.refreshPluginName() // 刷新数据
+              this.handleEdit(this.id)
+            }
+          })
+          this.$refs.multipleTable.clearSelection()
+        } else {
+        // 禁用所有插件
+          taskpluginconfigApi.deleteAllByTaskId(id).then(response => {
+            this.$message({
+              message: response.message,
+              type: (response.flag ? 'success' : 'error')
+            })
+            if (response.flag) {
+              this.taskPluginList = []
+              this.refreshPluginName() // 刷新数据
+              this.handleEdit(this.id)
+            }
+          })
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
+    },
+    handleDeleteTaskPlugin(id) {
+      console.log(id)
+      this.$confirm('此操作将禁用已选插件, 是否继续?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        taskpluginconfigApi.deleteById(id).then(response => {
+          this.$message({
+            message: response.message,
+            type: (response.flag ? 'success' : 'error')
+          })
+          if (response.flag) {
+            this.handleEdit(this.id)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    refreshPluginName(id) {
+      this.getTaskPluginByTaskId(id)
+    },
+    getPluginName(id) { // 根据id从map获取项目名字
+      return this.pluginMap.get(id)
+    },
+    getTaskPluginByTaskId(id) {
+      taskpluginconfigApi.findAllByTaskid(id).then(response => {
+        if (response.flag) {
+          this.taskPluginPojoList = response.data
+        }
+      }).then(() => {
+        for (let i = 0; i < this.taskPluginPojoList.length; i++) {
+          pluginconfig.findById(this.taskPluginPojoList[i].pluginconfigid).then(response => {
+            this.taskPluginList.push(this.taskPluginPojoList[i].pluginconfigid)
+            this.pluginMap.set(response.data.id, response.data.name)
+          })
+        }
+      })
+    },
+    cleanCache() {
+      this.closeDialogForm()
+    },
+    getNmapConfigByTaskId(id) {
+      if (id !== '') { // 修改
+        nmapconfigApi.findByTaskId(id).then(response => {
+          if (response.flag) {
+            this.nmapPojo = response.data
+          }
+        })
+      } else {
+        this.nmapPojo = {} // 清空数据
+      }
+    },
+    executeTask(id) {
+      taskApi.executeTask(id).then(response => {
+        this.$notify({
+          message: response.data,
+          type: (response.flag ? 'success' : 'error'),
+          duration: 5000
+        })
+        if (response.flag) {
+          this.childFetchData()
+          this.fetchData() // 刷新数据
+        }
+      })
+    },
+    executeCheck(id) {
+      taskApi.executeCheck(id).then(response => {
+        this.$notify({
+          message: response.data,
+          type: (response.flag ? 'success' : 'error'),
+          duration: 5000
+        })
+        if (response.flag) {
+          this.childFetchData()
+          this.fetchData() // 刷新数据
+        }
+      })
+    },
+    stopTask(id) {
+      this.$confirm('此操作将停止任务并删除cron任务(如果有子任务, 子任务也会被停止), 是否继续?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        taskApi.stopTask(id).then(response => {
+          this.$notify({
+            message: response.data,
+            type: (response.flag ? 'success' : 'error'),
+            duration: 5000
+          })
+          if (response.flag) {
+            this.childFetchData()
+            this.fetchData() // 刷新数据
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
+    },
+    repeatTask(id) {
+      taskApi.repeatTask(id).then(response => {
+        this.$notify({
+          message: response.data,
+          type: (response.flag ? 'success' : 'error'),
+          duration: 5000
+        })
+        if (response.flag) {
+          this.childFetchData()
+          this.fetchData() // 刷新数据
+        }
+      })
+    },
+    stopScheduleTask(id) {
+      taskApi.stopScheduleTask(id).then(response => {
+        this.$notify({
+          message: response.data,
+          type: (response.flag ? 'success' : 'error'),
+          duration: 5000
+        })
+        if (response.flag) {
+          this.childFetchData()
+          this.fetchData() // 刷新数据
+        }
+      })
+    },
+    getTaskStatus(id) {
+      taskApi.getTaskStatus(id).then(response => {
+        this.$notify({
+          message: response.data,
+          type: (response.flag ? 'success' : 'error'),
+          duration: 5000
+        })
+        if (response.flag) {
+          this.childFetchData()
+          this.fetchData() // 刷新数据
+        }
+      })
+    },
+    getNameListList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          taskApi.search(1, 10, { 'name': query }).then(response => {
+            this.nameList = response.data.rows.filter(item => {
+              return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.nameList = []
+      }
+    },
+    getWorktypeList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          taskApi.search(1, 10, { 'worktype': query }).then(response => {
+            this.worktypeList = response.data.rows.filter(item => {
+              return item.worktype.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.worktypeList = []
+      }
+    },
+    getChecktypeList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          taskApi.search(1, 10, { 'checktype': query }).then(response => {
+            this.checktypeList = response.data.rows.filter(item => {
+              return item.checktype.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.checktypeList = []
+      }
+    },
+    getAdditionoptionList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          taskApi.search(1, 10, { 'additionoption': query }).then(response => {
+            this.additionoptionList = response.data.rows.filter(item => {
+              return item.additionoption.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.additionoptionList = []
+      }
+    },
+    getTargetipList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          taskApi.search(1, 10, { 'targetip': query }).then(response => {
+            this.targetipList = response.data.rows.filter(item => {
+              return item.targetip.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.ipaddrtargetipListessv6List = []
+      }
+    },
+    getTargetportList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          taskApi.search(1, 10, { 'targetport': query }).then(response => {
+            this.targetportList = response.data.rows.filter(item => {
+              return item.targetport.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.targetportList = []
+      }
+    },
+    getExcludeipList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          taskApi.search(1, 10, { 'excludeip': query }).then(response => {
+            this.excludeipList = response.data.rows.filter(item => {
+              return item.excludeip.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.excludeipList = []
+      }
+    },
+    getProjectnameList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          projectApi.search(1, 10, { 'name': query }).then(response => {
+            this.projectnameList = response.data.rows.filter(item => {
+              return item.ipaddressv4.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.projectnameList = []
+      }
+    },
+    getProjectNameById(id) {
+      return this.projectIpMap.get(id)
+    },
+    getTaskNameById(id) {
+      return this.taskInMap.get(id)
+    },
+    getProject() {
+      projectApi.getList().then(response => {
+        this.projectList = response.data
+        for (let i = 0; i < this.projectList.length; i++) {
+          this.projectIpMap.set(this.projectList[i].id, this.projectList[i].name)
+        }
+      })
+    },
+    handleCheckedChange(value) {
+      return value
+    },
+    closeDialogForm() {
+      this.dialogFormVisible = false
+      this.searchMap = {}
+      this.nameList = []
+      this.worktypeList = []
+      this.checktypeList = []
+      this.additionoptionList = []
+      this.targetipList = []
+      this.targetportList = []
+      this.excludeipList = []
+      this.pluginnameList = []
+      this.argsList = []
+      this.pluginconfigpageSize = 5
+      this.pluginconfigcurrentPage = 1
+      this.checkedChecktypes = []
+      this.taskPluginList = []
+    },
+    childHandleDeleteAll() {
+      if (this.childMultipleSelection && this.childMultipleSelection.length) {
+        this.$confirm('此操作将永久删除已选记录, 包括任务插件配置, 是否继续?', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          const ids = []
+          for (let i = 0; i < this.childMultipleSelection.length; i++) {
+            ids.push(this.childMultipleSelection[i].id)
+          }
+          taskApi.deleteAllByIds(ids).then(response => {
+            this.$message({
+              message: response.message,
+              type: (response.flag ? 'success' : 'error')
+            })
+            if (response.flag) {
+              this.childFetchData() // 刷新数据
+              this.fetchData() // 刷新数据
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+      } else {
+        this.$message({
+          message: '^_^至少选择一条记录哦~',
+          type: 'info'
+        })
+      }
+    },
+    handleDeleteAll() {
+      if (this.multipleSelection && this.multipleSelection.length) {
+        this.$confirm('此操作将永久删除已选记录, 包括任务插件配置, 是否继续?', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          const ids = []
+          for (let i = 0; i < this.multipleSelection.length; i++) {
+            ids.push(this.multipleSelection[i].id)
+          }
+          taskApi.deleteAllByIds(ids).then(response => {
+            this.$message({
+              message: response.message,
+              type: (response.flag ? 'success' : 'error')
+            })
+            if (response.flag) {
+              this.fetchData() // 刷新数据
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+      } else {
+        this.$message({
+          message: '^_^至少选择一条记录哦~',
+          type: 'info'
+        })
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
+    childHandleSelectionChange(val) {
+      this.childMultipleSelection = val
+    },
+    handleDownload() {
+      if (this.multipleSelection && this.multipleSelection.length) {
+        this.downloadLoading = true
+        import('@/vendor/Export2Excel').then(excel => {
+          const tHeader = [
+            '父任务',
+            '项目',
+            '名称',
+            'cron表达式',
+            'cron任务',
+            '开始时间',
+            '结束时间',
+            '任务类型',
+            '检测类型',
+            '线程数量',
+            'ip扫描次数',
+            '附加选项',
+            '扫描速率',
+            '目标ip',
+            '目标端口',
+            '排除ip',
+            'ip分组大小',
+            '端口分组大小',
+            '排除db中ip',
+            '结果合并到资产',
+            '描述'
+
+          ]
+          const filterVal = [
+            'taskparentid',
+            'projectid',
+            'name',
+            'cronexpression',
+            'crontask',
+            'starttime',
+            'endtime',
+            'worktype',
+            'checktype',
+            'threadnumber',
+            'singleipscantime',
+            'additionoption',
+            'rate',
+            'targetip',
+            'targetport',
+            'excludeip',
+            'ipslicesize',
+            'portslicesize',
+            'dbipisexcludeip',
+            'merge2asset',
+            'description'
+
+          ]
+          const list = this.multipleSelection
+          for (let i = 0; i < list.length; i++) {
+            list[i].taskparentid = this.getTaskNameById(list[i].taskparentid)
+            list[i].projectid = this.getProjectNameById(list[i].projectid)
+            list[i].starttime = dateformat(list[i].starttime)
+            list[i].endtime = dateformat(list[i].endtime)
+            list[i].crontask = list[i].crontask ? '是' : ''
+            list[i].dbipisexcludeip = list[i].dbipisexcludeip ? '是' : ''
+            list[i].merge2asset = list[i].merge2asset ? '是' : ''
+          }
+          const data = this.formatJson(filterVal, list)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: this.filename
+          })
+          this.$refs.multipleTable.clearSelection()
+          this.downloadLoading = false
+        })
+        this.fetchData()
+      } else {
+        this.$message({
+          message: '^_^至少选择一条记录哦~',
+          type: 'info'
+        })
+      }
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]))
+    },
+
+    resetForm(formName) { // 清空搜索表单
+      this.$refs[formName].resetFields()
+      this.searchMap = {}
+      this.childSearchMap = {}
+      this.nameList = []
+      this.worktypeList = []
+      this.checktypeList = []
+      this.additionoptionList = []
+      this.targetipList = []
+      this.targetportList = []
+      this.excludeipList = []
+      this.pluginnameList = []
+      this.argsList = []
+      this.$message({
+        message: '已清空搜索条件',
+        type: 'info'
+      })
+    },
+    handlePluginconfigSizeChange(val) {
+      this.pluginconfigpageSize = val
+      this.fetchPluginconfigData()
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.fetchData()
+    },
+    childHandleSizeChange(val) {
+      this.childPageSize = val
+      this.childFetchData()
+    },
+    formatBoolean(cellValue) {
+      return cellValue ? '是' : ''
+    },
+    fetchData() {
+      this.listLoading = true
+      taskApi.search(this.currentPage, this.pageSize, this.searchMap).then(response => {
+        this.list = response.data.rows
+        this.total = response.data.total
+        this.listLoading = false
+        for (let i = 0; i < this.list.length; i++) {
+          this.taskInMap.set(this.list[i].id, this.list[i].name)
+        }
+      })
+    },
+    handleSave() {
+      if ((this.pojo.worktype === 'nmap' || this.pojo.worktype === 'mass2Nmap') && (this.pojo.starttime != null && this.pojo.endtime != null)) {
+        if (this.checkedChecktypes && this.checkedChecktypes.length !== 0) {
+          this.pojo.checktype = this.checkedChecktypes.join(',')
+        } else {
+          this.pojo.checktype = null
+        }
+      }
+      taskApi.update(this.id, this.pojo).then(response => {
+        if (this.pojo.worktype === 'mass2Nmap' || this.pojo.worktype === 'selfd' || this.pojo.worktype === 'nse') {
+          if (this.id === '') {
+            this.nmapPojo.taskid = response.data
+            this.temptaskid = response.data
+          } else {
+            this.nmapPojo.taskid = this.id
+            this.temptaskid = this.id
+          }
+          if (this.pojo.worktype === 'mass2Nmap') {
+            nmapconfigApi.updateByTaskId('', this.nmapPojo)
+            this.nmapPojo = {}
+          }
+        }
+        this.$message({
+          message: response.message,
+          type: (response.flag ? 'success' : 'error')
+        })
+        if (response.flag) { // 如果成功
+          this.fetchData() // 刷新列表
+        }
+      }).then(() => {
+        if (this.pojo.worktype === 'selfd' || this.pojo.worktype === 'nse') {
+          this.handleEdit(this.temptaskid)
+        } else {
+          this.closeDialogForm()
+        }
+      })
+    },
+    handleEdit(id) {
+      this.nmapPojo = {}
+      this.id = id
+      this.dialogFormVisible = true // 打开窗口
+
+      if (id !== '') { // 修改
+        taskApi.findById(id).then(response => {
+          if (response.flag) {
+            this.pojo = response.data
+            // 判断任务类型, 开始和结束时间
+
+            if ((this.pojo.worktype === 'nmap' || this.pojo.worktype === 'mass2Nmap') && (this.pojo.starttime != null && this.pojo.endtime != null)) {
+              if (this.pojo.checktype && this.pojo.checktype.length !== 0) {
+                this.checkedChecktypes = this.pojo.checktype.split(',')
+              }
+            }
+            this.fetchPluginconfigData()
+            if (this.pojo.worktype === 'mass2Nmap') {
+              this.getNmapConfigByTaskId(id)
+            }
+            // 获取插件id
+            this.getTaskPluginByTaskId(id)
+          }
+        })
+      } else {
+        this.pojo = {} // 清空数据
+      }
+    },
+    handleDelete(id) {
+      this.$confirm('此操作将永久删除已选记录, 包括任务插件配置, 是否继续?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        taskApi.deleteById(id).then(response => {
+          this.$message({
+            message: response.message,
+            type: (response.flag ? 'success' : 'error')
+          })
+          if (response.flag) {
+            this.fetchData() // 刷新数据
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    }
+  }
+}
+</script>
+
+<style>
+.el-drawer__body {
+   overflow: auto;
+}
+</style>
