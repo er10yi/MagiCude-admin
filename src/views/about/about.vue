@@ -5,7 +5,7 @@
         <span><b>魔方-MagiCude</b></span>
 
         <el-link :underline="false" @click="handleDrawer()">
-          <i class="el-icon-view el-icon--right" />正式版 V2.0
+          <i class="el-icon-view el-icon--right" />正式版 V2.0.1
         </el-link>
         <el-link style="float: right;" href="https://github.com/er10yi/MagiCude" target="_blank">GitHub项目页面</el-link>
       </div>
@@ -39,6 +39,27 @@
               <li>丰富漏洞wiki，建成知识库</li>
               <li>增加全局搜索</li>
               <li>增加资产导入接口，漏洞导入接口</li>
+            </ol>
+          </div>
+        </div>
+      </el-card>
+
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span><b>正式版 V2.0.1 - 20201009</b></span>
+          <div class="text">
+            <ol>
+              部署脚本：
+              <li>增加部署脚本执行目录判断（issues #3 建议判断或约束一下安装脚本执行目录）</li>
+              <li>增加agent.yml内容是否已经修改判断</li>
+              <li>增加center和agent所需文件判断</li>
+              <li>增加前端api地址是否修改判断</li>
+              <li>增加操作系统判断</li>
+              <li>修复多次重新部署的时候，环境变量会写入多次</li>
+              <li>优化脚本日志输出，屏蔽非脚本错误输出，优化所有脚本</li>
+              <li>Python升级到3.9.0</li>
+              <li>部署脚本运行结束时，增加信息和错误提示</li>
+              <li>移除agentDependency，nmap更新到7.90</li>
             </ol>
           </div>
         </div>
