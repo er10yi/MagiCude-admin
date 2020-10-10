@@ -5,7 +5,7 @@
         <span><b>魔方-MagiCude</b></span>
 
         <el-link :underline="false" @click="handleDrawer()">
-          <i class="el-icon-view el-icon--right" />正式版 V2.0.1
+          <i class="el-icon-view el-icon--right" />正式版 V2.0.2
         </el-link>
         <el-link style="float: right;" href="https://github.com/er10yi/MagiCude" target="_blank">GitHub项目页面</el-link>
       </div>
@@ -39,6 +39,22 @@
               <li>丰富漏洞wiki，建成知识库</li>
               <li>增加全局搜索</li>
               <li>增加资产导入接口，漏洞导入接口</li>
+            </ol>
+          </div>
+        </div>
+      </el-card>
+
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span><b>正式版 V2.0.2 - 20201011</b></span>
+          <div class="text">
+            <ol>
+              部署脚本：
+              <li>日志提示增加字体颜色</li>
+              <li>增加卸载脚本</li>
+              <li>center部署无需本地手动修改前端api地址和agent.yml中的地址，只需部署时选择即可</li>
+              <li>agent分布式部署无需本地手动修改agent.yml中的地址，只需部署时输入部署center的ip地址即可</li>
+              <li>优化判断依赖是否存在的方式</li>
             </ol>
           </div>
         </div>
