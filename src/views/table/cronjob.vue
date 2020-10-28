@@ -46,7 +46,8 @@
     <br>
     <el-form ref="searchform" inline size="small" :model="searchMap">
       <el-form-item label="cron表达式解析">
-        <el-input v-model="searchMap.cronExpression" style="width:300px;" prop="cronExpression" clearable placeholder="只支持6位" /></el-form-item>
+        <el-input v-model="searchMap.cronExpression" style="width:300px;" prop="cronExpression" clearable placeholder="只支持6位" />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="parseCron()">解析</el-button>
       </el-form-item>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -8,15 +8,9 @@
       <!-- <el-form-item label="端口">
         <el-input v-model="searchMap.port" prop="port" clearable placeholder="端口" /></el-form-item> -->
 
-      <el-form-item prop="ipwhitelistid" label="ip地址">
-        <el-select v-model="searchMap.ipwhitelistid" filterable clearable placeholder="请输入关键词">
-          <el-option
-            v-for="item in ipwhitelistList"
-            :key="item.id"
-            :label="item.ip"
-            :value="item.id"
-          />
-        </el-select>
+      <el-form-item prop="ip" label="ip地址">
+        <el-select v-model="searchMap.ipwhitelistid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpList" :loading="searchLoading">
+          <el-option v-for="item in ipList" :key="item.id" :label="item.ip" :value="item.id" /></el-select>
       </el-form-item>
 
       <el-form-item prop="port" label="端口">
@@ -67,17 +61,13 @@
       <!-- <el-table-column sortable prop="id" label="编号" /> -->
       <!-- <el-table-column sortable prop="ipwhitelistid" label="ip白名单编号" /> -->
 
-      <el-table-column sortable prop="ipwhitelistid" label="ip" width="150">
-        <template slot-scope="scope">
-          {{ getIp(scope.row.ipwhitelistid) }}
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="ipwhitelistid" label="ip" width="300" />
 
-      <el-table-column sortable prop="port" label="端口" width="80" />
+      <el-table-column sortable prop="port" label="端口" width="150" />
       <!-- <el-table-column sortable prop="checkwhitelist" label="检测白名单" />
       <el-table-column sortable prop="notifywhitelist" label="提醒白名单" /> -->
 
-      <el-table-column sortable align="center" label="检测白名单" width="150">
+      <el-table-column sortable align="center" label="检测白名单" width="200">
         <template slot="header">
           <span>检测白名单</span>
           <el-tooltip placement="top">
@@ -90,7 +80,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column sortable align="center" label="提醒白名单" width="150">
+      <el-table-column sortable align="center" label="提醒白名单" width="200">
         <template slot="header">
           <span>提醒白名单</span>
           <el-tooltip placement="top">
@@ -104,6 +94,7 @@
       </el-table-column>
 
       <el-table-column
+        fixed="right"
         label="操作"
         width="100"
       >
@@ -129,15 +120,10 @@
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
       <el-form label-width="100px">
 
-        <el-form-item label="ip地址">
-          <el-select v-model="pojo.ipwhitelistid" style="width:300px;" filterable clearable placeholder="请输入关键词">
-            <el-option
-              v-for="item in ipwhitelistList"
-              :key="item.id"
-              :label="item.ip"
-              :value="item.id"
-            />
-          </el-select>
+        <el-form-item prop="ip" label="ipv4地址">
+          {{ ipv4 }}
+          <el-select v-model="pojo.ipwhitelistid" style="width:300px;" filterable remote clearable placeholder="请输入关键词（搜索ip白名单）" :remote-method="getIpList" :loading="searchLoading">
+            <el-option v-for="item in ipList" :key="item.id" :label="item.ip" :value="item.id" /></el-select>
         </el-form-item>
 
         <!-- <el-form-item label="ip白名单编号"><el-input v-model="pojo.ipwhitelistid" style="width:300px;" /></el-form-item> -->
@@ -182,28 +168,32 @@ export default {
       searchLoading: false,
       ipwhitelistList: [],
       portList: [],
-      IpMap: new Map()
+      ipList: [],
+      ipv4: ''
 
     }
   },
   created() {
-    this.getIpwhitelistList()
     this.fetchData()
   },
   methods: {
     cleanCache() {
       this.closeDialogForm()
     },
-    getIp(id) { // 根据id从map获取ip
-      return this.IpMap.get(id)
-    },
-    getIpwhitelistList() {
-      ipwhitelistApi.getList().then(response => {
-        this.ipwhitelistList = response.data
-        for (let i = 0; i < this.ipwhitelistList.length; i++) { // 将项目id和ip封装到map中
-          this.IpMap.set(this.ipwhitelistList[i].id, this.ipwhitelistList[i].ip)
-        }
-      })
+    getIpList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          ipwhitelistApi.search(1, 10, { 'ip': query }).then(response => {
+            this.ipList = response.data.rows.filter(item => {
+              return item.ip.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.ipList = []
+      }
     },
     getPortList(query) {
       if (query !== '' && query) {
@@ -221,6 +211,8 @@ export default {
       }
     },
     closeDialogForm() {
+      this.ipList = []
+      this.ipv4 = ''
       this.dialogFormVisible = false
     },
 
@@ -281,7 +273,6 @@ export default {
           ]
           const list = this.multipleSelection
           for (let i = 0; i < list.length; i++) {
-            list[i].ipwhitelistid = this.getIp(list[i].ipwhitelistid)
             list[i].checkwhitelist = list[i].checkwhitelist ? '是' : ''
             list[i].notifywhitelist = list[i].notifywhitelist ? '是' : ''
           }
@@ -310,6 +301,7 @@ export default {
       this.$refs[formName].resetFields()
       this.searchMap = {}
       this.portList = []
+      this.ipList = []
       this.$message({
         message: '已清空搜索条件',
         type: 'info'
@@ -349,6 +341,9 @@ export default {
         ipportwhitelistApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
+            ipwhitelistApi.findById(this.pojo.ipwhitelistid).then(response => {
+              this.ipv4 = response.data.ip
+            })
           }
         })
       } else {

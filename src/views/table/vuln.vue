@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -70,17 +70,18 @@
       <el-table-column type="selection" align="center" />
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
 
-      <el-table-column sortable prop="categorysecondid" label="二级分类">
+      <el-table-column sortable prop="categorysecondid" label="二级分类" />
+      <!-- <el-table-column sortable prop="categorysecondid" label="二级分类">
         <template slot-scope="scope">
           {{ getCategorysecondById(scope.row.categorysecondid) }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column sortable prop="name" label="名称" />
-      <el-table-column sortable prop="description" label="描述" />
+      <el-table-column sortable prop="description" label="描述" show-overflow-tooltip />
       <el-table-column sortable prop="risk" label="风险" />
-      <el-table-column sortable prop="refer" label="参考" />
-      <el-table-column sortable prop="impactscope" label="影响范围" />
+      <el-table-column sortable prop="refer" label="参考" show-overflow-tooltip />
+      <el-table-column sortable prop="impactscope" label="影响范围" show-overflow-tooltip />
 
       <el-table-column
         fixed="right"
@@ -110,18 +111,13 @@
       <el-form label-width="100px">
 
         <!-- <el-form-item label="二级分类"><el-input v-model="pojo.categorysecondid" style="width:300px;" /></el-form-item> -->
-        <span v-if="pojo.id ==null">
-          <el-form-item required label="二级分类">
-            <el-select v-model="pojo.categorysecondid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getCategorysecondList" :loading="searchLoading">
-              <el-option v-for="item in categorysecondList" :key="item.id" :label="item.name" :value="item.id" />
-            </el-select>
-          </el-form-item>
-        </span>
-        <span v-else>
-          <el-form-item required label="二级分类">
-            <span>{{ getCategorysecondById(pojo.categorysecondid) }}</span>
-          </el-form-item>
-        </span>
+
+        <el-form-item required label="二级分类">
+          <span>{{ categorysecondName }}</span>
+          <el-select v-model="pojo.categorysecondid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getCategorysecondList" :loading="searchLoading">
+            <el-option v-for="item in categorysecondList" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
 
         <!-- <el-form-item label="名称"><el-input v-model="pojo.name" style="width:300px;" /></el-form-item> -->
         <el-form-item prop="name" label="名称">
@@ -261,11 +257,7 @@ export default {
       multipleSelection: [],
       downloadLoading: false,
 
-      categorysecondMap: new Map(),
-      categorysecondIds: [],
-      categorysecondIdAndNameList: [],
       categorysecondList: [],
-
       nameList: [],
       descriptionList: [],
       riskList: [],
@@ -280,7 +272,8 @@ export default {
       solutionPojo: {},
       solutionList: [],
 
-      tempId: ''
+      tempId: '',
+      categorysecondName: ''
 
     }
   },
@@ -481,27 +474,12 @@ export default {
         this.categorysecondList = []
       }
     },
-    getCategorysecond() {
-      this.categorysecondIds = []
-      for (let i = 0; i < this.list.length; i++) {
-        this.categorysecondIds.push(this.list[i].categorysecondid)
-      }
-      categorysecondApi.findByIds(this.categorysecondIds).then(response => {
-        this.categorysecondIdAndNameList = response.data
-        for (let i = 0; i < this.categorysecondIdAndNameList.length; i++) {
-          this.categorysecondMap.set(this.categorysecondIdAndNameList[i].split('-')[0], this.categorysecondIdAndNameList[i].split('-')[1])
-        }
-      })
-    },
-    getCategorysecondById(id) {
-      return this.categorysecondMap.get(id)
-    },
-
     closeDialogForm() {
       this.dialogFormVisible = false
       this.democodeList = []
       this.solutionList = []
       this.categorysecondList = []
+      this.categorysecondName = ''
     },
 
     handleDeleteAll() {
@@ -564,9 +542,6 @@ export default {
 
           ]
           const list = this.multipleSelection
-          for (let i = 0; i < list.length; i++) {
-            list[i].categorysecondid = this.getCategorysecondById(list[i].categorysecondid)
-          }
           const data = this.formatJson(filterVal, list)
           excel.export_json_to_excel({
             header: tHeader,
@@ -615,8 +590,6 @@ export default {
         this.list = response.data.rows
         this.total = response.data.total
         this.listLoading = false
-      }).then(() => {
-        this.getCategorysecond()
       })
     },
     handleSave() {
@@ -644,6 +617,12 @@ export default {
         vulnApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
+            categorysecondApi.findById(this.pojo.categorysecondid).then((response) => {
+              if (response.flag) {
+                this.categorysecondName = response.data.name
+                this.pojo.categorysecondid = null
+              }
+            })
             democodeApi.findAllByVulnId(this.id).then(response => {
               this.democodeList = response.data
             })

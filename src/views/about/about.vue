@@ -2,12 +2,11 @@
   <div style="padding:100px 200px 0">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span><b>魔方-MagiCude</b></span>
-
+        <span><b>魔方-MagiCude </b></span>
         <el-link :underline="false" @click="handleDrawer()">
-          <i class="el-icon-view el-icon--right" />正式版 V2.0.2
+          <b>v2.0.20</b>
         </el-link>
-        <el-link style="float: right;" href="https://github.com/er10yi/MagiCude" target="_blank">GitHub项目页面</el-link>
+        <el-link style="float: right;" href="https://github.com/er10yi/MagiCude" target="_blank">GitHub</el-link>
       </div>
       <div class="text">
         <ol>
@@ -29,16 +28,31 @@
     </el-card>
 
     <!--更新日志显示 -->
-    <el-drawer title="ChangeLog" :visible.sync="drawer" direction="rtl" size="60%" :beforeclose="handleDrawerClose">
+    <el-drawer title="ChangeLog" :visible.sync="drawer" direction="rtl" size="60%">
+
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span><b>TDL - 待定</b></span>
+          <span><b>v2.0.20 - 20201028</b></span>
           <div class="text">
             <ol>
-              <li>增加用户前端，放开漏洞wiki，还有啥？</li>
-              <li>丰富漏洞wiki，建成知识库</li>
-              <li>增加全局搜索</li>
-              <li>增加资产导入接口，漏洞导入接口</li>
+              <li>优化多表数据显示逻辑</li>
+              <li>优化任务和子任务显示，默认不显示子任务，无子任务不能打开子任务的Drawer，子任务数量移到任务名称前显示</li>
+              <li>任务，cron任务删除移到类型列</li>
+              <li>任务及web信息增加 增加显示，可以按需选择显示的列</li>
+              <li>任务新增渐变色的进度百分比显示</li>
+              <li>任务编辑，新增cron表达式模拟解析</li>
+              <li>优化侧边栏，部分菜单二级收纳</li>
+              <li>项目信息添加负责人显示，可直接新增部门和负责人</li>
+              <li>检测结果新增ip、端口、漏洞名称方式搜索（三者是或的关系）</li>
+              <li>web信息新增ip、端口方式搜索（两者是或的关系）</li>
+              <li>任务端口，新增任务名称方式搜索，用于导出单次任务的端口扫描结果（暂缓方式，后续优化）</li>
+              <li>资产ip，新增统计列，方便查看当前ip的漏洞数量和端口数量</li>
+              <li>资产ip，新增漏洞数目</li>
+              <li>批量导入-项目信息ip，移除如果ip不存在，会新增</li>
+              <li>批量导入-ip端口，增加无端口信息的ip导入（避免使用新增C段甚至B段的格式，会导致整个C段或B段的ip都导入数据库）</li>
+              <li>批量导入-ip主机名，修复主机名重复时，导入失败问题</li>
+              <li>nmap模式增加域名扫描、-sn(ping)结果解析</li>
+              <li>启动任务前，发一次agent心跳包监控，防止agent掉线漏任务</li>
             </ol>
           </div>
         </div>
@@ -46,7 +60,7 @@
 
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span><b>正式版 V2.0.2 - 20201011</b></span>
+          <span><b>v2.0.2 - 20201011</b></span>
           <div class="text">
             <ol>
               部署脚本：
@@ -62,7 +76,7 @@
 
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span><b>正式版 V2.0.1 - 20201009</b></span>
+          <span><b>v2.0.1 - 20201009</b></span>
           <div class="text">
             <ol>
               部署脚本：
@@ -83,7 +97,7 @@
 
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span><b>正式版 V2.0 - 20200925</b></span>
+          <span><b>正式版 v2.0 - 20200925</b></span>
           <div class="text">
             <ol>
               正式版发布，同时开源
@@ -94,7 +108,7 @@
 
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span><b>公测版 V1.3.25 - 20200913</b></span>
+          <span><b>公测版 v1.3.25 - 20200913</b></span>
           <div class="text">
             <ol>
               前端：
@@ -135,7 +149,7 @@
 
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span><b>公测版 V1.2.2 - 20200722</b></span>
+          <span><b>公测版 v1.2.2 - 20200722</b></span>
           <div class="text">
             <ol>
               <li>优化center部署脚本，增加判断是否已经运行过部署脚本，避免误操作二次运行部署脚本（如果已经部署，则需要用户交互），优化docker服务运行状态检测</li>
@@ -152,7 +166,7 @@
 
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span><b>公测版 V1.2.1 - 20200715</b></span>
+          <span><b>公测版 v1.2.1 - 20200715</b></span>
           <div class="text">
             <ol>
               前端：
@@ -173,7 +187,7 @@
 
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span><b>公测版 V1.2.0 - 20200706</b></span>
+          <span><b>公测版 v1.2.0 - 20200706</b></span>
           <div class="text">
             <ol>
               公开公测开启
@@ -184,7 +198,7 @@
 
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span><b>内测版 V1.1 - 20200615</b></span>
+          <span><b>内测版 v1.1 - 20200615</b></span>
           <div class="text">
             <ol>
               <li>优化部署步骤，修改部署脚本成一键部署</li>
@@ -201,7 +215,7 @@
 
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span><b>内测版 V1.0 - 20200528</b></span>
+          <span><b>内测版 v1.0 - 20200528</b></span>
           <div class="text">
             <ol>
               公开内测开启

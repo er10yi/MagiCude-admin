@@ -3,19 +3,19 @@
     <br>
     <el-row type="flex" class="row-bg el-row-two" justify="start">
       <el-col :span="24">
-        <div><ip-port-pie-chart /></div>
+        <div style="padding:5px;"><ip-port-pie-chart /></div>
       </el-col>
       <el-col :span="24">
-        <div><ip-port-online-pie-chart /></div>
+        <div style="padding:5px;"><ip-port-online-pie-chart /></div>
       </el-col>
     </el-row>
     <br>
     <el-row type="flex" class="row-bg el-row-two" justify="start">
       <el-col :span="24">
-        <div><service-count-pie-chart /> </div>
+        <div style="padding:5px;"><service-count-pie-chart /> </div>
       </el-col>
       <el-col :span="24">
-        <div><service-count-online-pie-chart /> </div>
+        <div style="padding:5px;"><service-count-online-pie-chart /> </div>
       </el-col>
     </el-row>
 

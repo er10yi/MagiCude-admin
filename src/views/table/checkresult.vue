@@ -1,18 +1,24 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <el-collapse v-model="activeNames">
       <el-collapse-item name="1">
         <template slot="title"><i class="header-icon el-icon-info" />菜单栏隐藏与显示</template>
         <!-- 查询条件 -->
         <el-form ref="searchform" inline size="small" :model="searchMap">
-          <!-- <el-form-item label="端口编号">
-        <el-input v-model="searchMap.assetportid" prop="assetportid" clearable placeholder="端口编号" /></el-form-item> -->
-          <!-- <el-form-item label="插件名称">
-        <el-input v-model="searchMap.name" prop="name" clearable placeholder="插件名称" /></el-form-item> -->
-          <!-- <el-form-item label="检测结果">
-        <el-input v-model="searchMap.result" prop="result" clearable placeholder="检测结果" /></el-form-item> -->
-          <!-- <el-form-item label="风险">
-        <el-input v-model="searchMap.risk" prop="risk" clearable placeholder="风险" /></el-form-item> -->
+          <el-form-item prop="assetip" label="ip">
+            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
+              <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" />
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="assetport" label="端口">
+            <el-select v-model="searchMap.assetport" style="width:100px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getPortList" :loading="searchLoading">
+              <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
+          </el-form-item>
+
+          <el-form-item prop="vulname" label="漏洞名称">
+            <el-select v-model="searchMap.vulname" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getVulNameList" :loading="searchLoading">
+              <el-option v-for="item in vulNameList" :key="item.id" :label="item.name" :value="item.name" />
+            </el-select></el-form-item>
 
           <el-form-item prop="name" label="插件名称">
             <el-select v-model="searchMap.name" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
@@ -20,11 +26,6 @@
             </el-select>
           </el-form-item>
 
-          <!-- <el-form-item prop="risk" label="风险">
-        <el-select v-model="searchMap.risk" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getRiskList" :loading="searchLoading">
-          <el-option v-for="item in riskList" :key="item.id" :label="item.risk" :value="item.risk" />
-        </el-select>
-      </el-form-item> -->
           <el-form-item label="风险">
             <el-radio-group v-model="searchMap.risk" size="mini">
               <el-radio-button label="信息" />
@@ -65,10 +66,10 @@
           <el-form-item>
             <el-button type="danger" icon="el-icon-delete" @click="handleDeleteAll">删除</el-button>
           </el-form-item>
-
-          <!-- <el-form-item>
-        <el-button type="primary" @click="handleEdit('')">新增</el-button>
-      </el-form-item> -->
+          <!--
+          <el-form-item>
+            <el-button type="primary" @click="handleEdit('')">新增</el-button>
+          </el-form-item> -->
         </el-form>
       </el-collapse-item>    </el-collapse>
 
@@ -87,27 +88,10 @@
     >
       <el-table-column type="selection" align="center" />
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
-      <!-- <el-table-column sortable prop="id" label="检测结果编号" /> -->
-      <!-- <el-table-column sortable prop="assetportid" label="端口编号" /> -->
 
-      <!-- <el-table-column sortable prop="assetipid" label="ip" />
-      <el-table-column sortable prop="assetportid" label="port" /> -->
-      <el-table-column sortable width="130" prop="assetipid" label="ip">
-        <template slot-scope="scope">
-          {{ getAssetIpById(getAssetipidById(scope.row.assetportid)) }}
-        </template>
-      </el-table-column>
-      <el-table-column sortable width="80" prop="assetportid" label="port">
-        <template slot-scope="scope">
-          {{ getAssetPortById(scope.row.assetportid) }}
-        </template>
-      </el-table-column>
-
-      <el-table-column sortable prop="vulnid" width="150" label="漏洞名称">
-        <template slot-scope="scope">
-          {{ getVulnName(scope.row.id) }}
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="assetip" label="ip" />
+      <el-table-column sortable prop="assetportid" label="端口" />
+      <el-table-column sortable prop="vulname" label="漏洞名称" />
 
       <el-table-column sortable prop="name" label="插件名称" />
       <el-table-column sortable prop="risk" label="风险" />
@@ -152,21 +136,30 @@
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
       <el-form label-width="100px">
 
-        <!-- <el-form-item label="端口编号"><el-input v-model="pojo.assetportid" style="width:300px;" /></el-form-item> -->
-        <span v-if="getAssetIpById(getAssetipidById(pojo.assetportid)) ==null">
-          <!-- <el-form-item required label="ip:port">
-            <el-select v-model="pojo.assetipid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
-              <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.id" />
+        <el-form-item required label="ip">
+          <span>{{ ipv4 }}</span>
+          <span v-if="pojo.id==null">
+            <el-select v-model="pojo.assetip" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
+              <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" />
             </el-select>
-          </el-form-item> -->
-        </span>
-        <span v-else>
-          <el-form-item label="ip:port">
-            <span> {{ getAssetIpById(getAssetipidById(pojo.assetportid)) }}:{{ getAssetPortById(pojo.assetportid) }}</span>
-          </el-form-item>
-        </span>
-        <el-form-item label="漏洞名称">
-          <span>{{ getVulnName(pojo.id) }}</span>
+          </span>
+        </el-form-item>
+
+        <el-form-item required label="端口">
+          <span>{{ assetport }}</span>
+          <span v-if="pojo.id==null">
+            <el-select v-model="pojo.assetport" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getPortList" :loading="searchLoading">
+              <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
+          </span>
+        </el-form-item>
+
+        <el-form-item required label="漏洞名称">
+          <span>{{ vulname }}</span>
+          <span v-if="pojo.id==null">
+            <el-select v-model="pojo.vulname" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getVulNameList" :loading="searchLoading">
+              <el-option v-for="item in vulNameList" :key="item.id" :label="item.name" :value="item.name" />
+            </el-select>
+          </span>
         </el-form-item>
 
         <el-form-item label="插件名称">
@@ -206,8 +199,10 @@
 import checkresultApi from '@/api/checkresult'
 import assetipApi from '@/api/assetip'
 import assetportApi from '@/api/assetport'
+import vulnApi from '@/api/vuln'
 
 import Vue from 'vue'
+import checkresult from '@/api/checkresult'
 const dateformat = Vue.filter('dateformat')
 
 export default {
@@ -226,25 +221,18 @@ export default {
       listLoading: true,
       multipleSelection: [],
       downloadLoading: false,
-      assetportList: [],
-      assetPortIdAndAssetIpIdList: [],
-      assetportids: [],
-      assetIpIdAndIpList: [],
-      assetipids: [],
-      assetPortIdAndAssetIpIdMap: new Map(),
-      assetPortMap: new Map(),
-      assetIpMap: new Map(),
-      vulnList: [],
-      vulnMap: new Map(),
-      ids: [],
-      checkresultVulnList: [],
-      checkresultIdVulnnameMap: new Map(),
       searchLoading: false,
       nameList: [],
       riskList: [],
       checkresultIds: [],
       resultList: [],
       activeNames: ['1'],
+      ipaddressv4List: [],
+      portList: [],
+      vulNameList: [],
+      ipv4: '',
+      assetport: '',
+      vulname: '',
 
       pickerOptions: { // 日期选择
         disabledDate(time) {
@@ -290,6 +278,51 @@ export default {
     this.fetchData()
   },
   methods: {
+    getVulNameList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          vulnApi.search(1, 10, { 'name': query }).then(response => {
+            this.vulNameList = response.data.rows.filter(item => {
+              return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.vulNameList = []
+      }
+    },
+    getPortList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          assetportApi.search(1, 10, { 'port': query }).then(response => {
+            this.portList = response.data.rows.filter(item => {
+              return item.port.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.portList = []
+      }
+    },
+    getIpaddressv4List(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          assetipApi.search(1, 10, { 'ipaddressv4': query }).then(response => {
+            this.ipaddressv4List = response.data.rows.filter(item => {
+              return item.ipaddressv4.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.ipaddressv4List = []
+      }
+    },
     cleanCache() {
       this.closeDialogForm()
     },
@@ -338,54 +371,13 @@ export default {
         this.riskList = []
       }
     },
-    getCheckresultIdVulnname() {
-      checkresultApi.findByIds(this.checkresultIds).then(response => {
-        this.checkresultVulnList = response.data
-        for (let i = 0; i < this.checkresultVulnList.length; i++) {
-          this.checkresultIdVulnnameMap.set(this.checkresultVulnList[i].split('-')[0], this.checkresultVulnList[i].split('-')[1])
-        }
-      }
-      )
-    },
-    getVulnName(id) {
-      return this.checkresultIdVulnnameMap.get(id)
-    },
-    getAssetport() {
-      this.checkresultIds = []
-      for (let i = 0; i < this.list.length; i++) {
-        this.assetportids.push(this.list[i].assetportid)
-        this.checkresultIds.push(this.list[i].id)
-      }
-      assetportApi.findByIds(this.assetportids).then(response => {
-        this.assetPortIdAndAssetIpIdList = response.data
-        for (let i = 0; i < this.assetPortIdAndAssetIpIdList.length; i++) { // assetportid - assetipid - assetport
-          this.assetipids.push(this.assetPortIdAndAssetIpIdList[i].split('-')[1])
-          this.assetPortIdAndAssetIpIdMap.set(this.assetPortIdAndAssetIpIdList[i].split('-')[0], this.assetPortIdAndAssetIpIdList[i].split('-')[1])
-          this.assetPortMap.set(this.assetPortIdAndAssetIpIdList[i].split('-')[0], this.assetPortIdAndAssetIpIdList[i].split('-')[2])
-        }
-      }).then(() => {
-        this.getAssetIp()
-        this.getCheckresultIdVulnname()
-      })
-    },
-    getAssetipidById(assetPortId) { // 根据id从map获取端口
-      return this.assetPortIdAndAssetIpIdMap.get(assetPortId)
-    },
-    getAssetPortById(id) { // 根据id从map获取端口
-      return this.assetPortMap.get(id)
-    },
-    getAssetIp() {
-      assetipApi.findByIds(this.assetipids).then(response => {
-        this.assetIpIdAndIpList = response.data
-        for (let i = 0; i < this.assetIpIdAndIpList.length; i++) {
-          this.assetIpMap.set(this.assetIpIdAndIpList[i].split('-')[0], this.assetIpIdAndIpList[i].split('-')[1])
-        }
-      })
-    },
-    getAssetIpById(id) { // 根据id从map获取ip
-      return this.assetIpMap.get(id)
-    },
     closeDialogForm() {
+      this.assetport = ''
+      this.ipv4 = ''
+      this.vulname = ''
+      this.ipaddressv4List = []
+      this.portList = []
+      this.nameList = []
       this.dialogFormVisible = false
     },
 
@@ -432,7 +424,7 @@ export default {
         import('@/vendor/Export2Excel').then(excel => {
           const tHeader = [
             'ip',
-            'port',
+            '端口',
             '漏洞名称',
             '插件名称',
             '风险',
@@ -443,9 +435,9 @@ export default {
 
           ]
           const filterVal = [
-            'assetipid',
+            'assetip',
             'assetportid',
-            'vulnid',
+            'vulname',
             'name',
             'risk',
             'result',
@@ -456,9 +448,6 @@ export default {
           ]
           const list = this.multipleSelection
           for (let i = 0; i < list.length; i++) {
-            list[i].assetipid = this.getAssetIpById(this.getAssetipidById(list[i].assetportid))
-            list[i].assetportid = this.getAssetPortById(list[i].assetportid)
-            list[i].vulnid = this.getVulnName(list[i].id)
             list[i].activetime = dateformat(list[i].activetime)
             list[i].passivetime = dateformat(list[i].passivetime)
           }
@@ -489,6 +478,9 @@ export default {
       this.nameList = []
       this.riskList = []
       this.resultList = []
+      this.ipaddressv4List = []
+      this.portList = []
+      this.vulNameList = []
       this.$message({
         message: '已清空搜索条件',
         type: 'info'
@@ -507,8 +499,6 @@ export default {
         this.list = response.data.rows
         this.total = response.data.total
         this.listLoading = false
-      }).then(() => {
-        this.getAssetport()
       })
     },
     handleSave() {
@@ -531,6 +521,21 @@ export default {
           if (response.flag) {
             this.pojo = response.data
           }
+          assetportApi.findById(this.pojo.assetportid).then(response => {
+            if (response.flag) {
+              this.assetport = response.data.port
+            }
+            assetipApi.findById(response.data.assetipid).then(response => {
+              if (response.flag) {
+                this.ipv4 = response.data.ipaddressv4
+              }
+            })
+            checkresult.findVulNameById(this.pojo.id).then(response => {
+              if (response.flag) {
+                this.vulname = response.data
+              }
+            })
+          })
         })
       } else {
         this.pojo = {} // 清空数据

@@ -10,7 +10,7 @@
     </el-row> -->
     <el-row type="flex" justify="start">
       <el-col :span="24">
-        <div> <statistics-line-chart /></div>
+        <div style="padding:5px;"> <statistics-line-chart /></div>
       </el-col>
     </el-row>
   </div>

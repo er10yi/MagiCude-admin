@@ -6,7 +6,7 @@
 
     <el-row type="flex" class="row-bg el-row-two" justify="start">
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
           <el-form inline>
             <el-form-item>
               <el-tooltip placement="top">
@@ -33,7 +33,7 @@
         </div>
       </el-col>
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
           <el-form inline>
             <el-form-item>
               <el-tooltip placement="top">
@@ -63,11 +63,11 @@
 
     <el-row type="flex" class="row-bg el-row-two" justify="start">
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
           <el-form inline>
             <el-form-item>
               <el-tooltip placement="top">
-                <div slot="content">ip[[端口,协议,状态,服务,版本],[端口,协议,状态,服务,版本]]<br>192.168.1.1[[1111,tcp,open,service22,version],[2222,udp,open,ssh,sshversion]]</div>
+                <div slot="content">ip<br>ip段<br>ip cidr<br>ip[[端口,协议,状态,服务,版本],[端口,协议,状态,服务,版本]]<br>192.168.2.1<br>192.168.2.2-192.168.2.11<br>192.168.1.1[[1111,tcp,open,service22,version],[2222,udp,open,ssh,sshversion]]</div>
                 <span>ip端口</span>
               </el-tooltip>
             </el-form-item>
@@ -90,7 +90,7 @@
         </div>
       </el-col>
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
           <el-form inline>
             <el-form-item>
               <el-tooltip placement="top">
@@ -122,7 +122,7 @@
 
     <el-row type="flex" class="row-bg el-row-two" justify="start">
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
 
           <el-form inline>
             <el-form-item>
@@ -149,7 +149,7 @@
         </div>
       </el-col>
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
 
           <el-form inline>
             <el-form-item>
@@ -182,7 +182,7 @@
 
     <el-row type="flex" class="row-bg el-row-two" justify="start">
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
           <el-form inline>
             <el-form-item>
               <el-tooltip placement="top">
@@ -221,7 +221,7 @@
       </el-col>
 
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
           <el-form inline>
             <el-form-item>
               <el-tooltip placement="top">
@@ -291,7 +291,7 @@ def start(ip, port, cmd, timeout, payload_map):
 
     <el-row type="flex" class="row-bg el-row-two" justify="start">
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
           <el-form inline>
             <el-form-item>
               <el-tooltip placement="top">
@@ -330,7 +330,7 @@ def start(ip, port, cmd, timeout, payload_map):
         </div>
       </el-col>
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
           <el-form inline>
             <el-form-item>
               <el-tooltip placement="top">
@@ -376,7 +376,7 @@ def start(ip, port, cmd, timeout, payload_map):
 
     <el-row type="flex" class="row-bg el-row-two" justify="start">
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
 
           <el-form inline>
             <el-form-item>
@@ -403,7 +403,7 @@ def start(ip, port, cmd, timeout, payload_map):
         </div>
       </el-col>
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
 
           <el-form inline>
             <el-form-item>
@@ -433,7 +433,7 @@ def start(ip, port, cmd, timeout, payload_map):
 
     <el-row type="flex" class="row-bg el-row-two" justify="start">
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
 
           <el-form inline>
             <el-form-item>
@@ -460,7 +460,7 @@ def start(ip, port, cmd, timeout, payload_map):
         </div>
       </el-col>
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
           <el-form inline>
             <el-form-item>
               <el-tooltip placement="top">
@@ -490,7 +490,7 @@ def start(ip, port, cmd, timeout, payload_map):
 
     <el-row type="flex" class="row-bg el-row-two" justify="start">
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
 
           <el-form inline>
             <el-form-item>
@@ -517,7 +517,7 @@ def start(ip, port, cmd, timeout, payload_map):
         </div>
       </el-col>
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
           <el-form inline>
             <el-form-item>
               <el-tooltip placement="top">
@@ -547,7 +547,7 @@ def start(ip, port, cmd, timeout, payload_map):
 
     <el-row type="flex" class="row-bg el-row-two" justify="start">
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
           <el-form inline>
             <el-form-item>
               <el-tooltip placement="top">
@@ -573,7 +573,7 @@ def start(ip, port, cmd, timeout, payload_map):
         </div>
       </el-col>
       <el-col :span="24">
-        <div>
+        <div style="padding:5px;">
           <el-form inline>
             <el-form-item>
               <el-tooltip placement="top">

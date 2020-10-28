@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -7,13 +7,8 @@
         <el-input v-model="searchMap.departmentid" prop="departmentid" clearable placeholder="部门编号" /></el-form-item> -->
 
       <el-form-item prop="departmentid" label="部门">
-        <el-select v-model="searchMap.departmentid" filterable clearable placeholder="请输入关键词">
-          <el-option
-            v-for="item in departmentInfoList"
-            :key="item.id"
-            :label="item.departmentname"
-            :value="item.id"
-          />
+        <el-select v-model="searchMap.departmentid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getDepartmentnameList" :loading="searchLoading">
+          <el-option v-for="item in departmentnameList" :key="item.id" :label="item.departmentname" :value="item.id" />
         </el-select>
       </el-form-item>
 
@@ -33,7 +28,7 @@
         <el-switch v-model="searchMap.overrideipwhitelist" />
       </el-form-item>
 
-      <el-form-item prop="inserttime" label="插入时间">
+      <el-form-item prop="inserttime" label="新增时间">
         <el-date-picker v-model="searchMap.inserttime" type="datetimerange" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" range-separator="-" end-placeholder="结束日期" :picker-options="pickerOptions" style="width:350px;" />
       </el-form-item>
 
@@ -72,16 +67,10 @@
       <el-table-column type="selection" align="center" />
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="编号" /> -->
-      <!-- <el-table-column sortable prop="departmentid" label="部门编号" /> -->
-
-      <el-table-column sortable prop="departmentid" label="部门">
-        <template slot-scope="scope">
-          {{ getDepartmentname(scope.row.departmentid) }}
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="departmentid" label="部门" />
 
       <el-table-column sortable prop="projectname" label="项目信息" />
-      <el-table-column prop="checkwhitelist" align="center" sortable label="检测白名单">
+      <el-table-column prop="checkwhitelist" align="center" label="检测白名单">
         <template slot="header">
           <span>检测白名单</span>
           <el-tooltip placement="top">
@@ -94,7 +83,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="notifywhitelist" align="center" sortable label="提醒白名单">
+      <el-table-column prop="notifywhitelist" align="center" label="提醒白名单">
         <template slot="header">
           <span>提醒白名单</span>
           <el-tooltip placement="top">
@@ -107,7 +96,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="overrideipwhitelist" align="center" sortable label="覆盖ip白名单">
+      <el-table-column prop="overrideipwhitelist" align="center" label="覆盖ip白名单">
         <template slot="header">
           <span>覆盖ip白名单</span>
           <el-tooltip placement="top">
@@ -120,12 +109,14 @@
         </template>
       </el-table-column>
 
-      <el-table-column sortable prop="inserttime" label="插入时间">
+      <el-table-column sortable prop="inserttime" label="新增时间">
         <template slot-scope="scope">
           {{ scope.row.inserttime | dateformat() }}
         </template>
       </el-table-column>
       <!-- <el-table-column sortable prop="overrideipwhitelist" label="覆盖ip白名单" /> -->
+
+      <el-table-column sortable prop="contact" label="项目负责人" />
 
       <el-table-column
         fixed="right"
@@ -156,15 +147,18 @@
 
         <!-- <el-form-item required label="部门编号"><el-input v-model="pojo.departmentid" style="width:300px;" /></el-form-item> -->
 
-        <el-form-item label="部门">
-          <el-select v-model="pojo.departmentid" style="width:300px;" filterable clearable placeholder="请输入关键词">
-            <el-option
-              v-for="item in departmentInfoList"
-              :key="item.id"
-              :label="item.departmentname"
-              :value="item.id"
-            />
-          </el-select>
+        <el-form-item prop="departmentid" label="部门">
+          <el-form>
+            <el-form-item label="部门不存在，新增">
+              <el-button type="info" size="mini" icon="el-icon-circle-plus-outline" circle @click="handleEditDepartment('')" />
+            </el-form-item>
+          </el-form>
+          <span v-if="pojo.id">
+            <span>{{ departmentName }}</span>
+            <el-select v-model="pojo.departmentid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getDepartmentnameList" :loading="searchLoading">
+              <el-option v-for="item in departmentnameList" :key="item.id" :label="item.departmentname" :value="item.id" />
+            </el-select>
+          </span>
         </el-form-item>
 
         <el-form-item required label="项目信息">
@@ -183,8 +177,42 @@
 
         </el-form-item>
         <el-form-item label="时间">
-          <el-date-picker v-model="pojo.inserttime" style="width:300px;" placeholder="插入时间" type="datetime" />
+          <el-date-picker v-model="pojo.inserttime" style="width:300px;" placeholder="新增时间" type="datetime" />
         </el-form-item>
+
+        <span v-if="pojo.id">
+          <!--  联系人  -->
+          <!-- 表格数据 -->
+
+          <el-form-item prop="name" label="增加负责人">
+            <el-form>
+              <el-form-item label="联系人不存在，新增">
+                <el-button type="info" size="mini" icon="el-icon-circle-plus-outline" circle @click="handleEditContact('')" />
+              </el-form-item>
+            </el-form>
+            <span v-if="pojo.id">
+              <el-select v-model="contactIdAdd" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+                <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
+              <el-button type="info" @click="handleAddContact(pojo.id)">增加</el-button>
+            </span>
+          </el-form-item>
+
+          <el-table :data="contactList" fit>
+            <el-table-column sortable prop="name" label="联系人" />
+            <el-table-column sortable prop="email" label="邮箱" />
+            <el-table-column sortable prop="phone" label="电话" />
+            <el-table-column label="操作" width="100">
+              <template slot-scope="scope">
+                <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="handleEditContact(scope.row.id)" />
+                <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="handleDeleteContact(pojo.id,scope.row.id)" />
+              </template>
+            </el-table-column>
+          </el-table>
+        </span>
+        <span v-else>
+          <div slot="tip" class="el-upload__tip">保存后才能编辑部门和负责人</div>
+        </span>
+        <br>
 
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -192,12 +220,52 @@
         <el-button @click="closeDialogForm()">关闭</el-button>
       </span>
     </el-dialog>
+
+    <!-- 部门编辑框 -->
+    <el-dialog title="编辑" :visible.sync="dialogFormVisibleDepartment" append-to-body width="40%" center :before-close="cleanCache">
+      <el-form label-width="100px">
+        <el-form-item label="部门名称">
+          <el-select v-model="departmentPojo.departmentname" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getDepartmentnameList" :loading="searchLoading">
+            <el-option v-for="item in departmentnameList" :key="item.id" :label="item.departmentname" :value="item.departmentname" />
+          </el-select>
+        </el-form-item>
+
+        <el-button type="primary" @click="handleSaveDepartment()">保存</el-button>
+        <el-button @click="closeDialogFormSecond()">关闭</el-button>
+
+      </el-form>
+
+    </el-dialog>
+
+    <!-- 联系人编辑框 -->
+    <el-dialog title="编辑" :visible.sync="dialogFormVisibleContact" append-to-body width="40%" center :before-close="cleanCache">
+      <el-form label-width="100px">
+        <el-form-item prop="name" label="联系人">
+          <el-select v-model="contactPojo.name" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+            <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
+        </el-form-item>
+
+        <el-form-item prop="email" label="邮箱">
+          <el-select v-model="contactPojo.email" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getEmailList" :loading="searchLoading">
+            <el-option v-for="item in emailList" :key="item.id" :label="item.email" :value="item.email" /></el-select>
+        </el-form-item>
+
+        <el-form-item label="电话"><el-input v-model="contactPojo.phone" clearable style="width:300px;" /></el-form-item>
+
+        <el-button type="primary" @click="handleSaveContact()">保存</el-button>
+        <el-button @click="closeDialogFormSecond()">关闭</el-button>
+
+      </el-form>
+
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import projectinfoApi from '@/api/projectinfo'
 import departmentApi from '@/api/department'
+import contactApi from '@/api/contact'
+
 import Vue from 'vue'
 const dateformat = Vue.filter('dateformat')
 
@@ -210,6 +278,7 @@ export default {
       pageSize: 10, // 每页大小
       searchMap: {}, // 查询条件
       dialogFormVisible: false, // 编辑窗口是否可见
+      dialogFormVisibleDepartment: false,
       pojo: {}, // 编辑表单绑定的实体对象
       id: '', // 当前用户修改的ID
       filename: '',
@@ -218,8 +287,20 @@ export default {
       downloadLoading: false,
       searchLoading: false,
       projectnameList: [],
-      departmentInfoList: [],
-      departmentInfoMap: new Map(),
+      departmentnameList: [],
+      departmentName: '',
+      dialogFormVisibleContact: false, // 编辑窗口是否可见
+
+      contactId: '',
+      contactPojo: {},
+      contactList: [],
+      nameList: [],
+      emailList: [],
+      phoneList: [],
+      contactIdAdd: '',
+
+      departmentId: '',
+      departmentPojo: {},
 
       pickerOptions: { // 日期选择
         disabledDate(time) {
@@ -263,27 +344,151 @@ export default {
   },
   created() {
     this.fetchData()
-    this.getDepartmentInfo()
   },
   methods: {
+    getNameList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          contactApi.search(1, 10, { 'name': query }).then(response => {
+            this.nameList = response.data.rows.filter(item => {
+              return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.nameList = []
+      }
+    },
+    getEmailList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          contactApi.search(1, 10, { 'email': query }).then(response => {
+            this.emailList = response.data.rows.filter(item => {
+              return item.email.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.emailList = []
+      }
+    },
+    closeDialogFormSecond() {
+      this.dialogFormVisibleDepartment = false
+      this.dialogFormVisibleContact = false
+      this.projectnameList = []
+      this.nameList = []
+      this.emailList = []
+    },
+    handleSaveContact() {
+      contactApi.update(this.contactId, this.contactPojo).then(response => {
+        this.$message({
+          message: response.message,
+          type: (response.flag ? 'success' : 'error')
+        })
+        if (response.flag) { // 如果成功
+          this.handleEdit(this.id)
+        }
+      })
+      this.closeDialogFormSecond() // 关闭窗口
+    },
+    handleEditContact(contactId) {
+      this.contactId = contactId
+      this.dialogFormVisibleContact = true // 打开窗口
+      if (contactId !== '') { // 修改
+        contactApi.findById(contactId).then(response => {
+          if (response.flag) {
+            this.contactPojo = response.data
+          }
+        })
+      } else {
+        this.contactPojo = {} // 清空数据
+      }
+    },
+    handleSaveDepartment() {
+      departmentApi.update(this.departmentId, this.departmentPojo).then(response => {
+        this.$message({
+          message: response.message,
+          type: (response.flag ? 'success' : 'error')
+        })
+        if (response.flag) { // 如果成功
+          this.handleEdit(this.id)
+        }
+      })
+      this.closeDialogFormSecond()
+    },
+    handleEditDepartment(departmentId) {
+      this.departmentId = departmentId
+      this.dialogFormVisibleDepartment = true // 打开窗口
+      if (departmentId !== '') { // 修改
+        departmentApi.findById(departmentId).then(response => {
+          if (response.flag) {
+            this.departmentPojo = response.data
+          }
+        })
+      } else {
+        this.departmentPojo = {} // 清空数据
+      }
+    },
+    handleAddContact(id) {
+      if (id && id !== '') {
+        var list = []
+        list.push(id)
+        list.push(this.contactIdAdd)
+        projectinfoApi.addContact(list).then(response => {
+          this.$message({
+            message: response.message,
+            type: (response.flag ? 'success' : 'error')
+          })
+          if (response.flag) { // 如果成功
+            this.fetchData()
+            this.handleEdit(id)
+          }
+          this.nameList = []
+        })
+      }
+    },
+    handleDeleteContact(id, contactid) {
+      var list = []
+      list.push(id)
+      list.push(contactid)
+      projectinfoApi.deleteContact(list).then(response => {
+        this.$message({
+          message: response.message,
+          type: (response.flag ? 'success' : 'error')
+        })
+        if (response.flag) { // 如果成功
+          this.fetchData()
+          this.handleEdit(id)
+        }
+      })
+    },
     cleanCache() {
       this.closeDialogForm()
+      this.closeDialogFormSecond()
     },
     closeDialogForm() {
       this.dialogFormVisible = false
       this.projectnameList = []
+      this.departmentName = ''
     },
-    getDepartmentname(id) { // 根据id从map获取项目名字
-      return this.departmentInfoMap.get(id)
-    },
-    getDepartmentInfo() {
-      departmentApi.getList().then(response => {
-        this.departmentInfoList = response.data
-        for (let i = 0; i < this.departmentInfoList.length; i++) { // 将id和name封装到map中
-          this.departmentInfoMap.set(this.departmentInfoList[i].id, this.departmentInfoList[i].departmentname)
-        }
+    getDepartmentnameList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          departmentApi.search(1, 10, { 'departmentname': query }).then(response => {
+            this.departmentnameList = response.data.rows.filter(item => {
+              return item.departmentname.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.departmentnameList = []
       }
-      )
     },
     getProjectNameList(query) {
       if (query !== '' && query) {
@@ -347,7 +552,8 @@ export default {
             '检测白名单',
             '提醒白名单',
             '覆盖ip白名单',
-            '插入时间'
+            '新增时间',
+            '项目负责人'
           ]
           const filterVal = [
             'departmentid',
@@ -355,11 +561,11 @@ export default {
             'checkwhitelist',
             'notifywhitelist',
             'overrideipwhitelist',
-            'inserttime'
+            'inserttime',
+            'contact'
           ]
           const list = this.multipleSelection
           for (let i = 0; i < list.length; i++) {
-            list[i].departmentid = this.getDepartmentname(list[i].departmentid)
             list[i].inserttime = dateformat(list[i].inserttime)
             list[i].checkwhitelist = list[i].checkwhitelist ? '是' : ''
             list[i].notifywhitelist = list[i].notifywhitelist ? '是' : ''
@@ -410,7 +616,9 @@ export default {
       })
     },
     handleSave() {
+      var tempId
       projectinfoApi.update(this.id, this.pojo).then(response => {
+        tempId = response.data
         this.$message({
           message: response.message,
           type: (response.flag ? 'success' : 'error')
@@ -418,8 +626,15 @@ export default {
         if (response.flag) { // 如果成功
           this.fetchData() // 刷新列表
         }
+      }).then(() => {
+        if (tempId) {
+          this.handleEdit(tempId)
+        } else {
+          this.closeDialogForm() // 关闭窗口
+        }
       })
-      this.closeDialogForm() // 关闭窗口
+
+      // this.closeDialogForm() // 关闭窗口
     },
     handleEdit(id) {
       this.id = id
@@ -428,6 +643,18 @@ export default {
         projectinfoApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
+            if (this.pojo.departmentid !== null) {
+              departmentApi.findById(this.pojo.departmentid).then((response) => {
+                if (response.flag) {
+                  this.departmentName = response.data.departmentname
+                }
+              })
+            }
+            projectinfoApi.findAllContactById(this.pojo.id).then((response) => {
+              if (response.flag) {
+                this.contactList = response.data
+              }
+            })
           }
         })
       } else {

@@ -99,5 +99,11 @@ export default {
       method: 'post',
       data: ids
     })
+  },
+  getTaskStatusPercent(id) {
+    return request({
+      url: `/${group_name}/${api_name}/statuspercent/${id}`,
+      method: 'get'
+    })
   }
 }

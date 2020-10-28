@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -47,9 +47,10 @@
       <el-table-column type="selection" align="center" />
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="编号" /> -->
-      <el-table-column sortable prop="departmentname" label="部门名称" width="600" />
+      <el-table-column sortable prop="departmentname" label="部门名称" />
 
       <el-table-column
+        fixed="right"
         label="操作"
         width="100"
       >
@@ -117,7 +118,6 @@ export default {
   },
   created() {
     this.fetchData()
-    this.getDepartmentnameList()
   },
   methods: {
     cleanCache() {

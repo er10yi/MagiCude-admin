@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -55,19 +55,12 @@
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="编号" /> -->
 
-      <el-table-column sortable prop="contactid" width="250" label="联系人">
-        <template slot-scope="scope">
-          {{ getContactname(scope.row.contactid) }}
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="contactid" label="联系人" />
 
-      <el-table-column sortable prop="projectinfoid" width="400" label="项目信息">
-        <template slot-scope="scope">
-          {{ getProjectname(scope.row.projectinfoid) }}
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="projectinfoid" label="项目信息" />
 
       <el-table-column
+        fixed="right"
         label="操作"
         width="100"
       >
@@ -96,25 +89,17 @@
         <!-- <el-form-item label="联系编号"><el-input v-model="pojo.contactid" style="width:300px;" /></el-form-item> -->
         <!-- <el-form-item label="项目信息编号"><el-input v-model="pojo.projectinfoid" style="width:300px;" /></el-form-item> -->
 
-        <el-form-item required label="联系人">
-          <el-select v-model="pojo.contactid" style="width:300px;" filterable clearable placeholder="请输入关键词">
-            <el-option
-              v-for="item in contactList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
+        <el-form-item prop="contactid" label="联系人">
+          <span>{{ contactName }}</span>
+          <el-select v-model="pojo.contactid" style="width:400px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getContactList" :loading="searchLoading">
+            <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
-        <el-form-item required label="项目信息">
-          <el-select v-model="pojo.projectinfoid" style="width:300px;" filterable clearable placeholder="请输入关键词">
-            <el-option
-              v-for="item in projectInfoList"
-              :key="item.id"
-              :label="item.projectname"
-              :value="item.id"
-            />
+        <el-form-item prop="projectinfoid" label="项目信息">
+          <span>{{ projectinfoName }}</span>
+          <el-select v-model="pojo.projectinfoid" style="width:400px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getProjectinfoList" :loading="searchLoading">
+            <el-option v-for="item in projectnameList" :key="item.id" :label="item.projectname" :value="item.id" />
           </el-select>
         </el-form-item>
 
@@ -152,14 +137,12 @@ export default {
       projectnameList: [],
       projectInfoList: [],
       contactList: [],
-      contactMap: new Map(),
-      projectInfoMap: new Map()
+      contactName: '',
+      projectinfoName: ''
 
     }
   },
   created() {
-    this.getContact()
-    this.getProjectInfo()
     this.fetchData()
   },
   methods: {
@@ -169,32 +152,11 @@ export default {
     closeDialogForm() {
       this.dialogFormVisible = false
       this.nameList = []
+      this.projectinfoName = ''
+      this.contactName = ''
       this.projectnameList = []
     },
-    getContactname(id) { // 根据id从map获取联系人
-      return this.contactMap.get(id)
-    },
-    getProjectname(id) { // 根据id从map获取项目名字
-      return this.projectInfoMap.get(id)
-    },
-    getContact() {
-      contactApi.getList().then(response => {
-        this.contactList = response.data
-        for (let i = 0; i < this.contactList.length; i++) { // 将项目id和name封装到map中
-          this.contactMap.set(this.contactList[i].id, this.contactList[i].name)
-        }
-      }
-      )
-    },
-    getProjectInfo() {
-      projectinfoApi.getList().then(response => {
-        this.projectInfoList = response.data
-        for (let i = 0; i < this.projectInfoList.length; i++) { // 将项目id和name封装到map中
-          this.projectInfoMap.set(this.projectInfoList[i].id, this.projectInfoList[i].projectname)
-        }
-      }
-      )
-    },
+
     getContactList(query) {
       if (query !== '' && query) {
         this.searchLoading = true
@@ -275,10 +237,6 @@ export default {
             'projectinfoid'
           ]
           const list = this.multipleSelection
-          for (let i = 0; i < list.length; i++) {
-            list[i].contactid = this.getContactname(list[i].contactid)
-            list[i].projectinfoid = this.getProjectname(list[i].projectinfoid)
-          }
           const data = this.formatJson(filterVal, list)
           excel.export_json_to_excel({
             header: tHeader,
@@ -343,6 +301,18 @@ export default {
         contactProjectinfoApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
+            contactApi.findById(this.pojo.contactid).then((response) => {
+              if (response.flag) {
+                this.contactName = response.data.name
+                this.pojo.contactid = null
+              }
+            })
+            projectinfoApi.findById(this.pojo.projectinfoid).then((response) => {
+              if (response.flag) {
+                this.projectinfoName = response.data.projectname
+                this.pojo.projectinfoid = null
+              }
+            })
           }
         })
       } else {

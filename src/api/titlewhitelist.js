@@ -50,6 +50,12 @@ export default {
       method: 'post',
       data: ids
     })
+  },
+  deleteByTitle(title) {
+    return request({
+      url: `/${group_name}/${api_name}/title/${title}`,
+      method: 'delete'
+    })
   }
 
 }

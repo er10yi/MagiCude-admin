@@ -1,24 +1,20 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <el-collapse v-model="activeNames">
       <el-collapse-item name="1">
         <template slot="title"><i class="header-icon el-icon-info" />菜单栏隐藏与显示</template>
         <!-- 查询条件 -->
         <el-form ref="searchform" inline size="small" :model="searchMap">
 
-          <!-- <el-form-item label="端口编号">
-        <el-input v-model="searchMap.portid" prop="portid" clearable placeholder="端口编号" /></el-form-item> -->
-
-          <!-- <el-form-item prop="titlewhitelistid" label="标题白名单">
-        <el-select v-model="searchMap.titlewhitelistid" filterable clearable placeholder="请输入关键词">
-          <el-option
-            v-for="item in titlewhitelistList"
-            :key="item.id"
-            :label="item.title"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item> -->
+          <el-form-item prop="assetip" label="ip">
+            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
+              <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" />
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="assetport" label="端口">
+            <el-select v-model="searchMap.assetport" style="width:100px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getPortList" :loading="searchLoading">
+              <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
+          </el-form-item>
 
           <el-form-item prop="title" label="title">
             <el-select v-model="searchMap.title" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getTitleNameList" :loading="searchLoading">
@@ -35,36 +31,36 @@
               <el-option v-for="item in serverNameList" :key="item.id" :label="item.server" :value="item.server" />
             </el-select>
           </el-form-item>
-          <el-form-item prop="xpoweredby" label="xpoweredby">
+          <el-form-item v-if="showxpoweredby" prop="xpoweredby" label="xpoweredby">
             <el-select v-model="searchMap.xpoweredby" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getXpoweredbyNameList" :loading="searchLoading">
               <el-option v-for="item in xpoweredbyNameList" :key="item.id" :label="item.xpoweredby" :value="item.xpoweredby" />
             </el-select>
           </el-form-item>
-          <el-form-item prop="setcookie" label="setcookie">
+          <el-form-item v-if="showsetcookie" prop="setcookie" label="setcookie">
             <el-select v-model="searchMap.setcookie" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getSetcookieNameList" :loading="searchLoading">
               <el-option v-for="item in setcookieNameList" :key="item.id" :label="item.setcookie" :value="item.setcookie" />
             </el-select>
           </el-form-item>
-          <el-form-item prop="wwwauthenticate" label="认证方式">
+          <el-form-item v-if="showwwwauthenticate" prop="wwwauthenticate" label="认证方式">
             <el-select v-model="searchMap.wwwauthenticate" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getWwwauthenticateNameList" :loading="searchLoading">
               <el-option v-for="item in wwwauthenticateNameList" :key="item.id" :label="item.wwwauthenticate" :value="item.wwwauthenticate" />
             </el-select>
           </el-form-item>
-          <!-- <el-form-item prop="appname" label="应用名称">
-        <el-select v-model="searchMap.appname" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getAppnameNameList" :loading="searchLoading">
-          <el-option v-for="item in appnameNameList" :key="item.id" :label="item.appname" :value="item.appname" />
-        </el-select>
-      </el-form-item>
-      <el-form-item prop="appversion" label="应用版本">
-        <el-select v-model="searchMap.appversion" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getAppversionNameList" :loading="searchLoading">
-          <el-option v-for="item in appversionNameList" :key="item.id" :label="item.appversion" :value="item.appversion" />
-        </el-select>
-      </el-form-item>
-      <el-form-item prop="devlanguage" label="开发语言">
-        <el-select v-model="searchMap.devlanguage" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getDevlanguageNameList" :loading="searchLoading">
-          <el-option v-for="item in devlanguageNameList" :key="item.id" :label="item.devlanguage" :value="item.devlanguage" />
-        </el-select>
-      </el-form-item> -->
+          <el-form-item v-if="showappname" prop="appname" label="应用名称">
+            <el-select v-model="searchMap.appname" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getAppnameNameList" :loading="searchLoading">
+              <el-option v-for="item in appnameNameList" :key="item.id" :label="item.appname" :value="item.appname" />
+            </el-select>
+          </el-form-item>
+          <el-form-item v-if="showappversion" prop="appversion" label="应用版本">
+            <el-select v-model="searchMap.appversion" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getAppversionNameList" :loading="searchLoading">
+              <el-option v-for="item in appversionNameList" :key="item.id" :label="item.appversion" :value="item.appversion" />
+            </el-select>
+          </el-form-item>
+          <el-form-item v-if="showdevlanguage" prop="devlanguage" label="开发语言">
+            <el-select v-model="searchMap.devlanguage" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getDevlanguageNameList" :loading="searchLoading">
+              <el-option v-for="item in devlanguageNameList" :key="item.id" :label="item.devlanguage" :value="item.devlanguage" />
+            </el-select>
+          </el-form-item>
 
           <el-form-item prop="crawltime" label="抓取时间">
             <el-date-picker v-model="searchMap.crawltime" type="datetimerange" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" range-separator="-" end-placeholder="结束日期" :picker-options="pickerOptions" style="width:350px;" />
@@ -84,6 +80,23 @@
             <el-button type="danger" icon="el-icon-delete" @click="handleDeleteAll">删除</el-button>
           </el-form-item>
 
+          <el-form-item>
+            <el-popover
+              placement="bottom"
+              width="300"
+              trigger="hover"
+            >
+              <el-button slot="reference">增加显示</el-button>
+              <el-col :span="12"><el-checkbox @change="showHide('showlinks')">页面链接</el-checkbox> </el-col>
+              <el-col :span="12"><el-checkbox @change="showHide('showtitlewhitelistid')">不记录页面链接</el-checkbox> </el-col>
+              <el-col :span="12"><el-checkbox @change="showHide('showxpoweredby')">xpoweredby</el-checkbox> </el-col>
+              <el-col :span="12"><el-checkbox @change="showHide('showsetcookie')">setcookie</el-checkbox> </el-col>
+              <el-col :span="12"><el-checkbox @change="showHide('showwwwauthenticate')">认证方式</el-checkbox> </el-col>
+              <el-col :span="12"><el-checkbox @change="showHide('showappname')">应用名称</el-checkbox> </el-col>
+              <el-col :span="12"><el-checkbox @change="showHide('showappversion')">应用版本</el-checkbox> </el-col>
+              <el-col :span="12"><el-checkbox @change="showHide('showdevlanguage')">开发语言</el-checkbox> </el-col>
+            </el-popover>
+          </el-form-item>
           <!-- <el-form-item>
         <el-button type="primary" @click="handleEdit('')">新增</el-button>
       </el-form-item> -->
@@ -108,71 +121,75 @@
       <!-- <el-table-column sortable prop="id" label="web信息编号" /> -->
       <!-- <el-table-column sortable prop="portid" label="端口编号" /> -->
 
-      <el-table-column sortable width="150" prop="assetipid" label="ip">
+      <el-table-column key="1" sortable width="150" prop="assetip" label="ip">
         <template slot-scope="scope">
-
           <el-popover
             placement="top-start"
-            title="HTTP和HTTPS链接"
             width="250"
             trigger="hover"
           >
-            <el-link slot="reference" :underline="false"><i class="el-icon-view el-icon--right" />{{ getAssetIpById(getAssetipidById(scope.row.portid)) }}</el-link>
-            <el-link :href="'http://'+getAssetIpById(getAssetipidById(scope.row.portid))+':'+getAssetPortById(scope.row.portid)" target="_blank" :underline="false">点我打开HTTP链接</el-link>
-            <el-link :href="'https://'+getAssetIpById(getAssetipidById(scope.row.portid))+':'+getAssetPortById(scope.row.portid)" target="_blank" :underline="false">点我打开HTTPS链接</el-link>
+            <el-link slot="reference" :underline="false">{{ scope.row.assetip }}</el-link>
+            <el-link :href="'http://'+scope.row.assetip+':'+scope.row.portid" target="_blank" :underline="false">打开HTTP链接</el-link><br>
+            <el-link :href="'https://'+scope.row.assetip+':'+scope.row.portid" target="_blank" :underline="false">打开HTTPS链接</el-link>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column key="2" sortable width="80" prop="portid" label="端口" />
+      <!-- <el-table-column sortable prop="titlewhitelistid" label="标题白名单编号" /> -->
+
+      <el-table-column v-if="showtitlewhitelistid" key="3" sortable prop="titlewhitelistid" label="不抓取页面链接">
+        <template slot-scope="scope">
+          <span v-if="scope.row.titlewhitelistid ">
+            是
+          </span>
+        </template>
+      </el-table-column>
+
+      <el-table-column key="4" sortable prop="title" label="title">
+        <template slot="header">
+          <span>title</span>
+          <el-tooltip placement="top">
+            <div slot="content">如果title加入标题白名单，下次页面发生改变，将不记录该tittle的页面链接</div>
+            <i class="el-icon-info" />
+          </el-tooltip>
+        </template>
+
+        <template slot-scope="scope">
+          <el-popover
+            placement="right"
+            title=""
+            width="250"
+            trigger="hover"
+          >
+            <el-link slot="reference" :underline="false">{{ scope.row.title }}</el-link>
+            <el-link :underline="false" @click="addTitle(scope.row.title)">加入标题白名单</el-link><br>
+            <el-link :underline="false" @click="deleteTitle(scope.row.title)">删除标题白名单</el-link>
           </el-popover>
 
         </template>
       </el-table-column>
 
-      <el-table-column sortable width="80" prop="assetportid" label="port">
-        <template slot-scope="scope">
-          {{ getAssetPortById(scope.row.portid) }}
-        </template>
+      <el-table-column key="5" sortable prop="bodychildrenstextcontent" label="body内容" show-overflow-tooltip />
+      <el-table-column key="6" sortable prop="server" label="server" />
 
-      </el-table-column>
+      <el-table-column v-if="showxpoweredby" key="7" sortable prop="xpoweredby" label="xpoweredby" show-overflow-tooltip />
+      <el-table-column v-if="showsetcookie" key="8" sortable prop="setcookie" label="setcookie" show-overflow-tooltip />
+      <el-table-column v-if="showwwwauthenticate" key="9" sortable prop="wwwauthenticate" label="认证方式" show-overflow-tooltip />
 
-      <!-- <el-table-column sortable prop="titlewhitelistid" label="标题白名单编号" /> -->
+      <el-table-column v-if="showappname" key="10" sortable prop="appname" label="应用名称" />
+      <el-table-column v-if="showappversion" key="11" sortable prop="appversion" label="应用版本" />
+      <el-table-column v-if="showdevlanguage" key="12" sortable prop="devlanguage" label="开发语言" />
 
-      <!-- <el-table-column sortable prop="titlewhitelistid" label="标题白名单">
-        <template slot="header">
-          <span>标题白名单</span>
-          <el-tooltip placement="top">
-            <div slot="content">如果页面title包含白名单<br>则不记录该页面的链接</div>
-            <i class="el-icon-info" />
-          </el-tooltip>
-        </template>
-        <template slot-scope="scope">
-          {{ getTitlewhitelistById(scope.row.titlewhitelistid) }}
-        </template>
-      </el-table-column> -->
-
-      <el-table-column sortable prop="title" label="title" />
-      <el-table-column sortable prop="bodychildrenstextcontent" label="body内容" show-overflow-tooltip />
-      <el-table-column sortable prop="server" label="server" />
-      <el-table-column sortable prop="xpoweredby" label="xpoweredby" show-overflow-tooltip />
-      <el-table-column sortable prop="setcookie" label="setcookie" show-overflow-tooltip />
-      <el-table-column sortable prop="wwwauthenticate" label="认证方式" show-overflow-tooltip />
-      <!--
-      <el-table-column sortable prop="appname" label="应用名称" />
-      <el-table-column sortable prop="appversion" label="应用版本" />
-      <el-table-column sortable prop="devlanguage" label="开发语言" /> -->
-
-      <el-table-column sortable prop="crawltime" label="抓取时间">
+      <el-table-column key="13" sortable prop="crawltime" label="抓取时间">
         <template slot-scope="scope">
           {{ scope.row.crawltime | dateformat() }}
         </template>
       </el-table-column>
-      <!-- <el-table-column sortable label="links">
-        <el-table
-          :data="urlList"
-          border=""
-        >
-          <el-table-column sortable prop="name" label="name" />
-          <el-table-column sortable prop="url" label="url" />
-
-        </el-table>
-      </el-table-column> -->
+      <el-table-column v-if="showlinks" key="14" sortable prop="url" label="页面链接">
+        <template slot-scope="scope">
+          {{ scope.row.url }}
+        </template>
+      </el-table-column>
 
       <el-table-column
 
@@ -206,23 +223,25 @@
         <!-- <el-form-item label="标题白名单编号"><el-input v-model="pojo.titlewhitelistid" style="width:300px;" /></el-form-item> -->
 
         <el-form-item label="ip:port">
-          <span> {{ getAssetIpById(getAssetipidById(pojo.portid)) }}:{{ getAssetPortById(pojo.portid) }}</span>
+          <span>{{ ipv4 }}:{{ assetport }}</span>
         </el-form-item>
 
         <el-form-item label="title"><el-input v-model="pojo.title" autosize type="textarea" /></el-form-item>
         <el-form-item label="body内容"><el-input v-model="pojo.bodychildrenstextcontent" autosize type="textarea" /></el-form-item>
-        <el-form-item label="server"><el-input v-model="pojo.server" style="width:300px;" /></el-form-item>
-        <el-form-item label="xpoweredby"><el-input v-model="pojo.xpoweredby" style="width:300px;" /></el-form-item>
-        <el-form-item label="setcookie"><el-input v-model="pojo.setcookie" style="width:300px;" /></el-form-item>
-        <el-form-item label="认证方式"><el-input v-model="pojo.wwwauthenticate" style="width:300px;" /></el-form-item>
+        <el-form-item label="server"><el-input v-model="pojo.server" autosize type="textarea" /></el-form-item>
+        <el-form-item label="xpoweredby"><el-input v-model="pojo.xpoweredby" autosize type="textarea" /></el-form-item>
+        <el-form-item label="setcookie"><el-input v-model="pojo.setcookie" autosize type="textarea" /></el-form-item>
+        <el-form-item label="认证方式"><el-input v-model="pojo.wwwauthenticate" autosize type="textarea" /></el-form-item>
 
-        <!-- <el-form-item label="应用名称"><el-input v-model="pojo.appname" style="width:300px;" /></el-form-item>
-        <el-form-item label="应用版本"><el-input v-model="pojo.appversion" style="width:300px;" /></el-form-item>
-        <el-form-item label="开发语言"><el-input v-model="pojo.devlanguage" style="width:300px;" /></el-form-item> -->
+        <el-form-item label="应用名称"><el-input v-model="pojo.appname" autosize type="textarea" /></el-form-item>
+        <el-form-item label="应用版本"><el-input v-model="pojo.appversion" autosize type="textarea" /></el-form-item>
+        <el-form-item label="开发语言"><el-input v-model="pojo.devlanguage" autosize type="textarea" /></el-form-item>
 
         <el-form-item label="抓取时间">
           <el-date-picker v-model="pojo.crawltime" placeholder="抓取时间" type="datetime" />
         </el-form-item>
+
+        <el-form-item label="页面链接"><el-input v-model="links" autosize type="textarea" />        </el-form-item>
 
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -235,10 +254,10 @@
 
 <script>
 import webinfoApi from '@/api/webinfo'
-import titlewhitelistApi from '@/api/titlewhitelist'
 import assetipApi from '@/api/assetip'
 import assetportApi from '@/api/assetport'
 import urlApi from '@/api/url'
+import titlewhitelistApi from '@/api/titlewhitelist'
 
 import Vue from 'vue'
 const dateformat = Vue.filter('dateformat')
@@ -260,15 +279,6 @@ export default {
       multipleSelection: [],
       downloadLoading: false,
       titlewhitelistList: [],
-      titlewhitelistMap: new Map(),
-      assetportList: [],
-      assetPortIdAndAssetIpIdList: [],
-      assetportids: [],
-      assetIpIdAndIpList: [],
-      assetipids: [],
-      assetPortIdAndAssetIpIdMap: new Map(),
-      assetPortMap: new Map(),
-      assetIpMap: new Map(),
       searchLoading: false,
       titleNameList: [],
       bodychildrenstextcontentNameList: [],
@@ -279,10 +289,20 @@ export default {
       appnameNameList: [],
       appversionNameList: [],
       devlanguageNameList: [],
-      linkList: [],
-      webinfoInMap: new Map(),
-      webinfoids: [],
       activeNames: ['1'],
+      ipv4: '',
+      assetport: '',
+      links: '',
+      showlinks: false,
+      showxpoweredby: false,
+      showsetcookie: false,
+      showwwwauthenticate: false,
+      showappname: false,
+      showappversion: false,
+      showdevlanguage: false,
+      showtitlewhitelistid: false,
+      ipaddressv4List: [],
+      portList: [],
 
       pickerOptions: { // 日期选择
         disabledDate(time) {
@@ -326,28 +346,83 @@ export default {
   },
   created() {
     this.fetchData()
-    // this.getTitlewhitelist()
   },
   methods: {
+    getPortList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          assetportApi.search(1, 10, { 'port': query }).then(response => {
+            this.portList = response.data.rows.filter(item => {
+              return item.port.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.portList = []
+      }
+    },
+    getIpaddressv4List(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          assetipApi.search(1, 10, { 'ipaddressv4': query }).then(response => {
+            this.ipaddressv4List = response.data.rows.filter(item => {
+              return item.ipaddressv4.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.ipaddressv4List = []
+      }
+    },
+    addTitle(title) {
+      this.pojo.title = title
+      titlewhitelistApi.update(this.id, this.pojo).then(response => {
+        this.$message({
+          message: response.message,
+          type: (response.flag ? 'success' : 'error')
+        })
+      })
+    },
+    deleteTitle(title) {
+      titlewhitelistApi.deleteByTitle(title).then(response => {
+        this.$message({
+          message: response.message,
+          type: (response.flag ? 'success' : 'error')
+        })
+      })
+    },
+    showHide(para) {
+      if (para === 'showlinks') {
+        this.showlinks = !this.showlinks
+      }
+      if (para === 'showxpoweredby') {
+        this.showxpoweredby = !this.showxpoweredby
+      }
+      if (para === 'showsetcookie') {
+        this.showsetcookie = !this.showsetcookie
+      }
+      if (para === 'showwwwauthenticate') {
+        this.showwwwauthenticate = !this.showwwwauthenticate
+      }
+      if (para === 'showappname') {
+        this.showappname = !this.showappname
+      }
+      if (para === 'showappversion') {
+        this.showappversion = !this.showappversion
+      }
+      if (para === 'showdevlanguage') {
+        this.showdevlanguage = !this.showdevlanguage
+      }
+      if (para === 'showtitlewhitelistid') {
+        this.showtitlewhitelistid = !this.showtitlewhitelistid
+      }
+    },
     cleanCache() {
       this.closeDialogForm()
-    },
-    getUrlLinksById(id) {
-      return this.webinfoInMap.get(id) === '[]' ? null : this.webinfoInMap.get(id)
-    },
-    getUrl() {
-      if (this.list.length !== 0) {
-        this.webinfoids = []
-        for (let i = 0; i < this.list.length; i++) {
-          this.webinfoids.push(this.list[i].id)
-        }
-        urlApi.findByWebinfoids(this.webinfoids).then(response => {
-          this.linkList = response.data
-          for (let i = 0; i < this.linkList.length; i++) { // webinfoid + "#+-#" + urlNameAndLinkList
-            this.webinfoInMap.set(this.linkList[i].split('#+-#')[0], this.linkList[i].split('#+-#')[1])
-          }
-        })
-      }
     },
     getTitleNameList(query) {
       if (query !== '' && query) {
@@ -484,55 +559,9 @@ export default {
         this.devlanguageNameList = []
       }
     },
-    getAssetport() {
-      if (this.list.length !== 0) {
-        this.assetportids = []
-        for (let i = 0; i < this.list.length; i++) {
-          this.assetportids.push(this.list[i].portid)
-        }
-        this.assetipids = []
-        assetportApi.findByIds(this.assetportids).then(response => {
-          this.assetPortIdAndAssetIpIdList = response.data
-          for (let i = 0; i < this.assetPortIdAndAssetIpIdList.length; i++) { // assetportid - assetipid - assetport
-            this.assetipids.push(this.assetPortIdAndAssetIpIdList[i].split('-')[1])
-            this.assetPortIdAndAssetIpIdMap.set(this.assetPortIdAndAssetIpIdList[i].split('-')[0], this.assetPortIdAndAssetIpIdList[i].split('-')[1])
-            this.assetPortMap.set(this.assetPortIdAndAssetIpIdList[i].split('-')[0], this.assetPortIdAndAssetIpIdList[i].split('-')[2])
-          }
-        }).then(() => {
-          this.getAssetIp()
-        })
-      }
-    },
-    getAssetipidById(assetPortId) { // 根据id从map获取端口
-      return this.assetPortIdAndAssetIpIdMap.get(assetPortId)
-    },
-    getAssetPortById(id) { // 根据id从map获取端口
-      return this.assetPortMap.get(id)
-    },
-    getAssetIp() {
-      assetipApi.findByIds(this.assetipids).then(response => {
-        this.assetIpIdAndIpList = response.data
-        for (let i = 0; i < this.assetIpIdAndIpList.length; i++) {
-          this.assetIpMap.set(this.assetIpIdAndIpList[i].split('-')[0], this.assetIpIdAndIpList[i].split('-')[1])
-        }
-      })
-    },
-    getAssetIpById(id) { // 根据id从map获取ip
-      return this.assetIpMap.get(id)
-    },
-    async getTitlewhitelist() {
-      titlewhitelistApi.getList().then(response => {
-        this.titlewhitelistList = response.data
-        for (let i = 0; i < this.titlewhitelistList.length; i++) { // 将id和name封装到map中
-          this.titlewhitelistMap.set(this.titlewhitelistList[i].id, this.titlewhitelistList[i].title)
-        }
-      }
-      )
-    },
-    getTitlewhitelistById(id) {
-      return this.titlewhitelistMap.get(id)
-    },
     closeDialogForm() {
+      this.assetport = ''
+      this.ipv4 = ''
       this.dialogFormVisible = false
     },
 
@@ -580,43 +609,44 @@ export default {
           const tHeader = [
             'ip',
             'port',
-            // '标题白名单',
+            '不记录页面链接',
             'title',
             'body内容',
             'server',
             'xpoweredby',
             'setcookie',
             '认证方式',
-            // '应用名称',
-            // '应用版本',
-            // '开发语言',
-            '抓取时间'
+            '应用名称',
+            '应用版本',
+            '开发语言',
+            '抓取时间',
+            '页面链接'
 
           ]
           const filterVal = [
-            'assetipid',
+            'assetip',
             'portid',
-            // 'titlewhitelistid',
+            'titlewhitelistid',
             'title',
             'bodychildrenstextcontent',
             'server',
             'xpoweredby',
             'setcookie',
             'wwwauthenticate',
-            // 'appname',
-            // 'appversion',
-            // 'devlanguage',
-            'crawltime'
+            'appname',
+            'appversion',
+            'devlanguage',
+            'crawltime',
+            'url'
 
           ]
 
           const list = this.multipleSelection
           for (let i = 0; i < list.length; i++) {
-            list[i].assetipid = this.getAssetIpById(this.getAssetipidById(list[i].portid))
-            list[i].portid = this.getAssetPortById(list[i].portid)
-            // list[i].titlewhitelistid = this.getTitlewhitelistById(list[i].titlewhitelistid)
+            if (list[i].titlewhitelistid) {
+              list[i].titlewhitelistid = '是'
+            }
             list[i].crawltime = dateformat(list[i].crawltime)
-            // list[i].id = this.getUrlLinksById(list[i].id)
           }
           const data = this.formatJson(filterVal, list)
           excel.export_json_to_excel({
@@ -651,6 +681,16 @@ export default {
       this.appnameNameList = []
       this.appversionNameList = []
       this.devlanguageNameList = []
+      this.showlinks = false
+      this.showxpoweredby = false
+      this.showsetcookie = false
+      this.showwwwauthenticate = false
+      this.showappname = false
+      this.showappversion = false
+      this.showdevlanguage = false
+      this.showtitlewhitelistid = false
+      this.ipaddressv4List = []
+      this.portList = []
       this.$message({
         message: '已清空搜索条件',
         type: 'info'
@@ -669,10 +709,6 @@ export default {
         this.list = response.data.rows
         this.total = response.data.total
         this.listLoading = false
-      }).then(() => {
-        this.getAssetport()
-      }).then(() => {
-        this.getUrl()
       })
     },
     handleSave() {
@@ -695,6 +731,21 @@ export default {
           if (response.flag) {
             this.pojo = response.data
           }
+          assetportApi.findById(this.pojo.portid).then(response => {
+            if (response.flag) {
+              this.assetport = response.data.port
+            }
+            assetipApi.findById(response.data.assetipid).then(response => {
+              if (response.flag) {
+                this.ipv4 = response.data.ipaddressv4
+              }
+            })
+            urlApi.findLinksByWebinfoId(this.pojo.id).then(response => {
+              if (response.flag) {
+                this.links = response.data
+              }
+            })
+          })
         })
       } else {
         this.pojo = {} // 清空数据

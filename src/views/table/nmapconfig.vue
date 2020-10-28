@@ -1,19 +1,13 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
       <!-- <el-form-item label="任务编号">
         <el-input v-model="searchMap.taskid" prop="taskid" clearable placeholder="任务编号" /></el-form-item> -->
-
       <el-form-item prop="taskid" label="任务">
-        <el-select v-model="searchMap.taskid" filterable clearable placeholder="请输入关键词">
-          <el-option
-            v-for="item in mass2NmapTaskList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
+        <el-select v-model="searchMap.taskid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getTaskNameList" :loading="searchLoading">
+          <el-option v-for="item in taskNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -51,13 +45,7 @@
       <el-table-column type="selection" align="center" />
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="nmap配置编号" /> -->
-      <!-- <el-table-column sortable prop="taskid" label="任务编号" /> -->
-
-      <el-table-column sortable label="任务">
-        <template slot-scope="scope">
-          <span>{{ geTasknameById(scope.row.taskid) }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="taskid" label="任务" />
 
       <el-table-column sortable prop="threadnumber" label="线程数量" />
       <el-table-column sortable prop="singleipscantime" label="ip扫描次数" />
@@ -92,14 +80,10 @@
 
         <!-- <el-form-item label="任务编号"><el-input v-model="pojo.taskid" style="width:300px;" /></el-form-item> -->
 
-        <el-form-item required label="任务">
-          <el-select v-model="pojo.taskid" style="width:300px;" filterable clearable placeholder="请输入关键词">
-            <el-option
-              v-for="item in mass2NmapTaskList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
+        <el-form-item prop="taskid" label="任务">
+          {{ taskName }}
+          <el-select v-model="pojo.taskid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getTaskList" :loading="searchLoading">
+            <el-option v-for="item in taskList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="线程数量"><el-input v-model="pojo.threadnumber" style="width:300px;" /></el-form-item>
@@ -135,28 +119,32 @@ export default {
       listLoading: true,
       multipleSelection: [],
       downloadLoading: false,
-      mass2NmapTaskList: [],
-      mass2NmapTaskMap: new Map()
+      taskList: [],
+      taskNameList: [],
+      taskName: ''
     }
   },
   created() {
     this.fetchData()
-    this.getMass2NmapTask()
   },
   methods: {
+    getNameList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          taskApi.search(1, 10, { 'name': query }).then(response => {
+            this.taskNameList = response.data.rows.filter(item => {
+              return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.taskNameList = []
+      }
+    },
     cleanCache() {
       this.closeDialogForm()
-    },
-    getMass2NmapTask() {
-      taskApi.findSearch({ 'worktype': 'mass2Nmap' }).then(response => {
-        this.mass2NmapTaskList = response.data
-        for (let i = 0; i < this.mass2NmapTaskList.length; i++) {
-          this.mass2NmapTaskMap.set(this.mass2NmapTaskList[i].id, this.mass2NmapTaskList[i].name)
-        }
-      })
-    },
-    geTasknameById(id) {
-      return this.mass2NmapTaskMap.get(id)
     },
     closeDialogForm() {
       this.dialogFormVisible = false
@@ -218,9 +206,6 @@ export default {
 
           ]
           const list = this.multipleSelection
-          for (let i = 0; i < list.length; i++) {
-            list[i].taskid = this.geTasknameById(list[i].taskid)
-          }
           const data = this.formatJson(filterVal, list)
           excel.export_json_to_excel({
             header: tHeader,
@@ -285,6 +270,9 @@ export default {
           if (response.flag) {
             this.pojo = response.data
           }
+          taskApi.findById(this.pojo.taskid).then(response => {
+            this.taskName = response.data.name
+          })
         })
       } else {
         this.pojo = {} // 清空数据

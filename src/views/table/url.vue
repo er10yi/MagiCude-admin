@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -224,13 +224,6 @@ export default {
 
           ]
           const list = this.multipleSelection
-          // for (let i = 0; i < list.length; i++) {
-          //   list[i].urlid = this.getOuterInfo(list[i].urlid)
-          //   list[i].activetime = dateformat(list[i].activetime)
-          //   list[i].passivetime = dateformat(list[i].passivetime)
-          //   list[i].checkwhitelist = list[i].checkwhitelist ? '是' : ''
-          //   list[i].assetnotifywhitelist = list[i].assetnotifywhitelist ? '是' : ''
-          // }
           const data = this.formatJson(filterVal, list)
           excel.export_json_to_excel({
             header: tHeader,

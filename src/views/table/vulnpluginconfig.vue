@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -58,17 +58,8 @@
       <!-- <el-table-column sortable prop="vulnid" label="漏洞编号" />
       <el-table-column sortable prop="pluginconfigid" label="插件配置编号" /> -->
 
-      <el-table-column sortable prop="vulnid" label="漏洞">
-        <template slot-scope="scope">
-          {{ getVulnName(scope.row.vulnid) }}
-        </template>
-      </el-table-column>
-
-      <el-table-column sortable prop="pluginconfigid" label="插件">
-        <template slot-scope="scope">
-          {{ getPluginconfigName(scope.row.pluginconfigid) }}
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="vulnid" label="漏洞" />
+      <el-table-column sortable prop="pluginconfigid" label="插件" />
 
       <el-table-column
         fixed="right"
@@ -100,25 +91,17 @@
         <!-- <el-form-item label="漏洞编号"><el-input v-model="pojo.vulnid" style="width:300px;" /></el-form-item> -->
         <!-- <el-form-item label="插件配置编号"><el-input v-model="pojo.pluginconfigid" style="width:300px;" /></el-form-item> -->
 
-        <el-form-item required label="漏洞">
-          <el-select v-model="pojo.vulnid" style="width:300px;" filterable clearable placeholder="请输入关键词">
-            <el-option
-              v-for="item in vulnList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
+        <el-form-item prop="vulnid" label="漏洞">
+          {{ vulName }}
+          <el-select v-model="pojo.vulnid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getVulnNameList" :loading="searchLoading">
+            <el-option v-for="item in vulnNameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
-        <el-form-item required label="插件">
-          <el-select v-model="pojo.pluginconfigid" style="width:300px;" filterable clearable placeholder="请输入关键词">
-            <el-option
-              v-for="item in pluginconfigList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
+        <el-form-item prop="pluginconfigid" label="插件">
+          {{ pluginName }}
+          <el-select v-model="pojo.pluginconfigid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getPluginConfigNameList" :loading="searchLoading">
+            <el-option v-for="item in pluginConfigNameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
@@ -153,51 +136,25 @@ export default {
       listLoading: true,
       multipleSelection: [],
       downloadLoading: false,
-      pluginconfigList: [],
-      pluginconfigMap: new Map(),
-      vulnList: [],
-      vulnMap: new Map(),
+      pluginConfigNameList: [],
       vulnNameList: [],
-      pluginConfigNameList: []
+      vulName: '',
+      pluginName: ''
 
     }
   },
   created() {
     this.fetchData()
-    this.getPluginconfig()
-    this.getVuln()
   },
   methods: {
     cleanCache() {
       this.closeDialogForm()
     },
 
-    getPluginconfig() {
-      pluginconfigApi.getList().then(response => {
-        this.pluginconfigList = response.data
-        for (let i = 0; i < this.pluginconfigList.length; i++) { // 将项目id和name封装到map中
-          this.pluginconfigMap.set(this.pluginconfigList[i].id, this.pluginconfigList[i].name)
-        }
-      }
-      )
-    },
-    getPluginconfigName(id) { // 根据id从map获取
-      return this.pluginconfigMap.get(id)
-    },
-    getVuln() {
-      vulnApi.getList().then(response => {
-        this.vulnList = response.data
-        for (let i = 0; i < this.vulnList.length; i++) { // 将项目id和name封装到map中
-          this.vulnMap.set(this.vulnList[i].id, this.vulnList[i].name)
-        }
-      }
-      )
-    },
-    getVulnName(id) { // 根据id从map获取项目名字
-      return this.vulnMap.get(id)
-    },
     closeDialogForm() {
       this.dialogFormVisible = false
+      this.vulName = ''
+      this.pluginName = ''
     },
     getVulnNameList(query) {
       if (query !== '' && query) {
@@ -281,10 +238,6 @@ export default {
 
           ]
           const list = this.multipleSelection
-          for (let i = 0; i < list.length; i++) {
-            list[i].vulnid = this.getVulnName(list[i].vulnid)
-            list[i].pluginconfigid = this.getPluginconfigName(list[i].pluginconfigid)
-          }
           const data = this.formatJson(filterVal, list)
           excel.export_json_to_excel({
             header: tHeader,
@@ -351,6 +304,12 @@ export default {
           if (response.flag) {
             this.pojo = response.data
           }
+          vulnApi.findById(this.pojo.vulnid).then(response => {
+            this.vulName = response.data.name
+          })
+          pluginconfigApi.findById(this.pojo.pluginconfigid).then(response => {
+            this.pluginName = response.data.name
+          })
         })
       } else {
         this.pojo = {} // 清空数据

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -53,11 +53,12 @@
       <el-table-column type="selection" align="center" />
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="编号" /> -->
-      <el-table-column sortable prop="name" label="联系人" width="300" />
-      <el-table-column sortable prop="email" label="邮箱" width="500" />
-      <el-table-column sortable prop="phone" label="电话" width="200" />
+      <el-table-column sortable prop="name" label="联系人" />
+      <el-table-column sortable prop="email" label="邮箱" />
+      <el-table-column sortable prop="phone" label="电话" />
 
       <el-table-column
+        fixed="right"
         label="操作"
         width="100"
       >

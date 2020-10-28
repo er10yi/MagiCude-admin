@@ -21,10 +21,10 @@
     <br><br>
     <el-row type="flex" class="row-bg el-row-two" justify="space-between">
       <el-col :span="24">
-        <div><checkresult-vuln-pie-nest-chart /></div>
+        <div style="padding:5px;"><checkresult-vuln-pie-nest-chart /></div>
       </el-col>
       <el-col :span="24">
-        <div><checkresult-vuln-online-pie-nest-chart /></div>
+        <div style="padding:5px;"><checkresult-vuln-online-pie-nest-chart /></div>
       </el-col>
     </el-row>
 

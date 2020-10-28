@@ -1,28 +1,23 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <el-collapse v-model="activeNames">
       <el-collapse-item name="1">
         <template slot="title"><i class="header-icon el-icon-info" />菜单栏隐藏与显示</template>
         <!-- 查询条件 -->
         <el-form ref="searchform" inline size="small" :model="searchMap">
-          <el-form-item prop="projectinfoid" label="项目信息">
-            <el-select v-model="searchMap.projectinfoid" filterable clearable placeholder="请输入关键词">
-              <el-option
-                v-for="item in projectInfoList"
-                :key="item.id"
-                :label="item.projectname"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
           <!-- <el-input  v-model="searchMap.projectinfoid" placeholder="项目信息编号"  width="8"></el-input> -->
 
-          <el-form-item prop="ipaddressv4" label="ipv4地址">
+          <el-form-item prop="projectinfoid" label="项目信息">
+            <el-select v-model="searchMap.projectinfoid" style="width:180px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getProjectInfoList" :loading="searchLoading">
+              <el-option v-for="item in projectinfoList" :key="item.id" :label="item.projectname" :value="item.id" /></el-select>
+          </el-form-item>
+
+          <el-form-item prop="ipaddressv4" label="ipv4">
             <el-select v-model="searchMap.ipaddressv4" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" /></el-select>
           </el-form-item>
 
-          <el-form-item prop="ipaddressv6" label="ipv6地址">
+          <el-form-item prop="ipaddressv6" label="ipv6">
             <el-select v-model="searchMap.ipaddressv6" style="width:180px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv6List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv6List" :key="item.id" :label="item.ipaddressv6" :value="item.ipaddressv6" /></el-select>
           </el-form-item>
@@ -92,7 +87,7 @@
               <td>{{ departmentPojo.departmentname }}</td>
               <el-divider direction="vertical" />
               <td><b>项目信息</b></td>
-              <td>{{ getProjectname(pojo.projectinfoid) }}</td>
+              <td>{{ pojo.projectinfoid }}</td>
             </tr>
             <tr>
               <td><b>ipv4</b></td>
@@ -261,23 +256,36 @@
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
 
       <!-- <el-table-column prop="id" label="资产ip编号" /> -->
-      <el-table-column sortable prop="projectinfoid" label="项目信息">
+
+      <el-table-column sortable prop="projectinfoid" label="项目信息" />
+      <!-- <el-table-column sortable prop="projectinfoid" label="项目信息">
         <template slot-scope="scope">
           {{ getProjectname(scope.row.projectinfoid) }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
-      <!-- <el-table-column sortable prop="ipaddressv4" label="ipv4地址" /> -->
+      <!-- <el-table-column sortable prop="ipaddressv4" label="ipv4" /> -->
 
-      <el-table-column sortable prop="ipaddressv4" label="ipv4地址">
+      <el-table-column sortable prop="ipaddressv4" label="ipv4">
+
         <template slot-scope="scope">
           <el-link :underline="false" @click="handleDrawer(scope.row.id) ">
-            <i class="el-icon-view el-icon--right" />{{ scope.row.ipaddressv4 }}
+            {{ scope.row.ipaddressv4 }}
           </el-link>
         </template>
       </el-table-column>
 
-      <el-table-column sortable prop="ipaddressv6" label="ipv6地址" />
+      <el-table-column prop="statistic" label="统计">
+        <template slot="header">
+          <span>统计</span>
+          <el-tooltip placement="top">
+            <div slot="content">总端口数:未关闭端口数:总漏洞数:未修复漏洞数</div>
+            <i class="el-icon-info" />
+          </el-tooltip>
+        </template>
+      </el-table-column>
+
+      <el-table-column sortable prop="ipaddressv6" label="ipv6" />
 
       <el-table-column align="center" sortable label="安全检测白名单">
         <template slot="header">
@@ -344,19 +352,18 @@
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
       <el-form label-width="100px">
         <el-form-item label="项目信息">
-          <el-select v-model="pojo.projectinfoid" style="width:300px;" filterable clearable placeholder="请输入关键词">
-            <el-option
-              v-for="item in projectInfoList"
-              :key="item.id"
-              :label="item.projectname"
-              :value="item.id"
-            />
-          </el-select>
+          <span>{{ projectname }}</span>
+          <el-select v-model="pojo.projectinfoid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getProjectInfoList" :loading="searchLoading">
+            <el-option v-for="item in projectinfoList" :key="item.id" :label="item.projectname" :value="item.id" /></el-select>
         </el-form-item>
+
         <!-- <el-form-item label="ipv4" required><el-input v-model="pojo.ipaddressv4" style="width:300px;" clearable /></el-form-item> -->
-        <el-form-item prop="ipaddressv4" label="ipv4地址">
-          <el-select v-model="pojo.ipaddressv4" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
-            <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" /></el-select>
+        <el-form-item prop="ipaddressv4" label="ipv4">
+          {{ pojo.ipaddressv4 }}
+          <span v-if="pojo.id==null">
+            <el-select v-model="pojo.ipaddressv4" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
+              <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" /></el-select>
+          </span>
         </el-form-item>
         <el-form-item label="ipv6"><el-input v-model="pojo.ipaddressv6" style="width:300px;" clearable /></el-form-item>
         <el-form-item label="白名单">
@@ -403,8 +410,6 @@ export default {
       searchMap: {}, // 查询条件
       dialogFormVisible: false, // 编辑窗口是否可见
       pojo: {}, // 编辑表单绑定的实体对象
-      projectInfoList: [], // 项目信息列表
-      projectInfoMap: new Map(), // 项目信息id与项目名字map
       id: '', // 当前用户修改的ID
       filename: '',
       listLoading: true,
@@ -414,6 +419,7 @@ export default {
       remarkList: [],
       ipaddressv4List: [],
       ipaddressv6List: [],
+      projectinfoList: [],
 
       // 多表显示
       projectinfoPojo: {},
@@ -428,7 +434,7 @@ export default {
       portList: [],
       portids: [],
       activeNames: ['1'],
-
+      projectname: '',
       drawer: false,
 
       pickerOptions: { // 日期选择
@@ -472,7 +478,6 @@ export default {
     }
   },
   created() {
-    this.getProjectInfo()
     this.fetchData()
   },
   methods: {
@@ -482,29 +487,41 @@ export default {
       assetipApi.findById(id).then(response => {
         if (response.flag) {
           this.pojo = response.data
+
+          projectinfoApi.findById(this.pojo.projectinfoid).then(response => {
+            if (response.data) {
+              if (response.data.projectname !== null) {
+                this.pojo.projectinfoid = response.data.projectname
+              }
+            }
+          })
+
           // 资产端口
           assetportApi.findAllByAssetipId(this.id).then(response => {
             this.portList = response.data
-            if (this.pojo.projectinfoid) {
+            if (this.pojo.projectinfoid && this.pojo.projectinfoid !== '') {
               projectinfoApi.findById(this.pojo.projectinfoid).then(response => {
-                this.projectinfoPojo = response.data
-                const departmentid = this.projectinfoPojo.departmentid
-                if (departmentid) {
-                  departmentApi.findById(departmentid).then(response => {
-                    this.departmentPojo = response.data
+                if (response.data) {
+                  this.projectinfoPojo = response.data
+                  if (this.projectinfoPojo.departmentid) {
+                    const departmentid = this.projectinfoPojo.departmentid
+                    departmentApi.findById(departmentid).then(response => {
+                      this.departmentPojo = response.data
+                    })
+                  }
+                }
+              })
+
+              // 联系人信息
+              contactProjectinfoApi.findAllByProjectinfoid(this.pojo.projectinfoid).then(response => {
+                this.contactProjectinfoList = response.data
+                for (let i = 0; i < this.contactProjectinfoList.length; i++) {
+                  contactApi.findById(this.contactProjectinfoList[i].contactid).then(response => {
+                    this.contactList.push(response.data)
                   })
                 }
               })
             }
-            // 联系人信息
-            contactProjectinfoApi.findAllByProjectinfoid(this.pojo.projectinfoid).then(response => {
-              this.contactProjectinfoList = response.data
-              for (let i = 0; i < this.contactProjectinfoList.length; i++) {
-                contactApi.findById(this.contactProjectinfoList[i].contactid).then(response => {
-                  this.contactList.push(response.data)
-                })
-              }
-            })
 
             if (this.portList.length !== 0) {
               for (let i = 0; i < this.portList.length; i++) {
@@ -559,6 +576,8 @@ export default {
       this.webinfoids = []
       this.portList = []
       this.portids = []
+      this.projectinfoList = []
+      this.projectname = ''
     },
     getIpaddressv6List(query) {
       if (query !== '' && query) {
@@ -584,6 +603,7 @@ export default {
             this.ipaddressv4List = response.data.rows.filter(item => {
               return item.ipaddressv4.toLowerCase().indexOf(query.toLowerCase()) > -1
             })
+            console.log(this.ipaddressv4List)
           })
         }, 200)
       } else {
@@ -606,17 +626,21 @@ export default {
         this.remarkList = []
       }
     },
-    getProjectInfo() {
-      projectinfoApi.getList().then(response => {
-        this.projectInfoList = response.data
-        for (let i = 0; i < this.projectInfoList.length; i++) { // 将项目id和name封装到map中
-          this.projectInfoMap.set(this.projectInfoList[i].id, this.projectInfoList[i].projectname)
-        }
+
+    getProjectInfoList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          projectinfoApi.search(1, 10, { 'projectname': query }).then(response => {
+            this.projectinfoList = response.data.rows.filter(item => {
+              return item.projectname.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.projectinfoList = []
       }
-      )
-    },
-    getProjectname(id) { // 根据id从map获取项目名字
-      return this.projectInfoMap.get(id)
     },
     handleDeleteAll() {
       if (this.multipleSelection && this.multipleSelection.length) {
@@ -659,11 +683,11 @@ export default {
       if (this.multipleSelection && this.multipleSelection.length) {
         this.downloadLoading = true
         import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['项目信息', 'ipv4地址', 'ipv6地址', '安全检测白名单', '资产提醒白名单', '发现时间', '下线时间', '备注']
+          const tHeader = ['项目信息', 'ipv4', 'ipv6', '安全检测白名单', '资产提醒白名单', '发现时间', '下线时间', '备注']
           const filterVal = ['projectinfoid', 'ipaddressv4', 'ipaddressv6', 'checkwhitelist', 'assetnotifywhitelist', 'activetime', 'passivetime', 'remark']
           const list = this.multipleSelection
           for (let i = 0; i < list.length; i++) {
-            list[i].projectinfoid = this.getProjectname(list[i].projectinfoid)
+            // list[i].ipaddressv4 = this.list[i].ipaddressv4.split(' : ')[0]
             list[i].activetime = dateformat(list[i].activetime)
             list[i].passivetime = dateformat(list[i].passivetime)
             list[i].checkwhitelist = list[i].checkwhitelist ? '是' : ''
@@ -712,8 +736,8 @@ export default {
       assetipApi.search(this.currentPage, this.pageSize, this.searchMap).then(response => {
         this.list = response.data.rows
         this.total = response.data.total
-        this.listLoading = false
       })
+      this.listLoading = false
     },
     handleSave() {
       assetipApi.update(this.id, this.pojo).then(response => {
@@ -734,6 +758,11 @@ export default {
         assetipApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
+            projectinfoApi.findById(this.pojo.projectinfoid).then((response) => {
+              if (response.flag) {
+                this.projectname = response.data.projectname
+              }
+            })
           }
         })
       } else {

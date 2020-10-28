@@ -1,13 +1,12 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
-      <el-form-item prop="vulnid" label="漏洞">
-        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getVulnList" :loading="searchLoading">
-          <el-option v-for="item in vulnList" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </el-form-item>
+      <el-form-item prop="name" label="漏洞">
+        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+          <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select></el-form-item>
 
       <el-form-item prop="solution" label="修复方案">
         <el-select v-model="searchMap.solution" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getSolutionList" :loading="searchLoading">
@@ -60,11 +59,7 @@
       <el-table-column type="selection" align="center" />
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="修复方案编号" /> -->
-      <el-table-column sortable prop="vulnid" label="漏洞">
-        <template slot-scope="scope">
-          {{ getVulnById(scope.row.vulnid) }}
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="vulnid" label="漏洞" />
       <el-table-column sortable prop="solution" label="修复方案" />
       <el-table-column sortable prop="codedemo" label="修复代码示例" />
       <el-table-column sortable prop="configdemo" label="修复配置示例" />
@@ -96,18 +91,11 @@
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
       <el-form label-width="100px">
 
-        <span v-if="pojo.id ==null">
-          <el-form-item required label="漏洞">
-            <el-select v-model="pojo.vulnid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getVulnList" :loading="searchLoading">
-              <el-option v-for="item in vulnList" :key="item.id" :label="item.name" :value="item.id" />
-            </el-select>
-          </el-form-item>
-        </span>
-        <span v-else>
-          <el-form-item required label="漏洞">
-            <span>{{ getVulnById(pojo.vulnid) }}</span>
-          </el-form-item>
-        </span>
+        <el-form-item prop="name" label="漏洞">
+          {{ vulname }}
+          <el-select v-model="pojo.vulnid" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+            <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select></el-form-item>
         <el-form-item label="修复方案"><el-input v-model="pojo.solution" autosize type="textarea" /></el-form-item>
         <el-form-item label="修复代码示例"><el-input v-model="pojo.codedemo" autosize type="textarea" /></el-form-item>
         <el-form-item label="修复配置示例"><el-input v-model="pojo.configdemo" autosize type="textarea" /></el-form-item>
@@ -142,20 +130,34 @@ export default {
       multipleSelection: [],
       downloadLoading: false,
 
-      vulnMap: new Map(),
-      vulnids: [],
-      vulnIdAndVulnNameList: [],
       searchLoading: false,
       vulnList: [],
       solutionList: [],
       codedemoList: [],
-      configdemoList: []
+      configdemoList: [],
+      nameList: [],
+      vulname: ''
     }
   },
   created() {
     this.fetchData()
   },
   methods: {
+    getNameList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          vulnApi.search(1, 10, { 'name': query }).then(response => {
+            this.nameList = response.data.rows.filter(item => {
+              return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.nameList = []
+      }
+    },
     cleanCache() {
       this.closeDialogForm()
     },
@@ -219,24 +221,11 @@ export default {
         this.vulnList = []
       }
     },
-    getVuln() {
-      this.vulnids = []
-      for (let i = 0; i < this.list.length; i++) {
-        this.vulnids.push(this.list[i].vulnid)
-      }
-      vulnApi.findByIds(this.vulnids).then(response => {
-        this.vulnIdAndVulnNameList = response.data
-        for (let i = 0; i < this.vulnIdAndVulnNameList.length; i++) {
-          this.vulnMap.set(this.vulnIdAndVulnNameList[i].split('-')[0], this.vulnIdAndVulnNameList[i].split('-')[1])
-        }
-      })
-    },
-    getVulnById(id) { // 根据id从map获取ip
-      return this.vulnMap.get(id)
-    },
     closeDialogForm() {
       this.dialogFormVisible = false
       this.vulnList = []
+      this.nameList = []
+      this.vulname = ''
     },
 
     handleDeleteAll() {
@@ -295,9 +284,6 @@ export default {
 
           ]
           const list = this.multipleSelection
-          for (let i = 0; i < list.length; i++) {
-            list[i].vulnid = this.getVulnById(list[i].vulnid)
-          }
           const data = this.formatJson(filterVal, list)
           excel.export_json_to_excel({
             header: tHeader,
@@ -368,6 +354,9 @@ export default {
           if (response.flag) {
             this.pojo = response.data
           }
+          vulnApi.findById(this.pojo.vulnid).then(response => {
+            this.vulname = response.data.name
+          })
         })
       } else {
         this.pojo = {} // 清空数据

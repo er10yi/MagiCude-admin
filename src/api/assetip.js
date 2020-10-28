@@ -44,13 +44,6 @@ export default {
       method: 'delete'
     })
   },
-  findByIds(ids) {
-    return request({
-      url: `/${group_name}/${api_name}/ids`,
-      method: 'post',
-      data: ids
-    })
-  },
   deleteAllByIds(ids) {
     return request({
       url: `/${group_name}/${api_name}/deleteids`,

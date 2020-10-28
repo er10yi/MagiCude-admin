@@ -50,6 +50,25 @@ export default {
       method: 'post',
       data: ids
     })
+  },
+  findAllContactById(id) {
+    return request({
+      url: `/${group_name}/${api_name}/contact/${id}`,
+      method: 'get'
+    })
+  },
+  addContact(projectinfoIdAndContactId) {
+    return request({
+      url: `/${group_name}/${api_name}/contact`,
+      method: 'post',
+      data: projectinfoIdAndContactId
+    })
+  },
+  deleteContact(projectinfoIdAndContactId) {
+    return request({
+      url: `/${group_name}/${api_name}/delcontact`,
+      method: 'post',
+      data: projectinfoIdAndContactId
+    })
   }
-
 }

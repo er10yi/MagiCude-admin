@@ -1,23 +1,19 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
       <!-- <el-form-item label="插件配置编号">
         <el-input v-model="searchMap.pluginconfigid" prop="pluginconfigid" clearable placeholder="插件配置编号" /></el-form-item> -->
-      <el-form-item prop="pluginconfigid" label="插件名称">
-        <el-select v-model="searchMap.pluginconfigid" filterable clearable placeholder="请输入关键词">
-          <el-option
-            v-for="item in pluginconfigList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
+      <el-form-item prop="name" label="名称">
+        <el-select v-model="searchMap.pluginconfigid" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+          <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
       </el-form-item>
 
-      <el-form-item label="漏洞关键字">
-        <el-input v-model="searchMap.keyword" prop="keyword" clearable placeholder="漏洞关键字" /></el-form-item>
+      <el-form-item prop="keyword" label="漏洞关键字">
+        <el-select v-model="searchMap.keyword" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getKeyWordList" :loading="searchLoading">
+          <el-option v-for="item in keyWordList" :key="item.id" :label="item.keyword" :value="item.keyword" /></el-select>
+      </el-form-item>
 
       <el-form-item>
         <el-button type="primary" @click="fetchData()">查询</el-button>
@@ -55,11 +51,7 @@
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="漏洞关键字编号" /> -->
       <!-- <el-table-column sortable prop="pluginconfigid" label="插件配置编号" /> -->
-      <el-table-column sortable prop="pluginconfigid" label="插件名称">
-        <template slot-scope="scope">
-          {{ getPluginconfignameById(scope.row.pluginconfigid) }}
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="pluginconfigid" label="插件名称" />
       <el-table-column sortable prop="keyword" label="漏洞关键字" />
 
       <el-table-column
@@ -90,15 +82,10 @@
       <el-form label-width="100px">
 
         <!-- <el-form-item label="插件配置编号"><el-input v-model="pojo.pluginconfigid" style="width:300px;" /></el-form-item> -->
-        <el-form-item label="插件名称">
-          <el-select v-model="pojo.pluginconfigid" style="width:300px;" filterable clearable placeholder="请输入关键词">
-            <el-option
-              v-for="item in pluginconfigList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
+        <el-form-item prop="name" label="名称">
+          {{ pluginName }}
+          <el-select v-model="pojo.pluginconfigid" filterable remote clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+            <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
         </el-form-item>
         <el-form-item label="漏洞关键字"><el-input v-model="pojo.keyword" style="width:300px;" /></el-form-item>
 
@@ -133,32 +120,53 @@ export default {
       downloadLoading: false,
       searchLoading: false,
       pluginconfigList: [],
-      pluginconfigMap: new Map()
+      nameList: [],
+      pluginName: '',
+      keyWordList: []
 
     }
   },
   created() {
     this.fetchData()
-    this.getPluginconfig()
   },
   methods: {
+    getNameList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          pluginconfigApi.search(1, 10, { 'name': query }).then(response => {
+            this.nameList = response.data.rows.filter(item => {
+              return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.nameList = []
+      }
+    },
+    getKeyWordList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          vulnkeywordApi.search(1, 10, { 'keyword': query }).then(response => {
+            this.keyWordList = response.data.rows.filter(item => {
+              return item.keyword.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.keyWordList = []
+      }
+    },
     cleanCache() {
       this.closeDialogForm()
     },
-    getPluginconfignameById(id) {
-      return this.pluginconfigMap.get(id)
-    },
-    getPluginconfig() {
-      pluginconfigApi.getList().then(response => {
-        this.pluginconfigList = response.data
-        for (let i = 0; i < this.pluginconfigList.length; i++) { // 将id和name封装到map中
-          this.pluginconfigMap.set(this.pluginconfigList[i].id, this.pluginconfigList[i].name)
-        }
-      }
-      )
-    },
     closeDialogForm() {
       this.dialogFormVisible = false
+      this.nameList = []
+      this.pluginName = ''
     },
 
     handleDeleteAll() {
@@ -213,9 +221,6 @@ export default {
 
           ]
           const list = this.multipleSelection
-          for (let i = 0; i < list.length; i++) {
-            list[i].pluginconfigid = this.getPluginconfignameById(list[i].pluginconfigid)
-          }
           const data = this.formatJson(filterVal, list)
           excel.export_json_to_excel({
             header: tHeader,
@@ -240,6 +245,7 @@ export default {
     resetForm(formName) { // 清空搜索表单
       this.$refs[formName].resetFields()
       this.searchMap = {}
+      this.nameList = []
       this.$message({
         message: '已清空搜索条件',
         type: 'info'
@@ -280,6 +286,9 @@ export default {
           if (response.flag) {
             this.pojo = response.data
           }
+          pluginconfigApi.findById(this.pojo.pluginconfigid).then(response => {
+            this.pluginName = response.data.name
+          })
         })
       } else {
         this.pojo = {} // 清空数据

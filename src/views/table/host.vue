@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <el-collapse v-model="activeNames">
       <el-collapse-item name="1">
         <template slot="title"><i class="header-icon el-icon-info" />菜单栏隐藏与显示</template>
@@ -9,7 +9,7 @@
         <el-input v-model="searchMap.assetipid" prop="assetipid" clearable placeholder="资产ip编号" /></el-form-item> -->
 
           <el-form-item prop="assetipid" label="ipv4地址">
-            <el-select v-model="searchMap.assetipid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="searchMap.assetipid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.id" />
             </el-select>
           </el-form-item>
@@ -87,12 +87,7 @@
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="主机编号" /> -->
 
-      <!-- <el-table-column sortable prop="assetipid" label="资产ip编号" /> -->
-      <el-table-column sortable prop="assetipid" label="资产ip">
-        <template slot-scope="scope">
-          {{ getAssetIpById(scope.row.assetipid) }}
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="assetipid" label="资产ip" />
 
       <el-table-column sortable prop="macaddress" label="mac地址" />
       <el-table-column sortable prop="hostname" label="主机名" />
@@ -137,18 +132,14 @@
 
         <!-- <el-form-item label="资产ip编号"><el-input v-model="pojo.assetipid" style="width:300px;" /></el-form-item> -->
 
-        <span v-if="getAssetIpById(pojo.assetipid) ==null">
-          <el-form-item required label="ipv4地址">
+        <el-form-item required label="ipv4地址">
+          <span>{{ ipv4 }}</span>
+          <span v-if="pojo.id==null">
             <el-select v-model="pojo.assetipid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.id" />
             </el-select>
-          </el-form-item>
-        </span>
-        <span v-else>
-          <el-form-item required label="ipv4地址">
-            <span>{{ getAssetIpById(pojo.assetipid) }}</span>
-          </el-form-item>
-        </span>
+          </span>
+        </el-form-item>
 
         <el-form-item label="mac地址"><el-input v-model="pojo.macaddress" style="width:300px;" /></el-form-item>
         <el-form-item required label="主机名"><el-input v-model="pojo.hostname" style="width:300px;" /></el-form-item>
@@ -206,6 +197,7 @@ export default {
       ownerList: [],
       typeList: [],
       activeNames: ['1'],
+      ipv4: '',
 
       pickerOptions: { // 日期选择
         disabledDate(time) {
@@ -249,7 +241,6 @@ export default {
   },
   created() {
     this.fetchData()
-    this.assetIpMap = new Map()
   },
   methods: {
     cleanCache() {
@@ -258,20 +249,7 @@ export default {
     closeDialogForm() {
       this.dialogFormVisible = false
       this.ipaddressv4List = []
-    },
-    getAssetIpById(id) { // 根据id从map获取ip
-      return this.assetIpMap.get(id)
-    },
-    getAssetIp() {
-      for (let i = 0; i < this.list.length; i++) {
-        this.assetipids.push(this.list[i].assetipid)
-      }
-      assetipApi.findByIds(this.assetipids).then(response => {
-        this.assetIpIdAndIpList = response.data
-        for (let i = 0; i < this.assetIpIdAndIpList.length; i++) {
-          this.assetIpMap.set(this.assetIpIdAndIpList[i].split('-')[0], this.assetIpIdAndIpList[i].split('-')[1])
-        }
-      })
+      this.ipv4 = ''
     },
     getHostnameList(query) {
       if (query !== '' && query) {
@@ -445,7 +423,6 @@ export default {
           ]
           const list = this.multipleSelection
           for (let i = 0; i < list.length; i++) {
-            list[i].assetipid = this.getAssetIpById(list[i].assetipid)
             list[i].activetime = dateformat(list[i].activetime)
           }
           const data = this.formatJson(filterVal, list)
@@ -495,10 +472,8 @@ export default {
       hostApi.search(this.currentPage, this.pageSize, this.searchMap).then(response => {
         this.list = response.data.rows
         this.total = response.data.total
-        this.listLoading = false
-      }).then(() => {
-        this.getAssetIp()
       })
+      this.listLoading = false
     },
     handleSave() {
       hostApi.update(this.id, this.pojo).then(response => {
@@ -519,6 +494,11 @@ export default {
         hostApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
+            assetipApi.findById(this.pojo.assetipid).then(response => {
+              if (response.flag) {
+                this.ipv4 = response.data.ipaddressv4
+              }
+            })
           }
         })
       } else {

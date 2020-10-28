@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <el-collapse v-model="activeNames">
       <el-collapse-item name="1">
         <template slot="title"><i class="header-icon el-icon-info" />菜单栏隐藏与显示</template>
@@ -81,7 +81,7 @@
       <el-card class="box-card">
         <div slot="header" class="clearfix">
 
-          <span><b>  {{ getAssetIpById(pojo.assetipid) }} {{ pojo.port }} 端口所有信息</b></span>
+          <span><b>  {{ ipv4 }} {{ pojo.port }} 端口所有信息</b></span>
         </div>
         <div class="text">
           <table border="0">
@@ -126,10 +126,10 @@
             </tr>
             <tr>
               <td><b>HTTP链接</b></td>
-              <td><el-link :href="'http://'+getAssetIpById(pojo.assetipid)+':'+pojo.port" target="_blank" :underline="false">点我打开</el-link></td>
+              <td><el-link :href="'http://'+ipv4+':'+pojo.port" target="_blank" :underline="false">点我打开</el-link></td>
               <el-divider direction="vertical" />
               <td><b>HTTPS链接</b></td>
-              <td><el-link :href="'https://'+getAssetIpById(pojo.assetipid)+':'+pojo.port" target="_blank" :underline="false">点我打开</el-link></td>
+              <td><el-link :href="'https://'+ipv4+':'+pojo.port" target="_blank" :underline="false">点我打开</el-link></td>
 
             </tr>
           </table>
@@ -228,19 +228,21 @@
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="端口编号" /> -->
 
-      <!-- <el-table-column sortable prop="assetipid" label="资产ip" /> -->
-      <el-table-column sortable prop="assetipid" label="资产ip">
-        <template slot-scope="scope">
-          {{ getAssetIpById(scope.row.assetipid) }}
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="assetipid" label="资产ip" />
 
       <!-- <el-table-column sortable prop="port" label="端口" /> -->
 
       <el-table-column sortable prop="port" label="端口">
+        <template slot="header">
+          <span>端口</span>
+          <el-tooltip placement="top">
+            <div slot="content">端口 总漏洞数:未修复漏洞数</div>
+            <i class="el-icon-info" />
+          </el-tooltip>
+        </template>
         <template slot-scope="scope">
           <el-link :underline="false" @click="handleDrawer(scope.row.id) ">
-            <i class="el-icon-view el-icon--right" /> {{ scope.row.port }}
+            {{ scope.row.port }} {{ scope.row.statistic }}
           </el-link>
         </template>
       </el-table-column>
@@ -318,21 +320,19 @@
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
       <el-form label-width="100px">
 
-        <span v-if="pojo.id ==null">
-          <el-form-item required label="ipv4地址">
+        <el-form-item required label="ipv4地址">
+          <span>{{ ipv4 }}</span>
+          <span v-if="pojo.id==null">
             <el-select v-model="pojo.assetipid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.id" />
             </el-select>
-          </el-form-item>
-        </span>
-        <span v-else>
-          <el-form-item required label="ipv4地址">
-            <span>{{ getAssetIpById(pojo.assetipid) }}</span>
-          </el-form-item>
-        </span>
+          </span>
+        </el-form-item>
 
         <!-- <el-form-item label="资产ip编号"><el-input v-model="pojo.assetipid" style="width:300px;" /></el-form-item> -->
-        <el-form-item required label="端口"><el-input v-model="pojo.port" style="width:300px;" /></el-form-item>
+        <el-form-item required label="端口">
+          <el-input v-model="pojo.port" style="width:300px;" />
+        </el-form-item>
         <!-- <el-form-item prop="port" label="端口">
           <el-select v-model="pojo.port" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getPortList" :loading="searchLoading">
             <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
@@ -389,14 +389,11 @@ export default {
       dialogFormVisible: false, // 编辑窗口是否可见
       pojo: {}, // 编辑表单绑定的实体对象
       id: '', // 当前用户修改的ID
-      assetIpIdAndIpList: [], // ip编号-ip
       protocolList: [], // 协议
       stateList: [], // 状态
       serviceList: [], // 服务列表
       versionList: [], // 版本列表
       portList: [], // 端口列表
-      assetIpMap: [], // ip编号和ip，用于将id转换成ip
-      assetipids: [], // 根据当前页面的ip编号数组，获取ip信息
       filename: '',
       listLoading: true,
       searchLoading: false,
@@ -416,6 +413,7 @@ export default {
       webinfoids: [],
       activeNames: ['1'],
       drawer: false,
+      ipv4: '',
 
       pickerOptions: { // 日期选择
         disabledDate(time) {
@@ -458,7 +456,6 @@ export default {
     }
   },
   created() {
-    this.assetIpMap = new Map()
     this.fetchData()
   },
   methods: {
@@ -472,6 +469,7 @@ export default {
           const assetipidRespose = this.pojo.assetipid
           if (assetipidRespose) {
             assetipApi.findById(assetipidRespose).then(response => {
+              this.ipv4 = response.data.ipaddressv4
               const projectinfoid = response.data.projectinfoid
               if (projectinfoid) {
                 projectinfoApi.findById(projectinfoid).then(response => {
@@ -537,6 +535,7 @@ export default {
       this.urlList = []
       this.webinfoids = []
       this.ipaddressv4List = []
+      this.ipv4 = ''
     },
     getIpaddressv4List(query) {
       if (query !== '' && query) {
@@ -628,21 +627,6 @@ export default {
         this.stateList = []
       }
     },
-    getAssetIp() {
-      this.assetipids = []
-      for (let i = 0; i < this.list.length; i++) {
-        this.assetipids.push(this.list[i].assetipid)
-      }
-      assetipApi.findByIds(this.assetipids).then(response => {
-        this.assetIpIdAndIpList = response.data
-        for (let i = 0; i < this.assetIpIdAndIpList.length; i++) {
-          this.assetIpMap.set(this.assetIpIdAndIpList[i].split('-')[0], this.assetIpIdAndIpList[i].split('-')[1])
-        }
-      })
-    },
-    getAssetIpById(id) { // 根据id从map获取ip
-      return this.assetIpMap.get(id)
-    },
     handleDeleteAll() {
       if (this.multipleSelection && this.multipleSelection.length) {
         this.$confirm('此操作将永久删除已选记录, 包括 [资产端口, 漏洞检测结果, web信息, url信息], 是否继续?', '警告', {
@@ -714,7 +698,6 @@ export default {
           ]
           const list = this.multipleSelection
           for (let i = 0; i < list.length; i++) {
-            list[i].assetipid = this.getAssetIpById(list[i].assetipid)
             list[i].uptime = dateformat(list[i].uptime)
             list[i].downtime = dateformat(list[i].downtime)
             list[i].changedtime = dateformat(list[i].changedtime)
@@ -768,10 +751,8 @@ export default {
       assetportApi.search(this.currentPage, this.pageSize, this.searchMap).then(response => {
         this.list = response.data.rows
         this.total = response.data.total
-        this.listLoading = false
-      }).then(() => {
-        this.getAssetIp()
       })
+      this.listLoading = false
     },
     handleSave() {
       assetportApi.update(this.id, this.pojo).then(response => {
@@ -792,6 +773,11 @@ export default {
         assetportApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
+            assetipApi.findById(this.pojo.assetipid).then(response => {
+              if (response.flag) {
+                this.ipv4 = response.data.ipaddressv4
+              }
+            })
           }
         })
       } else {

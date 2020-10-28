@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -61,7 +61,7 @@
       <!-- <el-table-column sortable prop="checkwhitelist" label="检测白名单" />
       <el-table-column sortable prop="notifywhitelist" label="提醒白名单" /> -->
 
-      <el-table-column sortable align="center" prop="ip" label="ip" width="150">
+      <el-table-column sortable align="center" prop="ip" label="ip">
         <template slot="header">
           <span>ip</span>
           <el-tooltip placement="top">
@@ -96,6 +96,7 @@
       </el-table-column>
 
       <el-table-column
+        fixed="right"
         label="操作"
         width="100"
       >

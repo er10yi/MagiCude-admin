@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -33,10 +33,10 @@
       <el-form-item>
         <el-button type="danger" icon="el-icon-delete" @click="handleDeleteAll">删除</el-button>
       </el-form-item>
-
+      <!--
       <el-form-item>
         <el-button type="primary" @click="handleEdit('')">新增</el-button>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
 
     <!-- 表格数据 -->
@@ -58,16 +58,8 @@
       <!-- <el-table-column sortable prop="checkresultid" label="检测结果编号" />
       <el-table-column sortable prop="vulnid" label="漏洞编号" /> -->
 
-      <el-table-column sortable prop="checkresultid" label="检测结果">
-        <template slot-scope="scope">
-          {{ getCheckResultName(scope.row.checkresultid) }}
-        </template>
-      </el-table-column>
-      <el-table-column sortable prop="vulnid" label="漏洞">
-        <template slot-scope="scope">
-          {{ getVulnName(scope.row.vulnid) }}
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="checkresultid" label="检测结果" />
+      <el-table-column sortable prop="vulnid" label="漏洞" />
 
       <el-table-column
         fixed="right"
@@ -75,7 +67,7 @@
         width="100"
       >
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="handleEdit(scope.row.id)" />
+          <!-- <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="handleEdit(scope.row.id)" /> -->
           <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="handleDelete(scope.row.id)" />
         </template>
       </el-table-column>
@@ -96,29 +88,8 @@
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
       <el-form label-width="100px">
 
-        <!-- <el-form-item label="检测结果编号"><el-input v-model="pojo.checkresultid" style="width:300px;" /></el-form-item> -->
-        <!-- <el-form-item label="漏洞编号"><el-input v-model="pojo.vulnid" style="width:300px;" /></el-form-item> -->
-
-        <el-form-item required label="插件">
-          <el-select v-model="pojo.checkresultid" style="width:300px;" filterable clearable placeholder="请输入关键词">
-            <el-option
-              v-for="item in checkresultList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item required label="漏洞">
-          <el-select v-model="pojo.vulnid" style="width:300px;" filterable clearable placeholder="请输入关键词">
-            <el-option
-              v-for="item in vulnList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
+        <el-form-item label="检测结果编号"><el-input v-model="pojo.checkresultid" style="width:300px;" /></el-form-item>
+        <el-form-item label="漏洞编号"><el-input v-model="pojo.vulnid" style="width:300px;" /></el-form-item>
 
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -153,45 +124,16 @@ export default {
       searchLoading: false,
       checkresultList: [],
       checkResultNameList: [],
-      checkresultMap: new Map(),
-      vulnList: [],
-      vulnNameList: [],
-      vulnMap: new Map()
+      vulnNameList: []
 
     }
   },
   created() {
-    this.getCheckresult()
-    this.getVuln()
     this.fetchData()
   },
   methods: {
     cleanCache() {
       this.closeDialogForm()
-    },
-    getCheckresult() {
-      checkresultApi.getList().then(response => {
-        this.checkresultList = response.data
-        for (let i = 0; i < this.checkresultList.length; i++) { // 将项目id和name封装到map中
-          this.checkresultMap.set(this.checkresultList[i].id, this.checkresultList[i].name)
-        }
-      }
-      )
-    },
-    getCheckResultName(id) { // 根据id从map获取
-      return this.checkresultMap.get(id)
-    },
-    getVuln() {
-      vulnApi.getList().then(response => {
-        this.vulnList = response.data
-        for (let i = 0; i < this.vulnList.length; i++) { // 将项目id和name封装到map中
-          this.vulnMap.set(this.vulnList[i].id, this.vulnList[i].name)
-        }
-      }
-      )
-    },
-    getVulnName(id) { // 根据id从map获取项目名字
-      return this.vulnMap.get(id)
     },
     closeDialogForm() {
       this.dialogFormVisible = false
@@ -280,7 +222,6 @@ export default {
           ]
           const list = this.multipleSelection
           for (let i = 0; i < list.length; i++) {
-            list[i].checkresultid = this.getCheckResultName(list[i].checkresultid)
             list[i].vulnid = this.getVulnName(list[i].vulnid)
           }
           const data = this.formatJson(filterVal, list)

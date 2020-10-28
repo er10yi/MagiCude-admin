@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -53,17 +53,8 @@
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="编号" /> -->
 
-      <el-table-column sortable prop="taskid" label="任务">
-        <template slot-scope="scope">
-          {{ getTaskName(scope.row.taskid) }}
-        </template>
-      </el-table-column>
-
-      <el-table-column sortable prop="pluginconfigid" label="插件">
-        <template slot-scope="scope">
-          {{ getPluginconfigName(scope.row.pluginconfigid) }}
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="taskid" label="任务" />
+      <el-table-column sortable prop="pluginconfigid" label="插件" />
 
       <el-table-column
         fixed="right"
@@ -89,28 +80,20 @@
     />
 
     <!-- 编辑框 -->
-    <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="40%">
+    <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="40%" :before-close="cleanCache">
       <el-form label-width="100px">
 
-        <el-form-item required label="任务">
-          <el-select v-model="pojo.taskid" style="width:300px;" filterable clearable placeholder="请输入关键词">
-            <el-option
-              v-for="item in taskList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
+        <el-form-item prop="taskid" label="任务">
+          {{ taskName }}
+          <el-select v-model="pojo.taskid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getTaskList" :loading="searchLoading">
+            <el-option v-for="item in taskList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
-        <el-form-item required label="插件">
-          <el-select v-model="pojo.pluginconfigid" style="width:300px;" filterable clearable placeholder="请输入关键词">
-            <el-option
-              v-for="item in pluginconfigList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
+        <el-form-item prop="pluginconfigid" label="插件">
+          {{ pluginName }}
+          <el-select v-model="pojo.pluginconfigid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getPluginConfigNameList" :loading="searchLoading">
+            <el-option v-for="item in pluginConfigNameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
@@ -143,45 +126,43 @@ export default {
       downloadLoading: false,
       searchLoading: false,
       pluginconfigList: [],
-      pluginconfigMap: new Map(),
+
       taskList: [],
-      taskMap: new Map(),
       taskNameList: [],
-      pluginConfigNameList: []
+      pluginConfigNameList: [],
+      taskName: '',
+      pluginName: ''
+
     }
   },
   created() {
     this.fetchData()
-    this.getPluginconfig()
-    this.getTask()
   },
   methods: {
-    getPluginconfig() {
-      pluginconfigApi.getList().then(response => {
-        this.pluginconfigList = response.data
-        for (let i = 0; i < this.pluginconfigList.length; i++) { // 将项目id和name封装到map中
-          this.pluginconfigMap.set(this.pluginconfigList[i].id, this.pluginconfigList[i].name)
-        }
+    cleanCache() {
+      this.closeDialogForm()
+    },
+    getNameList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          taskApi.search(1, 10, { 'name': query }).then(response => {
+            this.taskNameList = response.data.rows.filter(item => {
+              return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.taskNameList = []
       }
-      )
-    },
-    getPluginconfigName(id) { // 根据id从map获取
-      return this.pluginconfigMap.get(id)
-    },
-    getTask() {
-      taskApi.getList().then(response => {
-        this.taskList = response.data
-        for (let i = 0; i < this.taskList.length; i++) { // 将项目id和name封装到map中
-          this.taskMap.set(this.taskList[i].id, this.taskList[i].name)
-        }
-      }
-      )
-    },
-    getTaskName(id) { // 根据id从map获取项目名字
-      return this.taskMap.get(id)
     },
     closeDialogForm() {
       this.dialogFormVisible = false
+      this.taskNameList = []
+      this.pluginConfigNameList = []
+      this.taskName = ''
+      this.pluginName = ''
     },
     getTaskNameList(query) {
       if (query !== '' && query) {
@@ -265,10 +246,6 @@ export default {
 
           ]
           const list = this.multipleSelection
-          for (let i = 0; i < list.length; i++) {
-            list[i].taskid = this.getTaskName(list[i].taskid)
-            list[i].pluginconfigid = this.getPluginconfigName(list[i].pluginconfigid)
-          }
           const data = this.formatJson(filterVal, list)
           excel.export_json_to_excel({
             header: tHeader,
@@ -292,6 +269,8 @@ export default {
     resetForm(formName) { // 清空搜索表单
       this.$refs[formName].resetFields()
       this.searchMap = {}
+      this.taskNameList = []
+      this.pluginConfigNameList = []
       this.$message({
         message: '已清空搜索条件',
         type: 'info'
@@ -332,6 +311,12 @@ export default {
           if (response.flag) {
             this.pojo = response.data
           }
+          taskApi.findById(this.pojo.taskid).then(response => {
+            this.taskName = response.data.name
+          })
+          pluginconfigApi.findById(this.pojo.pluginconfigid).then(response => {
+            this.pluginName = response.data.name
+          })
         })
       } else {
         this.pojo = {} // 清空数据

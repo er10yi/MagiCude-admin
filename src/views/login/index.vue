@@ -45,7 +45,7 @@
 
     </el-form>
 
-    <div>
+    <div style="padding:5px;">
       <h3 class="footer">赋予数据无限可能<br>
         Copyrights © 2018-{{ getYear() }} <a href="https://github.com/er10yi" target="_blank">贰拾壹.</a> All Rights Reserved.</h3>
     </div>

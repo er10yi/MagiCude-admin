@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -8,7 +8,7 @@
 
       <el-form-item prop="taskid" label="任务名称">
         <el-select v-model="searchMap.taskid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getTasknameList" :loading="searchLoading">
-          <el-option v-for="item in tasknameList" :key="item.id" :label="item.name" :value="item.id" />
+          <el-option v-for="item in tasknameList" :key="item.id" :label="item.name.split(':')[0]" :value="item.id" />
         </el-select>
       </el-form-item>
 
@@ -60,13 +60,7 @@
       <el-table-column type="selection" align="center" />
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="资产ip编号" /> -->
-      <!-- <el-table-column sortable prop="taskid" label="任务编号" /> -->
-
-      <el-table-column sortable prop="taskid" label="任务名称">
-        <template slot-scope="scope">
-          {{ getTasknameById(scope.row.taskid) }}
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="taskid" label="任务名称" />
 
       <el-table-column sortable prop="ipaddressv4" label="ipv4地址" />
       <el-table-column sortable prop="ipaddressv6" label="ipv6地址" />
@@ -113,18 +107,12 @@
 
         <!-- <el-form-item label="任务编号"><el-input v-model="pojo.taskid" style="width:300px;" /></el-form-item> -->
 
-        <span v-if="getTasknameById(pojo.taskid) ==null">
-          <el-form-item required label="任务名称">
-            <el-select v-model="pojo.taskid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getTasknameList" :loading="searchLoading">
-              <el-option v-for="item in tasknameList" :key="item.id" :label="item.name" :value="item.name" />
-            </el-select>
-          </el-form-item>
-        </span>
-        <span v-else>
-          <el-form-item required label="任务名称">
-            <span>{{ getTasknameById(pojo.taskid) }}</span>
-          </el-form-item>
-        </span>
+        <el-form-item required label="任务名称">
+          {{ taskname }}
+          <el-select v-model="pojo.taskid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getTasknameList" :loading="searchLoading">
+            <el-option v-for="item in tasknameList" :key="item.id" :label="item.name" :value="item.name" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="ipv4地址"><el-input v-model="pojo.ipaddressv4" style="width:300px;" /></el-form-item>
         <el-form-item label="ipv6地址"><el-input v-model="pojo.ipaddressv6" style="width:300px;" /></el-form-item>
         <el-form-item label="白名单">
@@ -164,35 +152,22 @@ export default {
       ipaddressv6List: [],
       searchLoading: false,
       tasknameList: [],
-      taskList: [],
-      taskIpMap: new Map()
+      taskname: ''
 
     }
   },
   created() {
     this.fetchData()
-    this.getTask()
   },
   methods: {
     cleanCache() {
       this.closeDialogForm()
     },
-    getTasknameById(id) {
-      return this.taskIpMap.get(id)
-    },
-    getTask() {
-      taskApi.getList().then(response => {
-        this.taskList = response.data
-        for (let i = 0; i < this.taskList.length; i++) { // 将id和name封装到map中
-          this.taskIpMap.set(this.taskList[i].id, this.taskList[i].name)
-        }
-      }
-      )
-    },
     closeDialogForm() {
       this.dialogFormVisible = false
       this.ipaddressv4List = []
       this.ipaddressv6List = []
+      this.taskname = ''
     },
     getTasknameList(query) {
       if (query !== '' && query) {
@@ -296,7 +271,6 @@ export default {
           ]
           const list = this.multipleSelection
           for (let i = 0; i < list.length; i++) {
-            list[i].taskid = this.getTasknameById(list[i].taskid)
             list[i].checkwhitelist = list[i].checkwhitelist ? '是' : ''
           }
           const data = this.formatJson(filterVal, list)
@@ -365,6 +339,9 @@ export default {
         taskipApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
+            taskApi.findById(this.pojo.taskid).then(response => {
+              this.taskname = response.data.name
+            })
           }
         })
       } else {

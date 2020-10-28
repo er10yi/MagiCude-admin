@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -35,6 +35,9 @@
       </el-form-item>
       <!-- <el-form-item label="超时">
         <el-input v-model="searchMap.timeout" prop="timeout" clearable placeholder="超时" /></el-form-item> -->
+
+      <!-- <el-form-item label="插件代码">
+        <el-input v-model="searchMap.plugincode" prop="plugincode" clearable placeholder="插件代码" /></el-form-item> -->
 
       <el-form-item>
         <el-button type="primary" @click="fetchData()">查询</el-button>
@@ -304,14 +307,6 @@
                 :value="item.id"
               />
             </el-select>
-
-            <span v-if="pojo.id">
-              <el-tooltip placement="top">
-                <div slot="content">显示漏洞名称</div>
-                <el-button type="info" size="mini" icon="el-icon-view" circle @click="refreshVulnName(pojo.id)" />
-              </el-tooltip>
-
-            </span>
           </el-form-item>
         </el-form-item>
 
@@ -323,11 +318,7 @@
               :data="vulnPluginPojoList"
               :show-header="false"
             >
-              <el-table-column width="400" prop="vulnid" label="漏洞">
-                <template slot-scope="scope">
-                  {{ getVulnName(scope.row.vulnid) }}
-                </template>
-              </el-table-column>
+              <el-table-column width="400" prop="name" label="漏洞" />
               <el-table-column width="50">
                 <template slot-scope="scope">
                   <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="handleDeleteVulnPlugin(scope.row.id)" />
@@ -471,7 +462,6 @@ export default {
       vulnPluginPojo: {},
       vulnPluginPojoList: [],
       vulnName: '',
-      vulnMap: new Map(),
 
       plugindemocdoe: '# -*- coding:utf-8 -*-\n' +
 '# plugin code demo\n' +
@@ -593,42 +583,45 @@ export default {
   },
   methods: {
     // 初始化
-    _initialize(plugincode) {
+    codeMirrorInitialize(plugincode) {
       // 初始化编辑器实例，传入需要被实例化的文本域对象和默认配置
+      if (this.$refs.textarea) {
+        this.coder = CodeMirror.fromTextArea(this.$refs.textarea, this.options)
 
-      this.coder = CodeMirror.fromTextArea(this.$refs.textarea, this.options)
-      // 编辑器赋值
-      if (plugincode !== null) {
-        this.coder.setValue(plugincode)
+        // 编辑器赋值
+        if (plugincode !== null) {
+          this.coder.setValue(plugincode)
         // if (plugincode.indexOf('def check')) {
         //   this.coder.setValue(plugincode)
         // } else {
         //   this.coder.setValue(JSON.stringify(JSON.parse(plugincode), null, 4))
         // }
-      } else {
-        this.coder.setValue('')
-      }
+        } else {
+          this.coder.setValue('')
+        }
 
-      // 支持双向绑定
-      // this.coder.on('change', (coder) => {
-      //   this.code = coder.getValue()
-      //   this.pojo.plugincode = this.code
-      // if (this.$emit) {
-      //   this.$emit('input', this.code)
-      // }
-      // })
+        // 支持双向绑定
+        this.coder.on('change', (coder) => {
+          this.code = coder.getValue()
+          this.pojo.plugincode = this.code
+          if (this.$emit) {
+            this.$emit('input', this.code)
+          }
+        })
 
-      // 尝试从父容器获取语法类型
-      if (this.language) {
+        // 尝试从父容器获取语法类型
+        if (this.language) {
         // 获取具体的语法类型对象
-        const modeObj = this._getLanguage(this.language)
+          const modeObj = this._getLanguage(this.language)
 
-        // 判断父容器传入的语法是否被支持
-        if (modeObj) {
-          this.mode = modeObj.label
+          // 判断父容器传入的语法是否被支持
+          if (modeObj) {
+            this.mode = modeObj.label
+          }
         }
       }
     },
+
     // 获取当前语法类型
     _getLanguage(language) {
       // 在支持的语法类型列表中寻找传入的语法类型
@@ -638,7 +631,7 @@ export default {
         const currentLabel = mode.label.toLowerCase()
         const currentValue = mode.value.toLowerCase()
 
-        // 由于真实值可能不规范，例如 java 的真实值是 x-java ，所以讲 value 和 label 同时和传入语法进行比较
+        // 由于真实值可能不规范，例如 java 的真实值是 x-java ，所以将 value 和 label 同时和传入语法进行比较
         return currentLabel === currentLanguage || currentValue === currentLanguage
       })
     },
@@ -655,19 +648,6 @@ export default {
     },
     cleanCache() {
       this.closeDialogForm()
-    },
-    refreshVulnName(id) {
-      if (id !== '') {
-        this.getVulnPluginByPluginId(id)
-      }
-    },
-    getVulnName(id) { // 根据id从map获取项目名字
-      return this.vulnMap.get(id)
-    },
-    getVulnNameNyVulnId(id) {
-      vulnApi.findById(id).then(response => {
-        this.vulnName = response.data.name
-      })
     },
     remoteSearchVuln(query) {
       if (query !== '' && query) {
@@ -921,12 +901,10 @@ export default {
       this.selectedVulnList = []
       this.remoteVulnOptions = []
       this.checkedChecktypes = []
-      // if (this.coder !== null && this.pojo.type === 'selfd') {
-      //   this.code = ''
-      //   this.coder.toTextArea()
-      // }
       this.code = ''
-      this.coder.toTextArea()
+      if (this.coder && this.$refs.textarea) {
+        this.coder.toTextArea()
+      }
     },
     closeOpenDialogForm() {
       this.closeDialogForm()
@@ -1103,7 +1081,9 @@ export default {
         // this.fetchData()
         // this.handleEdit(this.id)
       }
-      this.coder.toTextArea()
+      if (this.coder && this.$refs.textarea) {
+        this.coder.toTextArea()
+      }
     },
     getServiceByPluginId(id) {
       pluginassetserviceApi.findByPluginId(id).then(response => {
@@ -1131,22 +1111,7 @@ export default {
         if (response.flag) {
           this.vulnPluginPojoList = response.data
         }
-      }).then(() => {
-        for (let i = 0; i < this.vulnPluginPojoList.length; i++) {
-          vulnApi.findById(this.vulnPluginPojoList[i].vulnid).then(response => {
-            this.vulnMap.set(response.data.id, response.data.name)
-          })
-        }
       })
-    },
-    getVuln() {
-      vulnApi.getList().then(response => {
-        this.vulnList = response.data
-        for (let i = 0; i < this.vulnList.length; i++) { // 将项目id和name封装到map中
-          this.vulnMap.set(this.vulnList[i].id, this.vulnList[i].name)
-        }
-      }
-      )
     },
     handleEdit(id) {
       this.servicePojo = {}
@@ -1168,11 +1133,11 @@ export default {
           }
         }).then(() => {
           if (this.pojo.type === 'selfd') {
-            this._initialize(this.pojo.plugincode)
+            this.codeMirrorInitialize(this.pojo.plugincode)
           }
         })
       } else {
-        this._initialize(this.plugindemocdoe)
+        this.codeMirrorInitialize(this.plugindemocdoe)
         this.pojo = {} // 清空数据
       }
     },

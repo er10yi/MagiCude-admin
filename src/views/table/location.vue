@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -241,7 +241,6 @@ export default {
           ]
           const list = this.multipleSelection
           for (let i = 0; i < list.length; i++) {
-            list[i].locationid = this.getOuterInfo(list[i].locationid)
             list[i].activetime = dateformat(list[i].activetime)
             list[i].passivetime = dateformat(list[i].passivetime)
             list[i].checkwhitelist = list[i].checkwhitelist ? '是' : ''

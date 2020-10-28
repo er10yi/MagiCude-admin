@@ -3,28 +3,28 @@
     <br>
     <el-row type="flex" class="row-bg el-row-two" justify="start">
       <el-col :span="24">
-        <div><risk-port-count-pie-chart /></div>
+        <div style="padding:5px;"><risk-port-count-pie-chart /></div>
       </el-col>
       <el-col :span="24">
-        <div><risk-port-count-online-pie-chart /></div>
-      </el-col>
-    </el-row>
-    <br>
-    <el-row type="flex" class="row-bg el-row-two" justify="start">
-      <el-col :span="24">
-        <div><risk-service-count-pie-chart /></div>
-      </el-col>
-      <el-col :span="24">
-        <div><risk-service-count-online-pie-chart /></div>
+        <div style="padding:5px;"><risk-port-count-online-pie-chart /></div>
       </el-col>
     </el-row>
     <br>
     <el-row type="flex" class="row-bg el-row-two" justify="start">
       <el-col :span="24">
-        <div> <risk-version-count-pie-chart /></div>
+        <div style="padding:5px;"><risk-service-count-pie-chart /></div>
       </el-col>
       <el-col :span="24">
-        <div><risk-version-count-online-pie-chart /></div>
+        <div style="padding:5px;"><risk-service-count-online-pie-chart /></div>
+      </el-col>
+    </el-row>
+    <br>
+    <el-row type="flex" class="row-bg el-row-two" justify="start">
+      <el-col :span="24">
+        <div style="padding:5px;"> <risk-version-count-pie-chart /></div>
+      </el-col>
+      <el-col :span="24">
+        <div style="padding:5px;"><risk-version-count-online-pie-chart /></div>
       </el-col>
     </el-row>
   </div>

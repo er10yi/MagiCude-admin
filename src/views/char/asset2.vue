@@ -3,18 +3,18 @@
     <br>
     <el-row type="flex" justify="start">
       <el-col :span="24">
-        <div> <version-count-pie-chart /> </div>
+        <div style="padding:5px;"> <version-count-pie-chart /> </div>
       </el-col>
     </el-row>
     <el-row type="flex" justify="start">
       <el-col :span="24">
-        <div>  <version-count-online-pie-chart /></div>
+        <div style="padding:5px;">  <version-count-online-pie-chart /></div>
       </el-col>
     </el-row>
     <br>
     <el-row type="flex" justify="start">
       <el-col :span="24">
-        <div>  <webinfo-count-pie-chart /></div>
+        <div style="padding:5px;">  <webinfo-count-pie-chart /></div>
       </el-col>
     </el-row>
 

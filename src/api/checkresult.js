@@ -69,6 +69,12 @@ export default {
       method: 'post',
       data: ids
     })
+  },
+  findVulNameById(id) {
+    return request({
+      url: `/${group_name}/${api_name}/vulname/${id}`,
+      method: 'get'
+    })
   }
 
 }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -300,32 +300,34 @@ export default {
   },
   methods: {
     // 初始化
-    _initialize(plugincode) {
+    codeMirrorInitialize(plugincode) {
+      if (this.$refs.textarea) {
       // 初始化编辑器实例，传入需要被实例化的文本域对象和默认配置
 
-      this.coder = CodeMirror.fromTextArea(this.$refs.textarea, this.options)
-      // 编辑器赋值
-      if (plugincode !== null) {
-        this.coder.setValue(plugincode)
-      }
+        this.coder = CodeMirror.fromTextArea(this.$refs.textarea, this.options)
+        // 编辑器赋值
+        if (plugincode !== null) {
+          this.coder.setValue(plugincode)
+        }
 
-      // 支持双向绑定
-      // this.coder.on('change', (coder) => {
-      // this.code = coder.getValue()
-      // this.pojo.plugincode = this.code
-      // if (this.$emit) {
-      //   this.$emit('input', this.code)
-      // }
-      // })
+        // 支持双向绑定
+        // this.coder.on('change', (coder) => {
+        // this.code = coder.getValue()
+        // this.pojo.plugincode = this.code
+        // if (this.$emit) {
+        //   this.$emit('input', this.code)
+        // }
+        // })
 
-      // 尝试从父容器获取语法类型
-      if (this.language) {
+        // 尝试从父容器获取语法类型
+        if (this.language) {
         // 获取具体的语法类型对象
-        const modeObj = this._getLanguage(this.language)
+          const modeObj = this._getLanguage(this.language)
 
-        // 判断父容器传入的语法是否被支持
-        if (modeObj) {
-          this.mode = modeObj.label
+          // 判断父容器传入的语法是否被支持
+          if (modeObj) {
+            this.mode = modeObj.label
+          }
         }
       }
     },
@@ -399,7 +401,9 @@ export default {
       this.remoteVulnOptions = []
       this.checkedChecktypes = []
       this.code = ''
-      this.coder.toTextArea()
+      if (this.coder && this.$refs.textarea) {
+        this.coder.toTextArea()
+      }
     },
 
     handleDeleteAll() {
@@ -544,11 +548,11 @@ export default {
             if (this.pojo.validatetype && this.pojo.validatetype.length !== 0) {
               this.checkedChecktypes = this.pojo.validatetype.split(',')
             }
-            this._initialize(response.data.plugincode)
+            this.codeMirrorInitialize(response.data.plugincode)
           }
         })
       } else {
-        this._initialize('hello plugin')
+        this.codeMirrorInitialize('hello plugin')
         this.pojo = {} // 清空数据
       }
     },

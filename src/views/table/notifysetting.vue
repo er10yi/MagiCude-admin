@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
 
     <div slot="tip" class="el-upload__tip">
@@ -16,6 +16,7 @@
       <el-table-column prop="risk" label="风险等级" />
 
       <el-table-column
+        fixed="right"
         label="操作"
         width="100"
       >
@@ -78,6 +79,7 @@
       <el-table-column prop="messagecharset" label="消息编码" />
 
       <el-table-column
+        fixed="right"
         label="操作"
         width="100"
       >
@@ -164,6 +166,7 @@
       <el-table-column prop="excelauthor" label="excel作者" />
 
       <el-table-column
+        fixed="right"
         label="操作"
         width="100"
       >

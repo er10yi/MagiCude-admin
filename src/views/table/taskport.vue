@@ -1,10 +1,16 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
       <!-- <el-form-item label="任务ip编号">
         <el-input v-model="searchMap.taskipid" prop="taskipid" clearable placeholder="任务ip编号" /></el-form-item> -->
+
+      <el-form-item prop="taskid" label="任务名称">
+        <el-select v-model="searchMap.taskid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getTaskNameList" :loading="searchLoading">
+          <el-option v-for="item in taskNameList" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </el-form-item>
 
       <el-form-item prop="taskipid" label="任务ip">
         <el-select v-model="searchMap.taskipid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
@@ -71,13 +77,14 @@
       <el-table-column type="selection" align="center" />
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="端口编号" /> -->
+      <el-table-column sortable prop="taskname" label="任务名称" />
 
-      <!-- <el-table-column sortable prop="taskipid" label="任务ip编号" /> -->
-      <el-table-column sortable prop="taskipid" label="任务ip">
+      <el-table-column sortable prop="taskipid" label="任务ip" />
+      <!-- <el-table-column sortable prop="taskipid" label="任务ip">
         <template slot-scope="scope">
           {{ getTaskipById(scope.row.taskipid) }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column sortable prop="port" label="端口" />
       <el-table-column sortable prop="protocol" label="协议" />
@@ -127,18 +134,14 @@
 
         <!-- <el-form-item label="任务ip编号"><el-input v-model="pojo.taskipid" style="width:300px;" /></el-form-item> -->
 
-        <span v-if="getTaskipById(pojo.taskipid) ==null">
-          <el-form-item required label="ipv4地址">
+        <el-form-item required label="ipv4地址">
+          <span>{{ ipv4 }}</span>
+          <span v-if="pojo.id==null">
             <el-select v-model="pojo.taskipid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.id" />
             </el-select>
-          </el-form-item>
-        </span>
-        <span v-else>
-          <el-form-item required label="ipv4地址">
-            <span>{{ getTaskipById(pojo.taskipid) }}</span>
-          </el-form-item>
-        </span>
+          </span>
+        </el-form-item>
 
         <el-form-item label="端口"><el-input v-model="pojo.port" style="width:300px;" /></el-form-item>
         <el-form-item label="协议"><el-input v-model="pojo.protocol" style="width:300px;" /></el-form-item>
@@ -161,6 +164,7 @@
 <script>
 import taskportApi from '@/api/taskport'
 import taskipApi from '@/api/taskip'
+import taskApi from '@/api/task'
 
 export default {
   data() {
@@ -183,18 +187,40 @@ export default {
       serviceList: [], // 服务列表
       versionList: [], // 版本列表
       portList: [], // 端口列表
-      taskIpIdAndIpList: [], // ip编号-ip
-      taskipids: [],
-      taskIpMap: new Map(),
-      ipaddressv4List: []
+      ipaddressv4List: [],
+      ipv4: '',
+      taskNameList: []
     }
   },
   created() {
     this.fetchData()
   },
   methods: {
+    getTaskNameList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          taskApi.search(1, 10, { 'name': query }).then(response => {
+            this.taskNameList = response.data.rows.filter(item => {
+              return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.taskNameList = []
+      }
+    },
     cleanCache() {
       this.closeDialogForm()
+    },
+    closeDialogForm() {
+      this.dialogFormVisible = false
+      this.serviceList = []
+      this.portList = []
+      this.ipv4 = ''
+      this.ipaddressv4List = []
+      this.taskNameList = []
     },
     getIpaddressv4List(query) {
       if (query !== '' && query) {
@@ -286,24 +312,6 @@ export default {
         this.stateList = []
       }
     },
-    getTaskIp() {
-      for (let i = 0; i < this.list.length; i++) {
-        this.taskipids.push(this.list[i].taskipid)
-      }
-      taskipApi.findByIds(this.taskipids).then(response => {
-        this.taskIpIdAndIpList = response.data
-        for (let i = 0; i < this.taskIpIdAndIpList.length; i++) {
-          this.taskIpMap.set(this.taskIpIdAndIpList[i].split('-')[0], this.taskIpIdAndIpList[i].split('-')[1])
-        }
-      })
-    },
-    getTaskipById(id) {
-      return this.taskIpMap.get(id)
-    },
-    closeDialogForm() {
-      this.dialogFormVisible = false
-      this.ipaddressv4List = []
-    },
     handleDeleteAll() {
       if (this.multipleSelection && this.multipleSelection.length) {
         this.$confirm('此操作将永久删除已选记录, 是否继续?', '警告', {
@@ -346,6 +354,7 @@ export default {
         this.downloadLoading = true
         import('@/vendor/Export2Excel').then(excel => {
           const tHeader = [
+            '任务名称',
             '任务ip',
             '端口',
             '协议',
@@ -356,6 +365,7 @@ export default {
 
           ]
           const filterVal = [
+            'taskname',
             'taskipid',
             'port',
             'protocol',
@@ -367,7 +377,6 @@ export default {
           ]
           const list = this.multipleSelection
           for (let i = 0; i < list.length; i++) {
-            list[i].taskipid = this.getTaskipById(list[i].taskipid)
             list[i].checkwhitelist = list[i].checkwhitelist ? '是' : ''
           }
           const data = this.formatJson(filterVal, list)
@@ -400,6 +409,7 @@ export default {
       this.serviceList = []
       this.versionList = []
       this.portList = []
+      this.taskNameList = []
       this.$message({
         message: '已清空搜索条件',
         type: 'info'
@@ -418,8 +428,6 @@ export default {
         this.list = response.data.rows
         this.total = response.data.total
         this.listLoading = false
-      }).then(() => {
-        this.getTaskIp()
       })
     },
     handleSave() {
@@ -441,6 +449,11 @@ export default {
         taskportApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
+            taskipApi.findById(this.pojo.taskipid).then(response => {
+              if (response.flag) {
+                this.ipv4 = response.data.ipaddressv4
+              }
+            })
           }
         })
       } else {

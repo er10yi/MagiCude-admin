@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -13,13 +13,8 @@
         <el-input v-model="searchMap.notifywhitelist" prop="notifywhitelist" clearable placeholder="提醒白名单" /></el-form-item> -->
 
       <el-form-item prop="projectinfoid" label="项目信息">
-        <el-select v-model="searchMap.projectinfoid" filterable clearable placeholder="请输入关键词">
-          <el-option
-            v-for="item in projectInfoList"
-            :key="item.id"
-            :label="item.projectname"
-            :value="item.id"
-          />
+        <el-select v-model="searchMap.projectinfoid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getProjectNameList" :loading="searchLoading">
+          <el-option v-for="item in projectnameList" :key="item.id" :label="item.projectname" :value="item.id" />
         </el-select>
       </el-form-item>
 
@@ -73,11 +68,7 @@
 
       <!-- <el-table-column sortable prop="projectinfoid" label="项目信息编号" /> -->
 
-      <el-table-column sortable prop="projectinfoid" width="300" label="项目信息">
-        <template slot-scope="scope">
-          {{ getProjectname(scope.row.projectinfoid) }}
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="projectinfoid" label="项目信息" />
 
       <el-table-column sortable prop="port" label="端口" width="80" />
 
@@ -108,6 +99,7 @@
       </el-table-column>
 
       <el-table-column
+        fixed="right"
         label="操作"
         width="100"
       >
@@ -133,14 +125,10 @@
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
       <el-form label-width="100px">
 
-        <el-form-item label="项目信息">
-          <el-select v-model="pojo.projectinfoid" style="width:300px;" filterable clearable placeholder="请输入关键词">
-            <el-option
-              v-for="item in projectInfoList"
-              :key="item.id"
-              :label="item.projectname"
-              :value="item.id"
-            />
+        <el-form-item prop="projectinfoid" label="项目信息">
+          {{ projectname }}
+          <el-select v-model="pojo.projectinfoid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getProjectNameList" :loading="searchLoading">
+            <el-option v-for="item in projectnameList" :key="item.id" :label="item.projectname" :value="item.id" />
           </el-select>
         </el-form-item>
 
@@ -183,17 +171,38 @@ export default {
       multipleSelection: [],
       downloadLoading: false,
       searchLoading: false,
-      projectInfoList: [],
-      projectInfoMap: new Map(),
-      portList: []
+      portList: [],
+
+      projectnameList: [],
+      projectname: ''
 
     }
   },
   created() {
-    this.getProjectInfo()
     this.fetchData()
   },
   methods: {
+    getProjectNameList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          projectinfoApi.search(1, 10, { 'projectname': query }).then(response => {
+            this.projectnameList = response.data.rows.filter(item => {
+              return item.projectname.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.projectnameList = []
+      }
+    },
+    closeDialogForm() {
+      this.dialogFormVisible = false
+      this.projectnameList = []
+      this.portList = []
+      this.projectname = ''
+    },
     cleanCache() {
       this.closeDialogForm()
     },
@@ -212,22 +221,6 @@ export default {
         this.portList = []
       }
     },
-    getProjectInfo() {
-      projectinfoApi.getList().then(response => {
-        this.projectInfoList = response.data
-        for (let i = 0; i < this.projectInfoList.length; i++) { // 将项目id和name封装到map中
-          this.projectInfoMap.set(this.projectInfoList[i].id, this.projectInfoList[i].projectname)
-        }
-      }
-      )
-    },
-    getProjectname(id) { // 根据id从map获取项目名字
-      return this.projectInfoMap.get(id)
-    },
-    closeDialogForm() {
-      this.dialogFormVisible = false
-    },
-
     handleDeleteAll() {
       if (this.multipleSelection && this.multipleSelection.length) {
         this.$confirm('此操作将永久删除已选记录, 是否继续?', '警告', {
@@ -285,7 +278,6 @@ export default {
           ]
           const list = this.multipleSelection
           for (let i = 0; i < list.length; i++) {
-            list[i].projectinfoid = this.getProjectname(list[i].projectinfoid)
             list[i].checkwhitelist = list[i].checkwhitelist ? '是' : ''
             list[i].notifywhitelist = list[i].notifywhitelist ? '是' : ''
           }
@@ -313,6 +305,8 @@ export default {
     resetForm(formName) { // 清空搜索表单
       this.$refs[formName].resetFields()
       this.searchMap = {}
+      this.projectnameList = []
+      this.portList = []
       this.$message({
         message: '已清空搜索条件',
         type: 'info'
@@ -352,6 +346,9 @@ export default {
         projectportwhitelistApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
+            projectinfoApi.findById(this.pojo.projectinfoid).then(response => {
+              this.projectname = response.data.projectname
+            })
           }
         })
       } else {

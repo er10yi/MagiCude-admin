@@ -71,6 +71,13 @@ export default {
       data: webinfoids
     })
   },
+  findLinksByWebinfoId(webinfoid) {
+    return request({
+      url: `/${group_name}/${api_name}/links/${webinfoid}`,
+      method: 'get'
+    })
+  },
+
   deleteAllByIds(ids) {
     return request({
       url: `/${group_name}/${api_name}/deleteids`,

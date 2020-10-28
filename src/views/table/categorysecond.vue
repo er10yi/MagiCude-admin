@@ -1,19 +1,14 @@
 <template>
-  <div>
+  <div style="padding:5px;">
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
       <!-- <el-form-item label="漏洞一级分类编号">
         <el-input v-model="searchMap.categorytopid" prop="categorytopid" clearable placeholder="漏洞一级分类编号" /></el-form-item> -->
+
       <el-form-item prop="categorytopid" label="一级分类">
-        <el-select v-model="searchMap.categorytopid" filterable clearable placeholder="请输入关键词">
-          <el-option
-            v-for="item in categorytopList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
+        <el-select v-model="searchMap.categorytopid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getCategorytopNameList" :loading="searchLoading">
+          <el-option v-for="item in categorytopNameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
       </el-form-item>
 
       <!-- <el-form-item label="二级分类">
@@ -59,12 +54,7 @@
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="漏洞二级分类编号" /> -->
 
-      <!-- <el-table-column sortable prop="categorytopid" label="漏洞一级分类编号" /> -->
-      <el-table-column sortable prop="categorytopid" label="一级分类">
-        <template slot-scope="scope">
-          {{ getCategoryTopName(scope.row.categorytopid) }}
-        </template>
-      </el-table-column>
+      <el-table-column sortable prop="categorytopid" label="一级分类" />
       <el-table-column sortable prop="name" label="二级分类" />
 
       <el-table-column
@@ -95,15 +85,12 @@
       <el-form label-width="100px">
 
         <!-- <el-form-item label="漏洞一级分类编号"><el-input v-model="pojo.categorytopid" style="width:300px;" /></el-form-item> -->
-        <el-form-item label="一级分类">
-          <el-select v-model="pojo.categorytopid" style="width:300px;" filterable clearable placeholder="请输入关键词">
-            <el-option
-              v-for="item in categorytopList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
+
+        <el-form-item prop="categorytopid" label="一级分类">
+
+          <span>{{ categorytopName }}</span>
+          <el-select v-model="pojo.categorytopid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getCategorytopNameList" :loading="searchLoading">
+            <el-option v-for="item in categorytopNameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
         </el-form-item>
 
         <!-- <el-form-item required label="二级分类"><el-input v-model="pojo.name" style="width:300px;" /></el-form-item> -->
@@ -137,19 +124,17 @@ export default {
       dialogFormVisible: false, // 编辑窗口是否可见
       pojo: {}, // 编辑表单绑定的实体对象
       id: '', // 当前用户修改的ID
-      categorytopList: [], // 外键列表
-      categorytopInMap: [], // 外键id与名字map
+      categorytopNameList: '',
       filename: '',
       listLoading: true,
       multipleSelection: [],
       downloadLoading: false,
       searchLoading: false,
-      nameList: []
+      nameList: [],
+      categorytopName: ''
     }
   },
   created() {
-    this.categorytopInMap = new Map([])
-    this.getCategoryTopInfo()
     this.fetchData()
   },
   methods: {
@@ -157,7 +142,24 @@ export default {
       this.closeDialogForm()
     },
     closeDialogForm() {
+      this.categorytopNameList = []
+      this.nameList = []
       this.dialogFormVisible = false
+    },
+    getCategorytopNameList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          categorytopApi.search(1, 10, { 'name': query }).then(response => {
+            this.categorytopNameList = response.data.rows.filter(item => {
+              return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.categorytopNameList = []
+      }
     },
     getNameList(query) {
       if (query !== '' && query) {
@@ -173,19 +175,6 @@ export default {
       } else {
         this.nameList = []
       }
-    },
-    getCategoryTopName(id) {
-      return this.categorytopInMap.get(id)
-    },
-    getCategoryTopInfo() {
-      categorytopApi.getList().then(response => {
-        this.categorytopList = response.data
-        this.categorytopInMap = new Map([])
-        for (let i = 0; i < this.categorytopList.length; i++) { // 将id和name封装到map中
-          this.categorytopInMap.set(this.categorytopList[i].id, this.categorytopList[i].name)
-        }
-      }
-      )
     },
     handleDeleteAll() {
       if (this.multipleSelection && this.multipleSelection.length) {
@@ -239,9 +228,6 @@ export default {
 
           ]
           const list = this.multipleSelection
-          for (let i = 0; i < list.length; i++) {
-            list[i].categorytopid = this.getCategoryTopName(list[i].categorytopid)
-          }
           const data = this.formatJson(filterVal, list)
           excel.export_json_to_excel({
             header: tHeader,
@@ -305,6 +291,13 @@ export default {
         categorysecondApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
+
+            categorytopApi.findById(this.pojo.categorytopid).then((response) => {
+              if (response.flag) {
+                this.categorytopName = response.data.name
+                this.pojo.categorytopid = null
+              }
+            })
           }
         })
       } else {

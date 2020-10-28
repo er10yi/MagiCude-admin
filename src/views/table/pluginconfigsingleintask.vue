@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:5px;">
 
     <br>
     <!-- 查询条件 -->
