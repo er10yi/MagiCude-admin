@@ -1,19 +1,19 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
 
       <el-form-item prop="recipient" label="接收人">
-        <el-select v-model="searchMap.recipient" style="width:200px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getRecipientList" :loading="searchLoading">
+        <el-select v-model="searchMap.recipient" style="width:200px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getRecipientList" :loading="searchLoading">
           <el-option v-for="item in recipientList" :key="item.id" :label="item.recipient" :value="item.recipient" /></el-select>
       </el-form-item>
       <el-form-item prop="receiveuser" label="接收账户">
-        <el-select v-model="searchMap.receiveuser" style="width:200px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getReceiveuserList" :loading="searchLoading">
+        <el-select v-model="searchMap.receiveuser" style="width:200px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getReceiveuserList" :loading="searchLoading">
           <el-option v-for="item in receiveuserList" :key="item.id" :label="item.receiveuser" :value="item.receiveuser" /></el-select>
       </el-form-item>
       <el-form-item prop="content" label="内容">
-        <el-select v-model="searchMap.content" style="width:200px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getContentList" :loading="searchLoading">
+        <el-select v-model="searchMap.content" style="width:200px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getContentList" :loading="searchLoading">
           <el-option v-for="item in contentList" :key="item.id" :label="item.content" :value="item.content" /></el-select>
       </el-form-item>
 

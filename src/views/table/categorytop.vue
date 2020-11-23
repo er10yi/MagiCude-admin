@@ -1,11 +1,11 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
 
       <el-form-item prop="name" label="名称">
-        <el-select v-model="searchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
           <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
       </el-form-item>
 
@@ -83,7 +83,7 @@
             allow-create
             default-first-option
             clearable
-            placeholder="请输入关键词"
+            placeholder="请输入"
             :remote-method="getNameList"
             :loading="searchLoading"
           >

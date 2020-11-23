@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -7,12 +7,12 @@
         <el-input v-model="searchMap.name" prop="name" clearable placeholder="名称" /></el-form-item> -->
 
       <el-form-item prop="name" label="名称">
-        <el-select v-model="searchMap.name" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.name" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
           <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
       </el-form-item>
 
       <el-form-item prop="args" label="参数">
-        <el-select v-model="searchMap.args" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getArgsList" :loading="searchLoading">
+        <el-select v-model="searchMap.args" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getArgsList" :loading="searchLoading">
           <el-option v-for="item in argsList" :key="item.id" :label="item.args" :value="item.args" /></el-select>
       </el-form-item>
 
@@ -157,7 +157,7 @@
               reserve-keyword
               allow-create
               default-first-option
-              placeholder="请输入关键词搜索"
+              placeholder="请输入搜索"
               :remote-method="remoteSearchService"
               :loading="searchLoading"
             >
@@ -208,7 +208,7 @@
               reserve-keyword
               allow-create
               default-first-option
-              placeholder="请输入关键词搜索"
+              placeholder="请输入搜索"
               :remote-method="remoteSearchVersion"
               :loading="searchLoading"
             >
@@ -253,7 +253,7 @@
               reserve-keyword
               allow-create
               default-first-option
-              placeholder="请输入关键词搜索"
+              placeholder="请输入搜索"
               :remote-method="remoteSearchVulnkeyword"
               :loading="searchLoading"
             >
@@ -296,7 +296,7 @@
               remote
               reserve-keyword
               default-first-option
-              placeholder="请输入关键词搜索"
+              placeholder="请输入搜索"
               :remote-method="remoteSearchVuln"
               :loading="searchLoading"
             >

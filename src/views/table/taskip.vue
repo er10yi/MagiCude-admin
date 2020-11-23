@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -7,18 +7,18 @@
         <el-input v-model="searchMap.taskid" prop="taskid" clearable placeholder="任务编号" /></el-form-item> -->
 
       <el-form-item prop="taskid" label="任务名称">
-        <el-select v-model="searchMap.taskid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getTasknameList" :loading="searchLoading">
+        <el-select v-model="searchMap.taskid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getTasknameList" :loading="searchLoading">
           <el-option v-for="item in tasknameList" :key="item.id" :label="item.name.split(':')[0]" :value="item.id" />
         </el-select>
       </el-form-item>
 
       <el-form-item prop="ipaddressv4" label="ipv4地址">
-        <el-select v-model="searchMap.ipaddressv4" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
+        <el-select v-model="searchMap.ipaddressv4" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
           <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" /></el-select>
       </el-form-item>
 
       <el-form-item prop="ipaddressv6" label="ipv6地址">
-        <el-select v-model="searchMap.ipaddressv6" style="width:180px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv6List" :loading="searchLoading">
+        <el-select v-model="searchMap.ipaddressv6" style="width:180px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpaddressv6List" :loading="searchLoading">
           <el-option v-for="item in ipaddressv6List" :key="item.id" :label="item.ipaddressv6" :value="item.ipaddressv6" /></el-select>
       </el-form-item>
 
@@ -109,7 +109,7 @@
 
         <el-form-item required label="任务名称">
           {{ taskname }}
-          <el-select v-model="pojo.taskid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getTasknameList" :loading="searchLoading">
+          <el-select v-model="pojo.taskid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getTasknameList" :loading="searchLoading">
             <el-option v-for="item in tasknameList" :key="item.id" :label="item.name" :value="item.name" />
           </el-select>
         </el-form-item>

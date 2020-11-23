@@ -1,17 +1,17 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
       <!-- <el-form-item label="插件配置编号">
         <el-input v-model="searchMap.pluginconfigid" prop="pluginconfigid" clearable placeholder="插件配置编号" /></el-form-item> -->
       <el-form-item prop="name" label="名称">
-        <el-select v-model="searchMap.pluginconfigid" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.pluginconfigid" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
           <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
       </el-form-item>
 
       <el-form-item prop="keyword" label="漏洞关键字">
-        <el-select v-model="searchMap.keyword" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getKeyWordList" :loading="searchLoading">
+        <el-select v-model="searchMap.keyword" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getKeyWordList" :loading="searchLoading">
           <el-option v-for="item in keyWordList" :key="item.id" :label="item.keyword" :value="item.keyword" /></el-select>
       </el-form-item>
 
@@ -84,7 +84,7 @@
         <!-- <el-form-item label="插件配置编号"><el-input v-model="pojo.pluginconfigid" style="width:300px;" /></el-form-item> -->
         <el-form-item prop="name" label="名称">
           {{ pluginName }}
-          <el-select v-model="pojo.pluginconfigid" filterable remote clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+          <el-select v-model="pojo.pluginconfigid" filterable remote clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
             <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
         </el-form-item>
         <el-form-item label="漏洞关键字"><el-input v-model="pojo.keyword" style="width:300px;" /></el-form-item>

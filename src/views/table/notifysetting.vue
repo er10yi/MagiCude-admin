@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
 
     <div slot="tip" class="el-upload__tip">

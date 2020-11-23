@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -9,13 +9,13 @@
         <el-input v-model="searchMap.vulnid" prop="vulnid" clearable placeholder="漏洞编号" /></el-form-item> -->
 
       <el-form-item prop="checkresultid" label="检测结果">
-        <el-select v-model="searchMap.checkresultid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getCheckResultNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.checkresultid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getCheckResultNameList" :loading="searchLoading">
           <el-option v-for="item in checkResultNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
 
       <el-form-item prop="vulnid" label="漏洞">
-        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getVulnNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getVulnNameList" :loading="searchLoading">
           <el-option v-for="item in vulnNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>

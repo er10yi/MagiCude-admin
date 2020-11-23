@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -9,13 +9,13 @@
         <el-input v-model="searchMap.pluginconfigid" prop="pluginconfigid" clearable placeholder="插件配置编号" /></el-form-item> -->
 
       <el-form-item prop="vulnid" label="漏洞">
-        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getVulnNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getVulnNameList" :loading="searchLoading">
           <el-option v-for="item in vulnNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
 
       <el-form-item prop="pluginconfigid" label="插件">
-        <el-select v-model="searchMap.pluginconfigid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getPluginConfigNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.pluginconfigid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getPluginConfigNameList" :loading="searchLoading">
           <el-option v-for="item in pluginConfigNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -93,14 +93,14 @@
 
         <el-form-item prop="vulnid" label="漏洞">
           {{ vulName }}
-          <el-select v-model="pojo.vulnid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getVulnNameList" :loading="searchLoading">
+          <el-select v-model="pojo.vulnid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getVulnNameList" :loading="searchLoading">
             <el-option v-for="item in vulnNameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
         <el-form-item prop="pluginconfigid" label="插件">
           {{ pluginName }}
-          <el-select v-model="pojo.pluginconfigid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getPluginConfigNameList" :loading="searchLoading">
+          <el-select v-model="pojo.pluginconfigid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getPluginConfigNameList" :loading="searchLoading">
             <el-option v-for="item in pluginConfigNameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>

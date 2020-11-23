@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -11,7 +11,7 @@
         <el-input v-model="searchMap.notifywhitelist" prop="notifywhitelist" clearable placeholder="提醒白名单" /></el-form-item> -->
 
       <el-form-item prop="ip" label="ip地址">
-        <el-select v-model="searchMap.ip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpList" :loading="searchLoading">
+        <el-select v-model="searchMap.ip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpList" :loading="searchLoading">
           <el-option v-for="item in ipList" :key="item.id" :label="item.ip" :value="item.ip" /></el-select>
       </el-form-item>
 
@@ -125,7 +125,7 @@
         <!-- <el-form-item label="ip"><el-input v-model="pojo.ip" style="width:300px;" /></el-form-item> -->
 
         <el-form-item prop="ip" label="ipv4地址">
-          <el-select v-model="pojo.ip" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词（搜索资产ip）" :remote-method="getIpaddressv4List" :loading="searchLoading">
+          <el-select v-model="pojo.ip" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入（搜索资产ip）" :remote-method="getIpaddressv4List" :loading="searchLoading">
             <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" /></el-select>
         </el-form-item>
 

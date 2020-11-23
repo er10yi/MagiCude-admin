@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -7,7 +7,7 @@
         <el-input v-model="searchMap.service" prop="service" clearable placeholder="高危服务" /></el-form-item> -->
 
       <el-form-item prop="service" label="高危服务">
-        <el-select v-model="searchMap.service" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getServiceList" :loading="searchLoading">
+        <el-select v-model="searchMap.service" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getServiceList" :loading="searchLoading">
           <el-option v-for="item in serviceList" :key="item.id" :label="item.service" :value="item.service" /></el-select>
       </el-form-item>
 
@@ -78,7 +78,7 @@
         <el-tooltip placement="top">
           <div slot="content">具体的服务<br></div>
           <el-form-item prop="service" label="高危服务">
-            <el-select v-model="pojo.service" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getServiceList" :loading="searchLoading">
+            <el-select v-model="pojo.service" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getServiceList" :loading="searchLoading">
               <el-option v-for="item in serviceList" :key="item.id" :label="item.service" :value="item.service" /></el-select>
           </el-form-item>
         </el-tooltip>

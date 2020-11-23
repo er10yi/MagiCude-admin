@@ -1,16 +1,16 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
       <el-form-item prop="contactid" label="联系人">
-        <el-select v-model="searchMap.contactid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getContactList" :loading="searchLoading">
+        <el-select v-model="searchMap.contactid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getContactList" :loading="searchLoading">
           <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
 
       <el-form-item prop="projectinfoid" label="项目信息">
-        <el-select v-model="searchMap.projectinfoid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getProjectinfoList" :loading="searchLoading">
+        <el-select v-model="searchMap.projectinfoid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectinfoList" :loading="searchLoading">
           <el-option v-for="item in projectnameList" :key="item.id" :label="item.projectname" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -91,14 +91,14 @@
 
         <el-form-item prop="contactid" label="联系人">
           <span>{{ contactName }}</span>
-          <el-select v-model="pojo.contactid" style="width:400px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getContactList" :loading="searchLoading">
+          <el-select v-model="pojo.contactid" style="width:400px;" filterable remote clearable placeholder="请输入" :remote-method="getContactList" :loading="searchLoading">
             <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
         <el-form-item prop="projectinfoid" label="项目信息">
           <span>{{ projectinfoName }}</span>
-          <el-select v-model="pojo.projectinfoid" style="width:400px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getProjectinfoList" :loading="searchLoading">
+          <el-select v-model="pojo.projectinfoid" style="width:400px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectinfoList" :loading="searchLoading">
             <el-option v-for="item in projectnameList" :key="item.id" :label="item.projectname" :value="item.id" />
           </el-select>
         </el-form-item>

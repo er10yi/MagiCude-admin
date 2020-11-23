@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -7,35 +7,35 @@
         <el-input v-model="searchMap.taskipid" prop="taskipid" clearable placeholder="任务ip编号" /></el-form-item> -->
 
       <el-form-item prop="taskid" label="任务名称">
-        <el-select v-model="searchMap.taskid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getTaskNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.taskid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getTaskNameList" :loading="searchLoading">
           <el-option v-for="item in taskNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
 
       <el-form-item prop="taskipid" label="任务ip">
-        <el-select v-model="searchMap.taskipid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
+        <el-select v-model="searchMap.taskipid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
           <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.id" />
         </el-select>
       </el-form-item>
 
       <el-form-item prop="port" label="端口">
-        <el-select v-model="searchMap.port" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getPortList" :loading="searchLoading">
+        <el-select v-model="searchMap.port" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
           <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
       </el-form-item>
       <el-form-item prop="protocol" label="协议">
-        <el-select v-model="searchMap.protocol" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getProtocolList" :loading="searchLoading">
+        <el-select v-model="searchMap.protocol" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getProtocolList" :loading="searchLoading">
           <el-option v-for="item in protocolList" :key="item.id" :label="item.protocol" :value="item.protocol" /></el-select>
       </el-form-item>
       <el-form-item prop="state" label="端口状态">
-        <el-select v-model="searchMap.state" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getStateList" :loading="searchLoading">
+        <el-select v-model="searchMap.state" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getStateList" :loading="searchLoading">
           <el-option v-for="item in stateList" :key="item.id" :label="item.state" :value="item.state" /></el-select>
       </el-form-item>
       <el-form-item prop="service" label="服务">
-        <el-select v-model="searchMap.service" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getServiceList" :loading="searchLoading">
+        <el-select v-model="searchMap.service" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getServiceList" :loading="searchLoading">
           <el-option v-for="item in serviceList" :key="item.id" :label="item.service" :value="item.service" /></el-select>
       </el-form-item>
       <el-form-item prop="version" label="版本">
-        <el-select v-model="searchMap.version" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getVersionList" :loading="searchLoading">
+        <el-select v-model="searchMap.version" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getVersionList" :loading="searchLoading">
           <el-option v-for="item in versionList" :key="item.id" :label="item.version" :value="item.version" /></el-select>
       </el-form-item>
       <el-form-item prop="checkwhitelist" label="安全检测白名单">
@@ -137,7 +137,7 @@
         <el-form-item required label="ipv4地址">
           <span>{{ ipv4 }}</span>
           <span v-if="pojo.id==null">
-            <el-select v-model="pojo.taskipid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="pojo.taskipid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.id" />
             </el-select>
           </span>

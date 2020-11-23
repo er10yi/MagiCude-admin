@@ -18,7 +18,33 @@
     >
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <el-table-column sortable prop="name" label="名称" width="300" />
-      <el-table-column sortable prop="cronexpression" label="cron表达式" width="400" />
+      <el-table-column width="400" prop="cronexpression" label="cron表达式">
+        <template slot="header">
+          <span>cron表达式</span>
+          <el-tooltip placement="top">
+            <div slot="content">调度状态</div>
+            <i class="el-icon-info" />
+          </el-tooltip>
+        </template>
+        <template slot-scope="scope">
+          {{ scope.row.cronexpression }}
+          <span v-if="scope.row.jobstate">
+            <span v-if=" scope.row.jobstate=='正常'">
+              <el-tag size="mini" type="success" effect="plain">{{ scope.row.jobstate }}</el-tag>
+            </span>
+            <span v-else-if=" scope.row.jobstate=='出错'">
+              <el-tag size="mini" type="danger" effect="plain">{{ scope.row.jobstate }}</el-tag>
+            </span>
+            <span v-else-if=" scope.row.jobstate=='阻塞'">
+              <el-tag size="mini" type="warning" effect="plain">{{ scope.row.jobstate }}</el-tag>
+            </span>
+            <span v-else>
+              <el-tag size="mini" type="info" effect="plain">{{ scope.row.jobstate }}</el-tag>
+            </span>
+          </span>
+        </template>
+      </el-table-column>
+
       <el-table-column
         label="操作"
         width="100"
@@ -45,8 +71,9 @@
     </el-dialog>
     <br>
     <el-form ref="searchform" inline size="small" :model="searchMap">
-      <el-form-item label="cron表达式解析">
-        <el-input v-model="searchMap.cronExpression" style="width:300px;" prop="cronExpression" clearable placeholder="只支持6位" />
+
+      <el-form-item label="cron表达式设置及解析">
+        <cron-input v-model="cron" @change="change" @reset="reset" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="parseCron()">解析</el-button>
@@ -109,8 +136,13 @@
 
 <script>
 import cronjobApi from '@/api/cronjob'
+import CronInput from 'vue-cron-generator/src/components/cron-input'
+import { DEFAULT_CRON_EXPRESSION } from 'vue-cron-generator/src/constant/filed'
 
 export default {
+  components: {
+    CronInput
+  },
   data() {
     return {
       list: [],
@@ -123,17 +155,25 @@ export default {
       id: '', // 当前用户修改的ID
       filename: '',
       listLoading: true,
-      parseList: []
+      parseList: [],
+      cron: '0 0 12 * * ?'
     }
   },
   created() {
     this.fetchData()
   },
   methods: {
+    change(cron) {
+      this.cron = cron
+    },
+    reset(cron) {
+      this.cron = DEFAULT_CRON_EXPRESSION
+    },
     cleanCache() {
       this.closeDialogForm()
     },
     parseCron() {
+      this.searchMap = { 'cronExpression': this.cron }
       cronjobApi.parse(this.searchMap).then(response => {
         this.parseList = response.data
         this.$message({

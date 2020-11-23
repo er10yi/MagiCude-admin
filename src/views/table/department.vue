@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -7,7 +7,7 @@
         <el-input v-model="searchMap.departmentname" prop="departmentname" clearable placeholder="部门名称" /></el-form-item> -->
 
       <el-form-item prop="departmentname" label="部门名称">
-        <el-select v-model="searchMap.departmentname" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getDepartmentnameList" :loading="searchLoading">
+        <el-select v-model="searchMap.departmentname" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getDepartmentnameList" :loading="searchLoading">
           <el-option v-for="item in departmentnameList" :key="item.id" :label="item.departmentname" :value="item.departmentname" />
         </el-select>
       </el-form-item>
@@ -79,7 +79,7 @@
         <!-- <el-form-item label="部门名称"><el-input v-model="pojo.departmentname" style="width:300px;" /></el-form-item> -->
 
         <el-form-item label="部门名称">
-          <el-select v-model="pojo.departmentname" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getDepartmentnameList" :loading="searchLoading">
+          <el-select v-model="pojo.departmentname" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getDepartmentnameList" :loading="searchLoading">
             <el-option v-for="item in departmentnameList" :key="item.id" :label="item.departmentname" :value="item.departmentname" />
           </el-select>
         </el-form-item>

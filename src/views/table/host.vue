@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <el-collapse v-model="activeNames">
       <el-collapse-item name="1">
         <template slot="title"><i class="header-icon el-icon-info" />菜单栏隐藏与显示</template>
@@ -9,38 +9,38 @@
         <el-input v-model="searchMap.assetipid" prop="assetipid" clearable placeholder="资产ip编号" /></el-form-item> -->
 
           <el-form-item prop="assetipid" label="ipv4地址">
-            <el-select v-model="searchMap.assetipid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
-              <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.id" />
+            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
+              <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" />
             </el-select>
           </el-form-item>
 
           <el-form-item prop="macaddress" label="mac地址">
-            <el-select v-model="searchMap.macaddress" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getMacaddressList" :loading="searchLoading">
+            <el-select v-model="searchMap.macaddress" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getMacaddressList" :loading="searchLoading">
               <el-option v-for="item in macaddressList" :key="item.id" :label="item.macaddress" :value="item.macaddress" /></el-select>
           </el-form-item>
 
-          <el-form-item prop="hostname" label="主机名">
-            <el-select v-model="searchMap.hostname" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getHostnameList" :loading="searchLoading">
+          <el-form-item prop="hostname" label="主机/域名">
+            <el-select v-model="searchMap.hostname" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getHostnameList" :loading="searchLoading">
               <el-option v-for="item in hostnameList" :key="item.id" :label="item.hostname" :value="item.hostname" /></el-select>
           </el-form-item>
 
           <el-form-item prop="ostype" label="OS类型">
-            <el-select v-model="searchMap.ostype" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getOstypeList" :loading="searchLoading">
+            <el-select v-model="searchMap.ostype" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getOstypeList" :loading="searchLoading">
               <el-option v-for="item in ostypeList" :key="item.id" :label="item.ostype" :value="item.ostype" /></el-select>
           </el-form-item>
 
           <el-form-item prop="osversion" label="OS版本">
-            <el-select v-model="searchMap.osversion" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getOsversionList" :loading="searchLoading">
+            <el-select v-model="searchMap.osversion" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getOsversionList" :loading="searchLoading">
               <el-option v-for="item in osversionList" :key="item.id" :label="item.osversion" :value="item.osversion" /></el-select>
           </el-form-item>
 
           <el-form-item prop="type" label="类型">
-            <el-select v-model="searchMap.type" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getTypeList" :loading="searchLoading">
+            <el-select v-model="searchMap.type" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getTypeList" :loading="searchLoading">
               <el-option v-for="item in typeList" :key="item.id" :label="item.type" :value="item.type" /></el-select>
           </el-form-item>
 
           <el-form-item prop="owner" label="所有者">
-            <el-select v-model="searchMap.owner" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getOwnerList" :loading="searchLoading">
+            <el-select v-model="searchMap.owner" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getOwnerList" :loading="searchLoading">
               <el-option v-for="item in ownerList" :key="item.id" :label="item.owner" :value="item.owner" /></el-select>
           </el-form-item>
           <el-form-item prop="uptime" label="发现时间">
@@ -90,7 +90,7 @@
       <el-table-column sortable prop="assetipid" label="资产ip" />
 
       <el-table-column sortable prop="macaddress" label="mac地址" />
-      <el-table-column sortable prop="hostname" label="主机名" />
+      <el-table-column sortable prop="hostname" label="主机/域名" />
       <el-table-column sortable prop="ostype" label="OS类型" />
       <el-table-column sortable prop="osversion" label="OS版本" />
       <el-table-column sortable prop="type" label="类型" />
@@ -130,30 +130,30 @@
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
       <el-form label-width="100px">
 
-        <!-- <el-form-item label="资产ip编号"><el-input v-model="pojo.assetipid" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="资产ip编号"><el-input v-model="pojo.assetipid" style="width:400px;" /></el-form-item> -->
 
-        <el-form-item required label="ipv4地址">
+        <el-form-item label="ipv4地址">
           <span>{{ ipv4 }}</span>
           <span v-if="pojo.id==null">
-            <el-select v-model="pojo.assetipid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="pojo.assetipid" style="width:400px;" filterable remote clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.id" />
             </el-select>
           </span>
         </el-form-item>
 
-        <el-form-item label="mac地址"><el-input v-model="pojo.macaddress" style="width:300px;" /></el-form-item>
-        <el-form-item required label="主机名"><el-input v-model="pojo.hostname" style="width:300px;" /></el-form-item>
-        <el-form-item label="OS类型"><el-input v-model="pojo.ostype" style="width:300px;" /></el-form-item>
-        <el-form-item label="OS版本"><el-input v-model="pojo.osversion" style="width:300px;" /></el-form-item>
-        <el-form-item label="类型"><el-input v-model="pojo.type" style="width:300px;" /></el-form-item>
-        <el-form-item required label="所有者"><el-input v-model="pojo.owner" style="width:300px;" /></el-form-item>
+        <el-form-item label="mac地址"><el-input v-model="pojo.macaddress" style="width:400px;" /></el-form-item>
+        <el-form-item required label="主机/域名"><el-input v-model="pojo.hostname" style="width:400px;" /></el-form-item>
+        <el-form-item label="OS类型"><el-input v-model="pojo.ostype" style="width:400px;" /></el-form-item>
+        <el-form-item label="OS版本"><el-input v-model="pojo.osversion" style="width:400px;" /></el-form-item>
+        <el-form-item label="类型"><el-input v-model="pojo.type" style="width:400px;" /></el-form-item>
+        <el-form-item required label="所有者"><el-input v-model="pojo.owner" style="width:400px;" /></el-form-item>
 
-        <!-- <el-form-item label="发现时间"><el-input v-model="pojo.activetime" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="发现时间"><el-input v-model="pojo.activetime" style="width:400px;" /></el-form-item> -->
         <el-form-item label="发现时间">
-          <el-date-picker v-model="pojo.activetime" style="width:300px;" placeholder="发现时间" type="datetime" />
+          <el-date-picker v-model="pojo.activetime" style="width:400px;" placeholder="发现时间" type="datetime" />
         </el-form-item>
 
-        <el-form-item label="备注"><el-input v-model="pojo.remark" style="width:300px;" /></el-form-item>
+        <el-form-item label="备注"><el-input v-model="pojo.remark" style="width:400px;" /></el-form-item>
 
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -400,7 +400,7 @@ export default {
           const tHeader = [
             '资产ip',
             'mac地址',
-            '主机名',
+            '主机/域名',
             'OS类型',
             'OS版本',
             '类型',

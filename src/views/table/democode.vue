@@ -1,21 +1,21 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
       <!-- <el-form-item label="漏洞编号">
         <el-input v-model="searchMap.vulnid" prop="vulnid" clearable placeholder="漏洞编号" /></el-form-item> -->
       <el-form-item prop="name" label="漏洞">
-        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
           <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select></el-form-item>
       <el-form-item prop="democode" label="示例代码">
-        <el-select v-model="searchMap.democode" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getDemocodeList" :loading="searchLoading">
+        <el-select v-model="searchMap.democode" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getDemocodeList" :loading="searchLoading">
           <el-option v-for="item in democodeList" :key="item.id" :label="item.democode" :value="item.democode" />
         </el-select>
       </el-form-item>
       <el-form-item prop="poc" label="poc">
-        <el-select v-model="searchMap.poc" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getPocList" :loading="searchLoading">
+        <el-select v-model="searchMap.poc" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPocList" :loading="searchLoading">
           <el-option v-for="item in pocList" :key="item.id" :label="item.poc" :value="item.poc" />
         </el-select>
       </el-form-item>
@@ -98,7 +98,7 @@
 
         <el-form-item prop="name" label="漏洞">
           {{ vulname }}
-          <el-select v-model="pojo.vulnid" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+          <el-select v-model="pojo.vulnid" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
             <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select></el-form-item>
 

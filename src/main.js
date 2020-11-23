@@ -10,6 +10,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 import '@/styles/index.scss' // global css
 
+import 'vue-cron-generator/src/styles/global.less' // https://github.com/ldang264/vue-cron-generator
+import i18n from './lang' // Internationalization
+
 import App from './App'
 import store from './store'
 import router from './router'
@@ -20,7 +23,10 @@ import '@/permission' // permission control
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
-Vue.use(ElementUI)
+// Vue.use(ElementUI)
+Vue.use(ElementUI, {
+  i18n: (key, value) => i18n.t(key, value)
+})
 
 Vue.config.productionTip = false
 
@@ -35,6 +41,7 @@ Vue.filter('dateformat', function(dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
 new Vue({
   el: '#app',
   router,
+  i18n,
   store,
   render: h => h(App)
 })

@@ -21,6 +21,9 @@
               关于
             </el-dropdown-item>
           </router-link>
+          <el-dropdown-item>
+            <el-link :underline="false" href="https://github.com/er10yi/MagiCude" target="_blank">项目</el-link>
+          </el-dropdown-item>
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">退出</span>
           </el-dropdown-item>

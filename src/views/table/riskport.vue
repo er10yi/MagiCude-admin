@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -7,7 +7,7 @@
         <el-input v-model="searchMap.port" prop="port" clearable placeholder="高危端口" /></el-form-item> -->
 
       <el-form-item prop="port" label="高危端口">
-        <el-select v-model="searchMap.port" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getPortList" :loading="searchLoading">
+        <el-select v-model="searchMap.port" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
           <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
       </el-form-item>
 
@@ -76,7 +76,7 @@
       <el-form label-width="100px">
 
         <el-form-item prop="port" label="高危端口">
-          <el-select v-model="pojo.port" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getPortList" :loading="searchLoading">
+          <el-select v-model="pojo.port" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
             <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
         </el-form-item>
 

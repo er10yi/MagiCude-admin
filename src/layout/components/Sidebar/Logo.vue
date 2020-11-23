@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import logoPic from '@/assets/logo_images/logo.png'
+
 export default {
   name: 'SidebarLogo',
   props: {
@@ -24,8 +26,8 @@ export default {
   },
   data() {
     return {
-      title: 'Vue Admin Template',
-      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+      title: '魔方-MagiCude',
+      logo: logoPic
     }
   }
 }
@@ -43,10 +45,10 @@ export default {
 
 .sidebar-logo-container {
   position: relative;
-  width: 100%;
+  width: 85%;
   height: 50px;
   line-height: 50px;
-  background: #2b2f3a;
+  background: #7291ce00;
   text-align: center;
   overflow: hidden;
 
@@ -55,16 +57,16 @@ export default {
     width: 100%;
 
     & .sidebar-logo {
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       vertical-align: middle;
-      margin-right: 12px;
+      // margin-right: 12px;
     }
 
     & .sidebar-title {
       display: inline-block;
       margin: 0;
-      color: #fff;
+      color: rgba(255, 255, 255, 0.7);
       font-weight: 600;
       line-height: 50px;
       font-size: 14px;
@@ -75,7 +77,7 @@ export default {
 
   &.collapse {
     .sidebar-logo {
-      margin-right: 0px;
+      margin-left: 15px;
     }
   }
 }

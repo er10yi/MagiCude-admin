@@ -4,7 +4,7 @@
       <div slot="header" class="clearfix">
         <span><b>魔方-MagiCude </b></span>
         <el-link :underline="false" @click="handleDrawer()">
-          <b>v2.0.20</b>
+          <b>v2.0.28</b>
         </el-link>
         <el-link style="float: right;" href="https://github.com/er10yi/MagiCude" target="_blank">GitHub</el-link>
       </div>
@@ -29,6 +29,23 @@
 
     <!--更新日志显示 -->
     <el-drawer title="ChangeLog" :visible.sync="drawer" direction="rtl" size="60%">
+
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span><b>v2.0.28 - 20201123</b></span>
+          <div class="text">
+            <ol>
+              <li>前端主机名改成：主机/域名</li>
+              <li>nmap域名扫描，域名会直接新增到主机/域名中</li>
+              <li>任务，[cron任务删除]移到类型列</li>
+              <li>修复部分bug，并优化部分前端和后端代码</li>
+              <li>移除v2.0.20中[启动任务前，发一次agent心跳包监控，防止agent掉线漏任务]更新</li>
+              <li>增加最佳实践文档</li>
+              <li>侧边栏增加Logo显示，统一侧边栏菜单图标样式</li>
+            </ol>
+          </div>
+        </div>
+      </el-card>
 
       <el-card class="box-card">
         <div slot="header" class="clearfix">

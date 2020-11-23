@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <el-collapse v-model="activeNames">
       <el-collapse-item name="1">
         <template slot="title"><i class="header-icon el-icon-info" />菜单栏隐藏与显示</template>
@@ -7,29 +7,29 @@
         <el-form ref="searchform" inline size="small" :model="searchMap">
 
           <el-form-item prop="assetipid" label="ipv4地址">
-            <el-select v-model="searchMap.assetipid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
-              <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.id" />
+            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
+              <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" />
             </el-select>
           </el-form-item>
 
           <el-form-item prop="port" label="端口">
-            <el-select v-model="searchMap.port" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getPortList" :loading="searchLoading">
+            <el-select v-model="searchMap.port" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
               <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
           </el-form-item>
           <el-form-item prop="protocol" label="协议">
-            <el-select v-model="searchMap.protocol" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getProtocolList" :loading="searchLoading">
+            <el-select v-model="searchMap.protocol" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getProtocolList" :loading="searchLoading">
               <el-option v-for="item in protocolList" :key="item.id" :label="item.protocol" :value="item.protocol" /></el-select>
           </el-form-item>
           <el-form-item prop="state" label="状态">
-            <el-select v-model="searchMap.state" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getStateList" :loading="searchLoading">
+            <el-select v-model="searchMap.state" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getStateList" :loading="searchLoading">
               <el-option v-for="item in stateList" :key="item.id" :label="item.state" :value="item.state" /></el-select>
           </el-form-item>
           <el-form-item prop="service" label="服务">
-            <el-select v-model="searchMap.service" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getServiceList" :loading="searchLoading">
+            <el-select v-model="searchMap.service" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getServiceList" :loading="searchLoading">
               <el-option v-for="item in serviceList" :key="item.id" :label="item.service" :value="item.service" /></el-select>
           </el-form-item>
           <el-form-item prop="version" label="版本">
-            <el-select v-model="searchMap.version" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getVersionList" :loading="searchLoading">
+            <el-select v-model="searchMap.version" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getVersionList" :loading="searchLoading">
               <el-option v-for="item in versionList" :key="item.id" :label="item.version" :value="item.version" /></el-select>
           </el-form-item>
           <el-form-item prop="checkwhitelist" label="安全检测白名单">
@@ -236,14 +236,17 @@
         <template slot="header">
           <span>端口</span>
           <el-tooltip placement="top">
-            <div slot="content">端口 总漏洞数:未修复漏洞数</div>
+            <div slot="content">总漏洞数:未修复漏洞数</div>
             <i class="el-icon-info" />
           </el-tooltip>
         </template>
         <template slot-scope="scope">
           <el-link :underline="false" @click="handleDrawer(scope.row.id) ">
-            {{ scope.row.port }} {{ scope.row.statistic }}
+            {{ scope.row.port }}
           </el-link>
+          <span v-if=" scope.row.statistic">
+            <el-tag size="mini" type="success" effect="plain">{{ scope.row.statistic }}</el-tag>
+          </span>
         </template>
       </el-table-column>
 
@@ -323,7 +326,7 @@
         <el-form-item required label="ipv4地址">
           <span>{{ ipv4 }}</span>
           <span v-if="pojo.id==null">
-            <el-select v-model="pojo.assetipid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="pojo.assetipid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.id" />
             </el-select>
           </span>
@@ -334,7 +337,7 @@
           <el-input v-model="pojo.port" style="width:300px;" />
         </el-form-item>
         <!-- <el-form-item prop="port" label="端口">
-          <el-select v-model="pojo.port" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getPortList" :loading="searchLoading">
+          <el-select v-model="pojo.port" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
             <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
         </el-form-item> -->
 

@@ -1,11 +1,11 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
 
       <el-form-item prop="username" label="用户名">
-        <el-select v-model="searchMap.username" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getUsernameList" :loading="searchLoading">
+        <el-select v-model="searchMap.username" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getUsernameList" :loading="searchLoading">
           <el-option v-for="item in usernameList" :key="item.id" :label="item.username" :value="item.username" /></el-select>
       </el-form-item>
 
@@ -74,7 +74,7 @@
       <el-form label-width="100px">
 
         <el-form-item prop="username" label="用户名">
-          <el-select v-model="pojo.username" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getUsernameList" :loading="searchLoading">
+          <el-select v-model="pojo.username" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getUsernameList" :loading="searchLoading">
             <el-option v-for="item in usernameList" :key="item.id" :label="item.username" :value="item.username" /></el-select>
         </el-form-item>
 

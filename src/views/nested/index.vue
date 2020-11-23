@@ -1,6 +1,6 @@
 
 <template>
-  <div style="padding:5px;">
+  <div>
     <router-view />
   </div>
 </template>

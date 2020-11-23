@@ -1,7 +1,9 @@
 <template>
   <div style="background:#fff;padding:0 30px 0">
     <br>
-    <div slot="tip" class="el-upload__tip">文件编码为utf-8, 除<b>selfd插件配置</b>能多文件上传外, 其他一次只能上传一个不超过3M的txt文件, 每行一条数据<br>任何一条数据包含 | 都不能批量导入（数据在后端以 | 分隔）</div>
+    <div slot="tip" class="el-upload__tip">文件编码为utf-8, 除<b>selfd插件配置</b>能多文件上传外, 其他一次只能上传一个不超过3M的txt文件, 每行一条数据
+      <br>任何一条数据包含 | 都不能批量导入（数据在后端以 | 分隔）
+      <br>模板可在 GitHub页面【批量导入数据】下载</div>
     <hr>
 
     <el-row type="flex" class="row-bg el-row-two" justify="start">
@@ -94,8 +96,8 @@
           <el-form inline>
             <el-form-item>
               <el-tooltip placement="top">
-                <div slot="content">ip:主机名信息<br>192.168.1.1:work-testhostname.cor.com</div>
-                <span>ip主机名</span>
+                <div slot="content">ip:主机域名信息<br>192.168.1.1:work-testhostname.cor.com</div>
+                <span>ip主机域名</span>
               </el-tooltip>
             </el-form-item>
             <el-form-item>

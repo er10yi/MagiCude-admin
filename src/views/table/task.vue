@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <el-collapse v-model="activeNames">
       <el-collapse-item name="1">
         <template slot="title"><i class="header-icon el-icon-info" />菜单栏隐藏与显示</template>
@@ -8,7 +8,7 @@
           <!-- <el-form-item label="任务父编号"> -->
           <!-- <el-input v-model="searchMap.taskparentid" prop="taskparentid" clearable placeholder="任务父编号" /></el-form-item> -->
           <!-- <el-form-item prop="projectid" label="父任务">
-            <el-select v-model="searchMap.taskparentid" filterable clearable placeholder="请输入关键词">
+            <el-select v-model="searchMap.taskparentid" filterable clearable placeholder="请输入">
               <el-option
                 v-for="item in list"
                 :key="item.id"
@@ -26,12 +26,12 @@
           </el-form-item>
 
           <el-form-item v-if="showproject" prop="projectid" label="任务项目">
-            <el-select v-model="searchMap.projectid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getProjectnameList" :loading="searchLoading">
+            <el-select v-model="searchMap.projectid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectnameList" :loading="searchLoading">
               <el-option v-for="item in projectnameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
           </el-form-item>
 
           <el-form-item prop="name" label="名称">
-            <el-select v-model="searchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getTaskNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getTaskNameList" :loading="searchLoading">
               <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
           </el-form-item>
 
@@ -43,27 +43,27 @@
           </el-form-item>
 
           <el-form-item prop="worktype" label="类型">
-            <el-select v-model="searchMap.worktype" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getWorktypeList" :loading="searchLoading">
+            <el-select v-model="searchMap.worktype" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getWorktypeList" :loading="searchLoading">
               <el-option v-for="item in worktypeList" :key="item.id" :label="item.worktype" :value="item.worktype" /></el-select>
           </el-form-item>
           <el-form-item v-if="showcheck" prop="checktype" label="检测">
-            <el-select v-model="searchMap.checktype" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getChecktypeList" :loading="searchLoading">
+            <el-select v-model="searchMap.checktype" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getChecktypeList" :loading="searchLoading">
               <el-option v-for="item in checktypeList" :key="item.id" :label="item.checktype" :value="item.checktype" /></el-select>
           </el-form-item>
           <el-form-item v-if="showadditionoption" prop="additionoption" label="选项">
-            <el-select v-model="searchMap.additionoption" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getAdditionoptionList" :loading="searchLoading">
+            <el-select v-model="searchMap.additionoption" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getAdditionoptionList" :loading="searchLoading">
               <el-option v-for="item in additionoptionList" :key="item.id" :label="item.additionoption" :value="item.additionoption" /></el-select>
           </el-form-item>
           <el-form-item prop="targetip" label="目标">
-            <el-select v-model="searchMap.targetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getTargetipList" :loading="searchLoading">
+            <el-select v-model="searchMap.targetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getTargetipList" :loading="searchLoading">
               <el-option v-for="item in targetipList" :key="item.id" :label="item.targetip" :value="item.targetip" /></el-select>
           </el-form-item>
           <el-form-item prop="targetport" label="端口">
-            <el-select v-model="searchMap.targetport" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getTargetportList" :loading="searchLoading">
+            <el-select v-model="searchMap.targetport" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getTargetportList" :loading="searchLoading">
               <el-option v-for="item in targetportList" :key="item.id" :label="item.targetport" :value="item.targetport" /></el-select>
           </el-form-item>
           <el-form-item v-if="showexcludeip" prop="excludeip" label="排除ip">
-            <el-select v-model="searchMap.excludeip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getExcludeipList" :loading="searchLoading">
+            <el-select v-model="searchMap.excludeip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getExcludeipList" :loading="searchLoading">
               <el-option v-for="item in excludeipList" :key="item.id" :label="item.excludeip" :value="item.excludeip" /></el-select>
           </el-form-item>
 
@@ -87,7 +87,7 @@
             <el-input v-model="filename" placeholder="默认名字：报告" clearable style="width:180px;" prefix-icon="el-icon-document" />
             <el-button :loading="downloadLoading" type="success" icon="el-icon-document" @click="handleDownload">导出</el-button>
             <el-button type="danger" icon="el-icon-delete" @click="handleDeleteAll">删除</el-button>
-            <el-button type="primary" @click="handleEdit('')">新增</el-button>
+            <el-button type="primary" @click="handleEdit('')">新建任务</el-button>
           </el-form-item>
 
           <el-form-item>
@@ -102,7 +102,7 @@
               <el-col :span="12"><el-checkbox @change="showHide('showrate')">速率</el-checkbox></el-col>
               <el-col :span="12"><el-checkbox @change="showHide('showexcludeip')">排除ip</el-checkbox></el-col>
               <el-col :span="12"><el-checkbox @change="showHide('showthreadn')">线程数量</el-checkbox></el-col>
-              <el-col :span="12"><el-checkbox @change="showHide('showcronexp')">cron表达式</el-checkbox></el-col>
+              <!-- <el-col :span="12"><el-checkbox @change="showHide('showcronexp')">cron表达式</el-checkbox></el-col>  -->
               <el-col :span="12"><el-checkbox @change="showHide('showcron')">是否cron任务</el-checkbox></el-col>
               <el-col :span="12"><el-checkbox @change="showHide('showparent')">父任务(需开启显示子任务)</el-checkbox></el-col>
               <el-col :span="12"><el-checkbox @change="showHide('showipn')">单个ip扫描次数</el-checkbox></el-col>
@@ -133,7 +133,7 @@
           <el-form ref="searchformchild" inline size="small" :model="childSearchMap">
 
             <!-- <el-form-item prop="name" label="名称">
-              <el-select v-model="childSearchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getTaskNameList" :loading="searchLoading">
+              <el-select v-model="childSearchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getTaskNameList" :loading="searchLoading">
                 <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
             </el-form-item> -->
 
@@ -145,23 +145,23 @@
             </el-form-item>
 
             <!-- <el-form-item prop="worktype" label="类型">
-              <el-select v-model="childSearchMap.worktype" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getWorktypeList" :loading="searchLoading">
+              <el-select v-model="childSearchMap.worktype" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getWorktypeList" :loading="searchLoading">
                 <el-option v-for="item in worktypeList" :key="item.id" :label="item.worktype" :value="item.worktype" /></el-select>
             </el-form-item>
             <el-form-item prop="additionoption" label="选项">
-              <el-select v-model="childSearchMap.additionoption" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getAdditionoptionList" :loading="searchLoading">
+              <el-select v-model="childSearchMap.additionoption" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getAdditionoptionList" :loading="searchLoading">
                 <el-option v-for="item in additionoptionList" :key="item.id" :label="item.additionoption" :value="item.additionoption" /></el-select>
             </el-form-item>
             <el-form-item prop="targetip" label="目标">
-              <el-select v-model="childSearchMap.targetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getTargetipList" :loading="searchLoading">
+              <el-select v-model="childSearchMap.targetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getTargetipList" :loading="searchLoading">
                 <el-option v-for="item in targetipList" :key="item.id" :label="item.targetip" :value="item.targetip" /></el-select>
             </el-form-item>
             <el-form-item prop="targetport" label="端口">
-              <el-select v-model="childSearchMap.targetport" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getTargetportList" :loading="searchLoading">
+              <el-select v-model="childSearchMap.targetport" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getTargetportList" :loading="searchLoading">
                 <el-option v-for="item in targetportList" :key="item.id" :label="item.targetport" :value="item.targetport" /></el-select>
             </el-form-item>
             <el-form-item prop="excludeip" label="排除ip">
-              <el-select v-model="childSearchMap.excludeip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getExcludeipList" :loading="searchLoading">
+              <el-select v-model="childSearchMap.excludeip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getExcludeipList" :loading="searchLoading">
                 <el-option v-for="item in excludeipList" :key="item.id" :label="item.excludeip" :value="item.excludeip" /></el-select>
             </el-form-item> -->
 
@@ -314,16 +314,24 @@
       <!-- <el-table-column sortable prop="name" label="名称" /> -->
 
       <el-table-column key="4" prop="name" label="名称">
+        <template slot="header">
+          <span>名称</span>
+          <el-tooltip placement="top">
+            <div slot="content">子任务数量</div>
+            <i class="el-icon-info" />
+          </el-tooltip>
+        </template>
         <template slot-scope="scope">
           <span v-if="scope.row.taskparentid===null">
             <span v-if="scope.row.statistic!=='0'">
-              {{ scope.row.statistic }}
               <el-link :underline="false" @click="handleDrawer(scope.row.id) ">
-                <i class="el-icon-view el-icon--right" />{{ scope.row.name }}
+                {{ scope.row.name }}
               </el-link>
+              <span v-if=" scope.row.statistic"> <el-tag size="mini" type="success" effect="plain">{{ scope.row.statistic }}</el-tag></span>
+
             </span>
             <span v-else>
-              <i class="el-icon-view el-icon--right" />{{ scope.row.name }}
+              {{ scope.row.name }} <el-tag size="mini" type="info" effect="plain">0</el-tag>
             </span>
           </span>
           <span v-else>
@@ -331,13 +339,95 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column v-if="showcronexp" key="5" width="120" prop="cronexpression" label="cron表达式" />
+      <!-- <el-table-column v-if="showcronexp" key="5" width="120" prop="cronexpression" label="cron表达式" /> -->
+
+      <el-table-column prop="cronexpression" label="cron表达式">
+        <template slot="header">
+          <span>cron表达式</span>
+          <el-tooltip placement="top">
+            <div slot="content">调度状态</div>
+            <i class="el-icon-info" />
+          </el-tooltip>
+        </template>
+        <template slot-scope="scope">
+          <el-popover
+            placement="top-start"
+            title="当前只解析时间，调度状态正常才会执行"
+            width="450"
+            trigger="click"
+          >
+            <el-alert :closable="false">
+              <table border="0">
+                <tr>
+                  <td><b>当前时间</b></td>
+                  <td>{{ parseList[0] }}</td>
+                  <el-divider direction="vertical" />
+                  <td><b>最近十次</b></td>
+                  <td><b>运行时间</b></td>
+                </tr>
+                <tr>
+                  <td><b>一</b></td>
+                  <td>{{ parseList[1] }}</td>
+                  <el-divider direction="vertical" />
+                  <td><b>六</b></td>
+                  <td>{{ parseList[6] }}</td>
+                </tr>
+                <tr>
+                  <td><b>二</b></td>
+                  <td>{{ parseList[2] }}</td>
+                  <el-divider direction="vertical" />
+                  <td><b>七</b></td>
+                  <td>{{ parseList[7] }}</td>
+                </tr>
+                <tr>
+                  <td><b>三</b></td>
+                  <td>{{ parseList[3] }}</td>
+                  <el-divider direction="vertical" />
+                  <td><b>八</b></td>
+                  <td>{{ parseList[8] }}</td>
+                </tr>
+                <tr>
+                  <td><b>四</b></td>
+                  <td>{{ parseList[4] }}</td>
+                  <el-divider direction="vertical" />
+                  <td><b>九</b></td>
+                  <td>{{ parseList[9] }}</td>
+                </tr>
+                <tr>
+                  <td><b>五</b></td>
+                  <td>{{ parseList[5] }}</td>
+                  <el-divider direction="vertical" />
+                  <td><b>十</b></td>
+                  <td>{{ parseList[10] }}</td>
+                </tr>
+              </table>
+            </el-alert>
+            <el-link slot="reference" :underline="false" @click="parseCron(scope.row.cronexpression)"> {{ scope.row.cronexpression }}
+              <span v-if="scope.row.jobstate">
+                <span v-if=" scope.row.jobstate=='正常'">
+                  <el-tag size="mini" type="success" effect="plain">{{ scope.row.jobstate }}</el-tag>
+                </span>
+                <span v-else-if=" scope.row.jobstate=='出错'">
+                  <el-tag size="mini" type="danger" effect="plain">{{ scope.row.jobstate }}</el-tag>
+                </span>
+                <span v-else-if=" scope.row.jobstate=='阻塞'">
+                  <el-tag size="mini" type="warning" effect="plain">{{ scope.row.jobstate }}</el-tag>
+                </span>
+                <span v-else>
+                  <el-tag size="mini" type="info" effect="plain">{{ scope.row.jobstate }}</el-tag>
+                </span>
+              </span>
+            </el-link>
+          </el-popover>
+        </template>
+      </el-table-column>
 
       <el-table-column v-if="showcron" key="6" align="center" label="cron" width="60">
         <template slot-scope="scope">
           <span v-if="scope.row.crontask ">
-            <span>{{ formatBoolean(scope.row.crontask) }}</span><br>
-            <el-link @click="stopScheduleTask(scope.row.id)">删除</el-link>
+            <!-- <span>{{ formatBoolean(scope.row.crontask) }}</span><br> -->
+            <!-- <el-link @click="stopScheduleTask(scope.row.id)">删除</el-link> -->
+            <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="stopScheduleTask(scope.row.id)" />
           </span>
         </template>
       </el-table-column>
@@ -459,13 +549,509 @@
       @current-change="fetchData"
     />
 
+    <el-dialog title="新建任务" :visible.sync="newTaskDialogFormVisible" width="50%" center :before-close="closeNewTaskDialogForm">
+      <el-steps :active="active" finish-status="success">
+        <el-step title="名称及扫描类型" />
+        <el-step title="选择任务类型" />
+        <el-step title="设置目标" />
+      </el-steps>
+
+      <el-alert :closable="false" title="临时显示区">
+        任务名称 : {{ pojo.name }} <br>
+        扫描类型 : {{ targetType }}<br>
+        任务类型 : {{ pojo.worktype }}<br>
+        <span v-if="pojo.checktype">
+          检测类型 : {{ pojo.checktype }}<br>
+        </span>
+        目 标 : {{ pojo.targetip }}<br>
+
+      </el-alert>
+
+      <br>
+      <!-- 选择目标类型 -->
+      <el-form label-width="200px">
+        <div v-if="active==0">
+          <el-form label-width="100px">
+            <el-form-item required label="任务名称"><el-input v-model="pojo.name" clearable /></el-form-item>
+            <el-form-item required label="扫描类型">
+              <el-radio-group v-model="targetType">
+                <el-radio-button label="端口扫描" />
+                <el-radio-button label="安全扫描" />
+              </el-radio-group>
+            </el-form-item>
+          </el-form>
+        </div>
+
+        <!-- 选择任务类型 -->
+        <div v-if="active==1">
+          <el-form label-width="100px">
+            <span v-if="targetType =='端口扫描'">
+              <el-form-item required label="类型">
+                <el-radio-group v-model="pojo.worktype">
+                  <el-radio-button label="nmap" />
+                  <el-radio-button label="mass" />
+                  <el-radio-button label="mass2Nmap" />
+                </el-radio-group>
+              </el-form-item>
+            </span>
+
+            <span v-if="targetType =='安全扫描'">
+              <el-form-item required label="类型">
+                <el-radio-group v-model="pojo.worktype">
+                  <el-radio-button label="nse" />
+                  <el-radio-button label="selfd" />
+                  <el-radio-button label="httpp" />
+                </el-radio-group>
+              </el-form-item>
+            </span>
+
+            <!-- <span v-if="targetType =='安全扫描'">
+              <el-form-item required label="类型">
+                <el-radio-group v-model="pojo.worktype">
+                  <el-radio-button label="nmap" />
+                  <el-radio-button label="mass" />
+                  <el-radio-button label="mass2Nmap" />
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item>
+                <el-checkbox-group v-model="checkedChecktypes">
+                  <el-checkbox-button v-for="check in checks" :key="check" :label="check" />
+                </el-checkbox-group>
+
+              </el-form-item>
+            </span> -->
+
+          </el-form>
+        </div>
+
+        <!-- 目标或插件 -->
+        <div v-if="active==2">
+          <el-form label-width="100px">
+            <span v-if="targetType =='端口扫描' && pojo.worktype=='nmap'">
+              <el-form-item required label="目标">
+                <el-radio-group v-model="assetTargetOrInput">
+                  <el-radio-button label="手动填写的ip或域名" />
+                  <el-radio-button label="数据库中的ip" />
+                  <!-- <el-radio-button label="数据库中的域名" /> -->
+                </el-radio-group>
+              </el-form-item>
+              <span v-if="assetTargetOrInput =='数据库中的ip'">
+                <el-form-item label="选择ip类型">
+                  <el-radio-group v-model="pojo.targetip">
+                    <el-tooltip placement="top">
+                      <div slot="content">数据库中所有没有端口且未下线的ip</div>
+                      <el-radio-button label="ipNoPort" />
+                    </el-tooltip>
+
+                    <el-tooltip placement="top">
+                      <div slot="content">更新符合以下情况的ip的service和version:<br>端口service [为空, null, tcpwrapped, unknown, 包含?] 的ip<br>端口version [为空, null] 的ip</div>
+                      <el-radio-button label="unknownPortSerVer" />
+                    </el-tooltip>
+
+                    <el-tooltip placement="top">
+                      <div slot="content">数据库中全部有端口的ip和端口</div>
+                      <el-radio-button label="ipAllPort" />
+                    </el-tooltip>
+                  </el-radio-group>
+                </el-form-item>
+
+              </span>
+            </span>
+
+            <span v-if="assetTargetOrInput =='数据库中的域名'">
+              <span hidden> {{ pojo.targetip='assetdomain' }}</span>
+            </span>
+
+            <span v-if="assetTargetOrInput =='手动填写的ip或域名'&&pojo.worktype!=='mass'&&pojo.worktype!=='mass2Nmap'">
+              <el-form-item required label="填写目标">
+                <el-input v-model="pojo.targetip" :autosize="{maxRows: 10}" type="textarea" placeholder="格式:单个ip,ip段,CIDR或域名, 举例: assetip或192.168.1.1,192.168.2.1-192.168.2.100,192.168.3.0/24,nmap.org" />
+              </el-form-item>
+            </span>
+            <span v-if="pojo.worktype=='mass'||pojo.worktype=='mass2Nmap'">
+              <el-form-item required label="填写ip">
+                <el-input v-model="pojo.targetip" :autosize="{maxRows: 10}" type="textarea" placeholder="格式:单个ip,ip段,CIDR, 举例: 192.168.1.1,192.168.2.1-192.168.2.100,192.168.3.0/24" />
+              </el-form-item>
+            </span>
+          </el-form>
+
+          <el-form label-width="100px">
+            <span v-if="targetType =='安全扫描'">
+              <el-form-item required label="目标">
+                <el-radio-group v-model="assetTargetOrInput">
+                  <!-- <el-radio-button label="手动填写的ip或域名" /> -->
+                  <el-radio-button label="数据库中的ip" />
+                  <!-- <el-radio-button label="数据库中的域名" /> -->
+                </el-radio-group>
+              </el-form-item>
+            </span>
+
+            <span v-if="assetTargetOrInput =='数据库中的ip'&&pojo.worktype!=='nmap'&&pojo.worktype!=='mass'&&pojo.worktype!=='mass2Nmap'">
+              <span hidden>{{ pojo.targetip='assetip' }}</span>
+
+            </span>
+            <span v-if="assetTargetOrInput =='数据库中的域名'">
+              <span hidden> {{ pojo.targetip='assetdomain' }}</span>
+            </span>
+
+          </el-form>
+
+          <!-- 高级选项 -->
+          <span v-if="assetTargetOrInput=='数据库中的ip'||assetTargetOrInput =='数据库中的域名'||assetTargetOrInput=='手动填写的ip或域名'||pojo.worktype=='mass'||pojo.worktype=='mass2Nmap'">
+            <el-form label-width="100px">
+              <el-collapse v-model="activeNames">
+                <el-collapse-item title="高级选项(可选配置)">
+                  <el-form-item prop="projectid" label="任务项目">
+                    <el-select v-model="pojo.projectid" style="width:400px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectnameList" :loading="searchLoading">
+                      <el-option v-for="item in projectnameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
+
+                  </el-form-item>
+
+                  <span v-if="pojo.worktype == 'nmap'&&(pojo.portslicesize == null||pojo.portslicesize == '')&&pojo.targetip !=='unknownPortSerVer'&&pojo.targetip !=='ipAllPort'&&pojo.additionoption !== '-sn'">
+                    <el-tooltip placement="top">
+                      <div slot="content">格式1: <br>格式2:regular<br>格式3:80,443,1-1001<br>格式说明: 为空代表所有端口, regular为nmap默认端口</div>
+                      <el-form-item label="端口"><el-input v-model="pojo.targetport" clearable :autosize="{maxRows: 10}" type="textarea" placeholder="格式: 留空或regular或80,443,1-1001" /></el-form-item>
+                    </el-tooltip>
+                  </span>
+                  <span v-if="pojo.worktype == 'mass' || pojo.worktype == 'mass2Nmap'">
+                    <el-tooltip placement="top">
+                      <div slot="content">格式1: <br>格式2:regular<br>格式3:80,443,1-1001<br>格式说明: 为空代表所有端口, regular为nmap默认端口</div>
+                      <el-form-item label="端口"><el-input v-model="pojo.targetport" clearable :autosize="{maxRows: 10}" type="textarea" placeholder="格式: 留空或80,443,1-1001" /></el-form-item>
+                    </el-tooltip>
+                  </span>
+
+                  <span v-if="pojo.worktype == 'nmap'||pojo.worktype == 'nse'">
+                    <el-form-item label="选项"><el-input v-model="pojo.additionoption" clearable placeholder="nmap/nse默认-Pn -sV --max-retries=1 --open" /></el-form-item>
+                  </span>
+                  <span v-if="pojo.worktype == 'mass2Nmap'||pojo.worktype == 'mass'">
+                    <el-form-item label="选项"><el-input v-model="pojo.additionoption" clearable placeholder="无默认选项" /></el-form-item>
+                  </span>
+
+                  <!-- <el-form-item> -->
+                  <span v-if="pojo.worktype && pojo.worktype == 'mass2Nmap'">
+                    <el-form inline>
+                      <el-form-item label="Nmap配置" size="mini" />
+                      <el-form-item label="选项" size="mini"><el-input v-model="nmapPojo.additionoption" placeholder="-Pn -sV --max-retries=1" /></el-form-item>
+                      <!-- <i>{{ getNmapConfigByTaskId(pojo.id) }}</i> -->
+                      <el-form-item label="线程" size="mini">
+                        <el-input-number v-model="nmapPojo.threadnumber" :min="1" placeholder="10" />
+                        <!-- <el-input v-model="nmapPojo.threadnumber" style="width:400px;" placeholder="默认10" /> -->
+                      </el-form-item>
+
+                      <el-form-item label="ip扫描次数" size="mini">
+                        <el-input-number v-model="nmapPojo.singleipscantime" :min="1" placeholder="1" />
+                        <!-- <el-input v-model="nmapPojo.singleipscantime" style="width:400px;" placeholder="默认1" /> -->
+
+                      </el-form-item>
+                    </el-form>
+                  </span>
+                  <!-- </el-form-item> -->
+
+                  <el-form-item label="数量" inline>
+                    <span v-if="pojo.worktype == 'nse'||pojo.worktype == 'selfd'||pojo.worktype == 'httpp'">
+                      <el-tooltip placement="top">
+                        <div slot="content">线程数量 : 默认4</div>
+                        <el-input-number v-model="pojo.threadnumber" :min="1" size="small" placeholder="线程" />
+                        <!-- <el-input v-model="pojo.threadnumber" style="width:110px;" clearable placeholder="线程" /> -->
+                      </el-tooltip>
+                    </span>
+                    <span v-else>
+                      <el-tooltip placement="top">
+                        <div slot="content">线程数量 : 默认4</div>
+                        <el-input-number v-model="pojo.threadnumber" :min="1" size="small" placeholder="线程" />
+                        <!-- <el-input v-model="pojo.threadnumber" style="width:110px;" clearable placeholder="线程" /> -->
+                      </el-tooltip>
+
+                      <el-tooltip placement="top">
+                        <div slot="content">单ip扫描次数 : 默认1</div>
+                        <el-input-number v-model="pojo.singleipscantime" :min="1" size="small" placeholder="单ip扫描次数" />
+                        <!-- <el-input v-model="pojo.singleipscantime" style="width:130px;" clearable placeholder="单ip扫描次数" /> -->
+                      </el-tooltip>
+
+                      <span v-if="pojo.worktype == 'mass2Nmap'||pojo.worktype == 'mass'">
+                        <el-tooltip placement="top">
+                          <div slot="content">mass扫描速率 : 默认1000</div>
+                          <el-input-number v-model="pojo.rate" :min="100" size="small" :step="1000" placeholder="mass速率" />
+                          <!-- <el-input v-model="pojo.rate" style="width:130px;" clearable placeholder="mass速率" /> -->
+                        </el-tooltip>
+                      </span>
+                      <span v-if="pojo.targetip !=='unknownPortSerVer'&&pojo.targetip !=='ipAllPort'&&pojo.additionoption !== '-sn'">
+                        <el-tooltip placement="top">
+                          <div slot="content">ip分组大小 : 默认255</div>
+                          <el-input-number v-model="pojo.ipslicesize" :min="1" size="small" placeholder="ip分组大小" />
+                          <!-- <el-input v-model="pojo.ipslicesize" style="width:120px;" clearable placeholder="ip分组大小" /> -->
+                        </el-tooltip>
+                      </span>
+
+                      <!-- 没有端口的ip全端口扫描 端口分组和附加选项-->
+                      <!-- ||pojo.worktype == 'ipNoPort'||pojo.worktype == 'unknownPortSerVer' -->
+                      <span v-if="pojo.worktype == 'nmap'&&(pojo.targetport == null||pojo.targetport == '')&&pojo.targetip !=='unknownPortSerVer'&&pojo.targetip !=='ipAllPort'">
+                        <span v-if="pojo.additionoption == '-sn'" />
+                        <span v-else>
+                          <el-tooltip placement="top">
+                            <div slot="content">端口分组大小 : 默认1000<br>只对nmap全端口模式有效<br>范围：1000-10000<br></div>
+                            <el-input-number v-model="pojo.portslicesize" :min="1000" :max="10000" :step="1000" size="small" placeholder="端口分大小" />
+                            <!-- <el-input v-model="pojo.portslicesize" style="width:140px;" clearable placeholder="端口分组大小" /> -->
+                          </el-tooltip>
+                        </span>
+
+                      </span>
+                    </span>
+                  </el-form-item>
+
+                  <span v-if="(pojo.worktype == 'nmap'||pojo.worktype == 'mass2Nmap'||pojo.worktype == 'mass')&&pojo.targetip !=='unknownPortSerVer'&&pojo.targetip !=='ipAllPort'&&pojo.additionoption !== '-sn'">
+                    <el-form-item label="排除ip"><el-input v-model="pojo.excludeip" clearable :autosize="{maxRows: 10}" type="textarea" placeholder="格式:单个ip,ip段,CIDR,举例: 192.168.1.1,192.168.2.1-192.168.2.100,192.168.3.0/24" /></el-form-item>
+                  </span>
+
+                  <el-form-item label="Boolean">
+                    <el-tooltip placement="top">
+                      <div slot="content">默认false<br>cron任务需要手动点开始</div>
+                      <el-switch v-model="pojo.crontask" active-text="cron任务" />
+                    </el-tooltip>
+
+                    <span v-if="(pojo.worktype == 'nmap'||pojo.worktype == 'mass2Nmap'||pojo.worktype == 'mass')&&pojo.targetip !=='unknownPortSerVer'&&pojo.targetip !=='ipAllPort'&&pojo.targetip !=='ipNoPort'&&pojo.additionoption !== '-sn'">
+                      <el-tooltip placement="top">
+                        <div slot="content">默认false</div>
+                        <el-switch v-model="pojo.dbipisexcludeip" active-text="排除db中ip" />
+                      </el-tooltip>
+                    </span>
+
+                    <el-tooltip placement="top">
+                      <div slot="content">默认true</div>
+                      <el-switch v-model="pojo.merge2asset" active-text="结果合并到资产" />
+                    </el-tooltip>
+                  </el-form-item>
+
+                  <span v-if="pojo.crontask===true">
+                    <!-- <el-form-item required="" label="cron表达式">
+            <el-input v-model="pojo.cronexpression" clearable style="width:400px;" />
+            <el-button type="info" @click="parseCron(pojo.cronexpression)">cron模拟解析</el-button>
+            <br> -->
+                    <el-form ref="searchform" inline size="small" :model="searchMap">
+                      <el-form-item label="cron表达式">
+                        <cron-input v-model="cron" clearable style="width:300px;" @change="change" @reset="reset" />
+                      </el-form-item>
+                      <el-form-item>
+                        <el-button type="info" @click="parseCron('')">解析</el-button>
+                      </el-form-item>
+                      <br>
+                      <span v-if="parseList[0]">
+                        <el-alert :closable="false" center>
+                          <table border="0">
+                            <tr>
+                              <td><b>当前时间</b></td>
+                              <td>{{ parseList[0] }}</td>
+                              <el-divider direction="vertical" />
+                              <td><b>最近十次</b></td>
+                              <td><b>运行时间</b></td>
+                            </tr>
+                            <tr>
+                              <td><b>一</b></td>
+                              <td>{{ parseList[1] }}</td>
+                              <el-divider direction="vertical" />
+                              <td><b>六</b></td>
+                              <td>{{ parseList[6] }}</td>
+                            </tr>
+                            <tr>
+                              <td><b>二</b></td>
+                              <td>{{ parseList[2] }}</td>
+                              <el-divider direction="vertical" />
+                              <td><b>七</b></td>
+                              <td>{{ parseList[7] }}</td>
+                            </tr>
+                            <tr>
+                              <td><b>三</b></td>
+                              <td>{{ parseList[3] }}</td>
+                              <el-divider direction="vertical" />
+                              <td><b>八</b></td>
+                              <td>{{ parseList[8] }}</td>
+                            </tr>
+                            <tr>
+                              <td><b>四</b></td>
+                              <td>{{ parseList[4] }}</td>
+                              <el-divider direction="vertical" />
+                              <td><b>九</b></td>
+                              <td>{{ parseList[9] }}</td>
+                            </tr>
+                            <tr>
+                              <td><b>五</b></td>
+                              <td>{{ parseList[5] }}</td>
+                              <el-divider direction="vertical" />
+                              <td><b>十</b></td>
+                              <td>{{ parseList[10] }}</td>
+                            </tr>
+                          </table>
+                        </el-alert>
+                      </span>
+
+                    </el-form>
+                  </span>
+                  <el-form-item label="描述"><el-input v-model="pojo.description" autosize type="textarea" /></el-form-item>
+
+                  <span v-if="(pojo.worktype == 'nse'||pojo.worktype == 'selfd')||( pojo.worktype == 'nmap'||pojo.worktype == 'mass2Nmap'||pojo.worktype == 'mass')&&pojo.checktype&&pojo.checktype!='httpp'">
+                    <el-divider />
+                    <span v-if="pojo.id==null">
+                      <el-form-item label="插件">
+                        <b>保存任务后才能启用插件</b>
+                      </el-form-item>
+                    </span>
+                  </span>
+
+                  <span slot="footer" class="dialog-footer">
+                    <!-- <el-button type="info" @click="handleSaveAndStart()">保存并开始</el-button> -->
+                    <el-button type="primary" @click="handleSave()">保存</el-button>
+                    <el-button @click="closeDialogForm()">关闭</el-button>
+
+                  </span>
+
+                </el-collapse-item>
+              </el-collapse>
+            </el-form>
+
+            <!-- 新增插件 -->
+            <div v-if="checkTask">
+              <el-form>
+                <span v-if="(pojo.worktype=='nse'||pojo.worktype=='selfd')&&pojo.worktype!=='httpp'&&pojo.worktype!=='nmap'&&pojo.worktype!=='mass'&&pojo.worktype!=='mass2Nmap'">
+                  <el-collapse v-model="activePluginNames">
+                    <el-collapse-item title="插件(可选配置)">
+                      <el-form-item>
+                        <span v-if="taskPluginPojoList.length==0">
+                          <span><b>当前未选择插件, 默认启用 {{ pojo.worktype }} 类型的所有插件</b></span>
+                        </span>
+
+                        <el-form ref="searchform2" inline size="mini" :model="searchMap">
+
+                          <el-form-item prop="name" label="名称">
+                            <el-select v-model="searchMap.name" filterable remote allow-create default-first-option clearable placeholder="请输入" style="width:130px;" :remote-method="getNameList" :loading="searchLoading">
+                              <el-option v-for="item in pluginnameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
+                          </el-form-item>
+
+                          <el-form-item prop="args" label="参数">
+                            <el-select v-model="searchMap.args" filterable remote allow-create default-first-option clearable placeholder="请输入" style="width:130px;" :remote-method="getArgsList" :loading="searchLoading">
+                              <el-option v-for="item in argsList" :key="item.id" :label="item.args" :value="item.args" /></el-select>
+                          </el-form-item>
+
+                          <el-form-item label="风险">
+                            <el-select v-model="searchMap.risk" placeholder="请选择" clearable style="width:90px;">
+                              <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                              />
+                            </el-select>
+                          </el-form-item>
+                          <span v-if="pojo.checktype">
+                            <el-form-item label="类型">
+                              <el-radio-group v-model="searchMap.type" size="mini">
+                                <el-radio-button label="selfd" />
+                                <el-radio-button label="nse" />
+                              </el-radio-group>
+                            </el-form-item>
+                          </span>
+                          <!-- <el-form-item label="超时">
+        <el-input v-model="searchMap.timeout" prop="timeout" clearable placeholder="超时" /></el-form-item> -->
+
+                          <el-form-item>
+                            <el-button type="primary" size="mini" @click="fetchPluginconfigData()">查询</el-button>
+                            <el-button type="info" size="mini" @click="resetForm('searchform2')">重置</el-button>
+
+                            <!-- 操作 -->
+                            <el-button type="success" size="mini" @click="enableTaskPlugin(pojo.id)">启用</el-button>
+                            <el-tooltip placement="top">
+                              <div slot="content">不选择插件, 则禁用所有已启用插件</div>
+                              <el-button type="danger" size="mini" @click="disablePlugin(pojo.id)">禁用</el-button>
+                            </el-tooltip>
+
+                          </el-form-item>
+                        </el-form>
+                        <!-- 表格数据 -->
+                        <el-table
+                          ref="multipleTable"
+                          :data="pluginconfigList"
+                          fit
+                          style="width: 100%;"
+                          size="medium"
+                          @selection-change="handleSelectionChange"
+                        >
+                          <el-table-column type="selection" align="center" />
+                          <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
+                          <el-table-column sortable prop="name" label="名称" />
+                          <el-table-column sortable prop="args" label="参数" show-overflow-tooltip />
+                          <el-table-column sortable prop="risk" label="风险" />
+                          <el-table-column sortable prop="type" label="类型" />
+
+                          <el-table-column
+                            label="操作"
+                            width="140"
+                          >
+                            <template slot-scope="scope">
+                              <span v-if="checkPlugin(scope.row.id)">
+                                <el-button type="success" size="mini" @click="enableTaskPluginById(pojo.id,scope.row.id)">启用</el-button>
+                              </span>
+                              <span v-else>
+                                <el-button type="danger" size="mini" @click="handleDeleteTaskPluginById(pojo.id,scope.row.id)">禁用</el-button>
+                              </span>
+
+                            </template>
+                          </el-table-column>
+
+                        </el-table>
+
+                        <!-- 底部分页 -->
+                        <el-pagination
+                          :current-page.sync="pluginconfigcurrentPage"
+                          :page-sizes="[5,15,20,100,200]"
+                          :page-size="pluginconfigpageSize"
+                          layout="total, sizes, prev, pager, next, jumper"
+                          :total="pluginconfigtotal"
+                          @size-change="handlePluginconfigSizeChange"
+                          @current-change="fetchPluginconfigData"
+                        />
+
+                      </el-form-item>
+                    </el-collapse-item>
+                  </el-collapse>
+
+                </span>
+              </el-form>
+            </div>
+
+          </span>
+        </div>
+
+        <!-- 步骤跳跃 -->
+        <el-form label-width="100px">
+          <el-form-item>
+            <span v-if="active==2 &&(pojo.targetip||assetTargetOrInput)">
+              <!-- <el-button type="info" style="margin-top: 12px;" @click="forward">保存并开始</el-button> -->
+              <el-button type="primary" style="margin-top: 12px;" @click="handleSave()">保存</el-button>
+            </span>
+
+            <span v-if="active==1 &&(pojo.worktype == 'nse'||pojo.worktype == 'selfd')">
+              <el-button type="primary" style="margin-top: 12px;" @click="handleSaveCheckTask()">下一步</el-button>
+            </span>
+            <span v-else>
+              <span v-if="active!==2">
+                <el-button type="primary" style="margin-top: 12px;" @click="next">下一步</el-button>
+              </span>
+            </span>
+            <span v-if="pojo.worktype !== 'nse'&&pojo.worktype !== 'selfd'">
+              <span v-if="active!==0">
+                <el-button style="margin-top: 12px;" @click="forward">上一步</el-button>
+              </span>
+            </span>
+          </el-form-item>
+        </el-form>
+      </el-form>
+    </el-dialog>
+
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
       <el-form label-width="100px">
 
         <!-- <el-form-item label="父任务"><el-input v-model="pojo.taskparentid" /></el-form-item> -->
         <!-- <el-form-item label="父任务">
-          <el-select v-model="pojo.taskparentid" style="width:400px;" filterable clearable placeholder="请输入关键词">
+          <el-select v-model="pojo.taskparentid" style="width:400px;" filterable clearable placeholder="请输入">
             <el-option
               v-for="item in list"
               :key="item.id"
@@ -477,7 +1063,7 @@
 
         <el-form-item prop="projectid" label="任务项目">
           <span>{{ projectName }}</span>
-          <el-select v-model="pojo.projectid" style="width:400px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getProjectnameList" :loading="searchLoading">
+          <el-select v-model="pojo.projectid" style="width:400px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectnameList" :loading="searchLoading">
             <el-option v-for="item in projectnameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
 
         </el-form-item>
@@ -508,29 +1094,33 @@
               <el-radio-button label="httpp" />
             </el-radio-group>
           </span>
-
         </el-form-item>
+
+        <span v-if="pojo.worktype == 'nmap'||pojo.worktype == 'mass2Nmap'||pojo.worktype == 'mass'||pojo.worktype == 'nse'">
+          <el-form-item label="选项"><el-input v-model="pojo.additionoption" clearable placeholder="nmap/nse默认-Pn -sV --max-retries=1 --open，mass/mass2Nmap无默认" /></el-form-item>
+        </span>
 
         <!-- <el-form-item> -->
         <span v-if="pojo.worktype && pojo.worktype == 'mass2Nmap'">
-          <el-form-item label="Nmap配置" size="mini">
+          <el-form inline>
+            <el-form-item label="Nmap配置" size="mini" />
+            <el-form-item label="选项" size="mini"><el-input v-model="nmapPojo.additionoption" placeholder="-Pn -sV --max-retries=1" /></el-form-item>
             <!-- <i>{{ getNmapConfigByTaskId(pojo.id) }}</i> -->
             <el-form-item label="线程" size="mini">
-              <el-input-number v-model="nmapPojo.threadnumber" :min="1" placeholder="默认10" />
+              <el-input-number v-model="nmapPojo.threadnumber" :min="1" placeholder="10" />
               <!-- <el-input v-model="nmapPojo.threadnumber" style="width:400px;" placeholder="默认10" /> -->
             </el-form-item>
 
             <el-form-item label="ip扫描次数" size="mini">
-              <el-input-number v-model="nmapPojo.singleipscantime" :min="1" placeholder="默认1" />
+              <el-input-number v-model="nmapPojo.singleipscantime" :min="1" placeholder="1" />
               <!-- <el-input v-model="nmapPojo.singleipscantime" style="width:400px;" placeholder="默认1" /> -->
 
             </el-form-item>
-            <el-form-item label="选项" size="mini"><el-input v-model="nmapPojo.additionoption" placeholder="默认-Pn -n -sV --max-retries=1" /></el-form-item>
-          </el-form-item>
+          </el-form>
         </span>
         <!-- </el-form-item> -->
 
-        <span v-if="!pojo.taskparentid&&(pojo.worktype == 'nmap'||pojo.worktype == 'mass2Nmap')&&(pojo.starttime!=null&&pojo.endtime!=null)">
+        <span v-if="!pojo.taskparentid&&(pojo.worktype == 'nmap'||pojo.worktype == 'mass2Nmap')&&(pojo.starttime!=null&&pojo.endtime!=null)&&pojo.additionoption !== '-sn'">
           <el-form-item label="检测" inline>
             <el-tooltip placement="top">
               <div slot="content">保存后再重新编辑, 才能配置插件</div>
@@ -569,7 +1159,7 @@
                 <!-- <el-input v-model="pojo.rate" style="width:130px;" clearable placeholder="mass速率" /> -->
               </el-tooltip>
             </span>
-            <span v-if="pojo.targetip !=='unknownPortSerVer'&&pojo.targetip !=='ipAllPort'">
+            <span v-if="pojo.targetip !=='unknownPortSerVer'&&pojo.targetip !=='ipAllPort'&&pojo.additionoption !== '-sn'">
               <el-tooltip placement="top">
                 <div slot="content">ip分组大小 : 默认255</div>
                 <el-input-number v-model="pojo.ipslicesize" :min="1" size="small" placeholder="ip分组大小" />
@@ -583,7 +1173,7 @@
               <span v-if="pojo.additionoption == '-sn'" />
               <span v-else>
                 <el-tooltip placement="top">
-                  <div slot="content">端口分组大小<br>只对nmap全端口模式有效<br>范围：1000-10000<br>默认1000</div>
+                  <div slot="content">端口分组大小 : 默认1000<br>只对nmap全端口模式有效<br>范围：1000-10000<br></div>
                   <el-input-number v-model="pojo.portslicesize" :min="1000" :max="10000" :step="1000" size="small" placeholder="端口分大小" />
                 <!-- <el-input v-model="pojo.portslicesize" style="width:140px;" clearable placeholder="端口分组大小" /> -->
                 </el-tooltip>
@@ -592,10 +1182,6 @@
             </span>
           </span>
         </el-form-item>
-
-        <span v-if="pojo.worktype == 'nmap'||pojo.worktype == 'mass2Nmap'||pojo.worktype == 'mass'||pojo.worktype == 'nse'">
-          <el-form-item label="选项"><el-input v-model="pojo.additionoption" clearable placeholder="nmap/nse默认-Pn -sV --max-retries=1 --open，mass/mass2Nmap无默认" /></el-form-item>
-        </span>
 
         <span v-if="pojo.worktype == 'nse'||pojo.worktype == 'selfd'||pojo.worktype == 'httpp'">
           <span v-if="pojo.taskparentid">
@@ -623,7 +1209,7 @@
             </el-form-item>
           </el-tooltip>
 
-          <span v-if="pojo.worktype == 'nmap'&&(pojo.targetip == null||pojo.targetip == '')&&pojo.additionoption!==''">
+          <span v-if="pojo.worktype == 'nmap'&&(pojo.targetip == null||pojo.targetip == '')&&pojo.additionoption!==''&&pojo.additionoption !== '-sn'">
             <el-form-item required label="目标">
               <el-radio-group v-model="pojo.targetip" size="mini">
                 <el-tooltip placement="top">
@@ -649,7 +1235,7 @@
         <span v-if="pojo.worktype == 'nmap'&&(pojo.portslicesize == null||pojo.portslicesize == '')&&pojo.targetip !=='unknownPortSerVer'&&pojo.targetip !=='ipAllPort'&&pojo.additionoption !== '-sn'">
           <el-tooltip placement="top">
             <div slot="content">格式1: <br>格式2:regular<br>格式3:80,443,1-1001<br>格式说明: 为空代表所有端口, regular为nmap默认端口</div>
-            <el-form-item label="端口"><el-input v-model="pojo.targetport" clearable :autosize="{maxRows: 10}" type="textarea" placeholder="格式: 留空或regular或80,443,1-1001" /></el-form-item>
+            <el-form-item required label="端口"><el-input v-model="pojo.targetport" clearable :autosize="{maxRows: 10}" type="textarea" placeholder="格式: 留空或regular或80,443,1-1001" /></el-form-item>
           </el-tooltip>
         </span>
         <!-- <span v-if="pojo.worktype == 'nmap'&&pojo.id ">
@@ -661,7 +1247,7 @@
         <span v-if="pojo.worktype == 'mass' || pojo.worktype == 'mass2Nmap'">
           <el-tooltip placement="top">
             <div slot="content">格式1: <br>格式2:regular<br>格式3:80,443,1-1001<br>格式说明: 为空代表所有端口, regular为nmap默认端口</div>
-            <el-form-item label="端口"><el-input v-model="pojo.targetport" clearable :autosize="{maxRows: 10}" type="textarea" placeholder="格式: 留空或regular或80,443,1-1001" /></el-form-item>
+            <el-form-item required label="端口"><el-input v-model="pojo.targetport" clearable :autosize="{maxRows: 10}" type="textarea" placeholder="格式: 留空或regular或80,443,1-1001" /></el-form-item>
           </el-tooltip>
         </span>
 
@@ -689,13 +1275,20 @@
         </el-form-item>
 
         <span v-if="pojo.crontask===true">
-          <el-form-item required="" label="cron表达式">
+          <!-- <el-form-item required="" label="cron表达式">
             <el-input v-model="pojo.cronexpression" clearable style="width:400px;" />
             <el-button type="info" @click="parseCron(pojo.cronexpression)">cron模拟解析</el-button>
+            <br> -->
+          <el-form ref="searchform" inline size="small" :model="searchMap">
+            <el-form-item label="cron表达式">
+              <cron-input v-model="cron" clearable style="width:300px;" @change="change" @reset="reset" />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="info" @click="parseCron('')">解析</el-button>
+            </el-form-item>
             <br>
-
             <span v-if="parseList[0]">
-              <el-alert :closable="false">
+              <el-alert :closable="false" center>
                 <table border="0">
                   <tr>
                     <td><b>当前时间</b></td>
@@ -743,7 +1336,7 @@
               </el-alert>
             </span>
 
-          </el-form-item>
+          </el-form>
         </span>
         <el-form-item label="描述"><el-input v-model="pojo.description" autosize type="textarea" /></el-form-item>
 
@@ -772,12 +1365,12 @@
         <el-input v-model="searchMap.name" prop="name" clearable placeholder="名称" /></el-form-item> -->
 
                 <el-form-item prop="name" label="名称">
-                  <el-select v-model="searchMap.name" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" style="width:130px;" :remote-method="getNameList" :loading="searchLoading">
+                  <el-select v-model="searchMap.name" filterable remote allow-create default-first-option clearable placeholder="请输入" style="width:130px;" :remote-method="getNameList" :loading="searchLoading">
                     <el-option v-for="item in pluginnameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
                 </el-form-item>
 
                 <el-form-item prop="args" label="参数">
-                  <el-select v-model="searchMap.args" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" style="width:130px;" :remote-method="getArgsList" :loading="searchLoading">
+                  <el-select v-model="searchMap.args" filterable remote allow-create default-first-option clearable placeholder="请输入" style="width:130px;" :remote-method="getArgsList" :loading="searchLoading">
                     <el-option v-for="item in argsList" :key="item.id" :label="item.args" :value="item.args" /></el-select>
                 </el-form-item>
 
@@ -867,8 +1460,10 @@
 
       </el-form>
       <span slot="footer" class="dialog-footer">
+        <!-- <el-button type="info" @click="handleSaveAndStart()">保存并开始</el-button> -->
         <el-button type="primary" @click="handleSave()">保存</el-button>
         <el-button @click="closeDialogForm()">关闭</el-button>
+
       </span>
     </el-dialog>
   </div>
@@ -882,6 +1477,8 @@ import nmapconfigApi from '@/api/nmapconfig'
 import taskpluginconfigApi from '@/api/taskpluginconfig'
 import pluginconfigApi from '@/api/pluginconfig'
 import cronjobApi from '@/api/cronjob'
+import CronInput from 'vue-cron-generator/src/components/cron-input'
+import { DEFAULT_CRON_EXPRESSION } from 'vue-cron-generator/src/constant/filed'
 
 import Vue from 'vue'
 
@@ -889,6 +1486,9 @@ const dateformat = Vue.filter('dateformat')
 const checkOptions = ['nse', 'selfd', 'httpp']
 
 export default {
+  components: {
+    CronInput
+  },
   filters: {
     showProgressColor(percentage) {
       if (percentage > 0 && percentage < 100) {
@@ -912,6 +1512,8 @@ export default {
       pageSize: 10, // 每页大小
       searchMap: {}, // 查询条件
       dialogFormVisible: false, // 编辑窗口是否可见
+      newTaskDialogFormVisible: false, // 编辑窗口是否可见
+      taskTypeDialogFormVisible: false,
       pojo: {}, // 编辑表单绑定的实体对象
       id: '', // 当前用户修改的ID
       searchLoading: false,
@@ -943,6 +1545,7 @@ export default {
       temptaskid: '',
 
       activeNames: ['1'],
+      activePluginNames: ['1'],
 
       drawer: false,
       childActiveNames: ['1'],
@@ -976,6 +1579,7 @@ export default {
 
       parseList: [],
       cronMap: {},
+      cron: '0 0 12 * * ?',
 
       options: [{
         value: '信息',
@@ -997,6 +1601,11 @@ export default {
         label: '致命'
       }],
       value: '',
+      targetType: '',
+      taskType: '',
+      assetTargetOrInput: '',
+      active: 0,
+      checkTask: false,
 
       pickerOptions: { // 日期选择
         disabledDate(time) {
@@ -1052,7 +1661,7 @@ export default {
           if (this.id) {
             this.childFetchData()
           }
-        }, 10000)
+        }, 30000)
       }
     }
     // window.addEventListener('focus', () => {
@@ -1078,8 +1687,128 @@ export default {
     clearInterval(this.timer)
   },
   methods: {
+    enableTaskPluginById(taskId, pluginId) {
+      const tempList = []
+      tempList.push(taskId)
+      tempList.push(pluginId)
+      taskpluginconfigApi.addAllByIds(tempList).then(response => {
+        this.$message({
+          message: response.message,
+          type: (response.flag ? 'success' : 'error')
+        })
+        if (response.flag) {
+          this.taskPluginList = []
+          this.handleEditCheckTask(taskId)
+        }
+      })
+    },
+    enableTaskPlugin(id) {
+      if (this.multipleSelection && this.multipleSelection.length) {
+        const tempList = []
+        tempList.push(id)
+        for (let i = 0; i < this.multipleSelection.length; i++) {
+          tempList.push(this.multipleSelection[i].id)
+        }
+        taskpluginconfigApi.addAllByIds(tempList).then(response => {
+          this.$message({
+            message: response.message,
+            type: (response.flag ? 'success' : 'error')
+          })
+          if (response.flag) {
+            this.taskPluginList = []
+            this.handleEditCheckTask(id)
+          }
+        })
+        this.$refs.multipleTable.clearSelection()
+      } else {
+        this.$message({
+          message: '^_^至少选择一条记录哦~',
+          type: 'info'
+        })
+      }
+    },
+    handleEditCheckTask(id) {
+      taskApi.findById(id).then(response => {
+        if (response.flag) {
+          this.pojo = response.data
+          this.fetchPluginconfigData()
+          // 获取插件id
+          taskpluginconfigApi.findAllByTaskid(id).then(response => {
+            if (response.flag) {
+              this.taskPluginList = response.data
+              this.taskPluginPojoList = response.data
+            }
+          })
+          if (this.pojo.projectid) {
+            projectApi.findById(this.pojo.projectid).then(response => {
+              if (response.flag) {
+                this.projectName = response.data.name
+              }
+            })
+          }
+        }
+      })
+    },
+    handleSaveCheckTask() {
+      if (this.pojo.crontask) {
+        this.pojo.cronexpression = this.cron
+      }
+      // 新增插件
+      this.pojo.targetip = 'assetip'
+      taskApi.update(this.id, this.pojo).then(response => {
+        if (this.pojo.worktype === 'selfd' || this.pojo.worktype === 'nse') {
+          if (this.id === '') {
+            taskApi.findById(response.data).then(response => {
+              if (response.flag) {
+                this.pojo = response.data
+              }
+            })
+            this.handleEditCheckTask(response.data)
+            this.checkTask = true
+          }
+        }
+      })
+      this.active++
+    },
+    closeNewTaskDialogForm() {
+      this.newTaskDialogFormVisible = false
+      this.active = 0
+      this.taskType = ''
+      this.targetType = ''
+      this.assetTargetOrInput = ''
+    },
+    forward() {
+      // this.active--
+      if (this.active-- < 0) this.active = 2
+    },
+    next() {
+      // this.active++
+      if (this.active++ > 2) this.active = 0
+    },
+    handleSaveAndStart() {
+      if (this.pojo.id) {
+        if (this.pojo.worktype === 'nmap' || this.pojo.worktype === 'mass' || this.pojo.worktype === 'mass2Nmap') {
+          this.executeTask(this.pojo.id)
+        }
+        if (this.pojo.checktype === 'nse' || this.pojo.checktype === 'selfd' || this.pojo.checktype === 'htpp') {
+          this.executeCheck(this.pojo.id)
+        }
+      }
+      this.closeDialogForm()
+    },
+    change(cron) {
+      this.cron = cron
+    },
+    reset(cron) {
+      this.cron = DEFAULT_CRON_EXPRESSION
+    },
     parseCron(exp) {
-      this.cronMap = { 'cronExpression': exp }
+      if (exp !== null && exp !== '') {
+        this.cronMap = { 'cronExpression': exp }
+      } else {
+        this.cronMap = { 'cronExpression': this.cron }
+      }
+
       cronjobApi.parse(this.cronMap).then(response => {
         this.parseList = response.data
         this.$message({
@@ -1609,6 +2338,9 @@ export default {
       this.projectnameList = []
       this.projectName = ''
       this.parseList = []
+      this.taskPluginPojoList = []
+      this.closeNewTaskDialogForm()
+      this.cron = '0 0 12 * * ?'
     },
     childHandleDeleteAll() {
       if (this.childMultipleSelection && this.childMultipleSelection.length) {
@@ -1830,6 +2562,10 @@ export default {
       this.listLoading = false
     },
     handleSave() {
+      if (this.pojo.crontask) {
+        this.pojo.cronexpression = this.cron
+      }
+
       if ((this.pojo.worktype === 'nmap' || this.pojo.worktype === 'mass2Nmap') && (this.pojo.starttime != null && this.pojo.endtime != null)) {
         if (this.checkedChecktypes && this.checkedChecktypes.length !== 0) {
           this.pojo.checktype = this.checkedChecktypes.join(',')
@@ -1857,25 +2593,32 @@ export default {
         })
         if (response.flag) { // 如果成功
           this.fetchData() // 刷新列表
-        }
-      }).then(() => {
-        if (this.pojo.worktype === 'selfd' || this.pojo.worktype === 'nse') {
-          this.handleEdit(this.temptaskid)
-        } else {
           this.closeDialogForm()
         }
       })
     },
+    // 请选择目标类型
+    newTask() {
+      this.newTaskDialogFormVisible = true
+    },
     handleEdit(id) {
+    // 新建任务
+      if (id === '') {
+        this.pojo = {}
+        this.newTask()
+      }
+
       this.nmapPojo = {}
+      this.parseList = []
       this.id = id
-      this.dialogFormVisible = true // 打开窗口
 
       if (id !== '') { // 修改
+        this.dialogFormVisible = true // 打开窗口
         taskApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
             // 判断任务类型, 开始和结束时间
+            this.cron = this.pojo.cronexpression
 
             if ((this.pojo.worktype === 'nmap' || this.pojo.worktype === 'mass2Nmap') && (this.pojo.starttime != null && this.pojo.endtime != null)) {
               if (this.pojo.checktype && this.pojo.checktype.length !== 0) {
@@ -1889,6 +2632,7 @@ export default {
             // 获取插件id
             taskpluginconfigApi.findAllByTaskid(id).then(response => {
               if (response.flag) {
+                this.taskPluginPojoList = response.data
                 this.taskPluginList = response.data
               }
             })

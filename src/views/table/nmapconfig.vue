@@ -1,12 +1,12 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
       <!-- <el-form-item label="任务编号">
         <el-input v-model="searchMap.taskid" prop="taskid" clearable placeholder="任务编号" /></el-form-item> -->
       <el-form-item prop="taskid" label="任务">
-        <el-select v-model="searchMap.taskid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getTaskNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.taskid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getTaskNameList" :loading="searchLoading">
           <el-option v-for="item in taskNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -82,8 +82,8 @@
 
         <el-form-item prop="taskid" label="任务">
           {{ taskName }}
-          <el-select v-model="pojo.taskid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getTaskList" :loading="searchLoading">
-            <el-option v-for="item in taskList" :key="item.id" :label="item.name" :value="item.id" />
+          <el-select v-model="pojo.taskid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getTaskNameList" :loading="searchLoading">
+            <el-option v-for="item in taskNameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="线程数量"><el-input v-model="pojo.threadnumber" style="width:300px;" /></el-form-item>
@@ -114,6 +114,7 @@ export default {
       dialogFormVisible: false, // 编辑窗口是否可见
       pojo: {}, // 编辑表单绑定的实体对象
       id: '', // 当前用户修改的ID
+      searchLoading: false,
 
       filename: '',
       listLoading: true,
@@ -128,7 +129,7 @@ export default {
     this.fetchData()
   },
   methods: {
-    getNameList(query) {
+    getTaskNameList(query) {
       if (query !== '' && query) {
         this.searchLoading = true
         setTimeout(() => {
@@ -148,6 +149,7 @@ export default {
     },
     closeDialogForm() {
       this.dialogFormVisible = false
+      this.taskNameList = []
     },
 
     handleDeleteAll() {
@@ -229,6 +231,7 @@ export default {
 
     resetForm(formName) { // 清空搜索表单
       this.$refs[formName].resetFields()
+      this.taskNameList = []
       this.searchMap = {}
       this.$message({
         message: '已清空搜索条件',

@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -13,13 +13,13 @@
         <el-input v-model="searchMap.notifywhitelist" prop="notifywhitelist" clearable placeholder="提醒白名单" /></el-form-item> -->
 
       <el-form-item prop="projectinfoid" label="项目信息">
-        <el-select v-model="searchMap.projectinfoid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getProjectNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.projectinfoid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectNameList" :loading="searchLoading">
           <el-option v-for="item in projectnameList" :key="item.id" :label="item.projectname" :value="item.id" />
         </el-select>
       </el-form-item>
 
       <el-form-item prop="port" label="端口">
-        <el-select v-model="searchMap.port" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getPortList" :loading="searchLoading">
+        <el-select v-model="searchMap.port" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
           <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
       </el-form-item>
 
@@ -127,7 +127,7 @@
 
         <el-form-item prop="projectinfoid" label="项目信息">
           {{ projectname }}
-          <el-select v-model="pojo.projectinfoid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getProjectNameList" :loading="searchLoading">
+          <el-select v-model="pojo.projectinfoid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectNameList" :loading="searchLoading">
             <el-option v-for="item in projectnameList" :key="item.id" :label="item.projectname" :value="item.id" />
           </el-select>
         </el-form-item>

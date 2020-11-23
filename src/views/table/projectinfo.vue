@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -7,13 +7,13 @@
         <el-input v-model="searchMap.departmentid" prop="departmentid" clearable placeholder="部门编号" /></el-form-item> -->
 
       <el-form-item prop="departmentid" label="部门">
-        <el-select v-model="searchMap.departmentid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getDepartmentnameList" :loading="searchLoading">
+        <el-select v-model="searchMap.departmentid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getDepartmentnameList" :loading="searchLoading">
           <el-option v-for="item in departmentnameList" :key="item.id" :label="item.departmentname" :value="item.id" />
         </el-select>
       </el-form-item>
 
       <el-form-item prop="projectname" label="项目信息">
-        <el-select v-model="searchMap.projectname" style="width:150px;" filterable allow-create remote clearable placeholder="请输入关键词" :remote-method="getProjectNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.projectname" style="width:150px;" filterable allow-create remote clearable placeholder="请输入" :remote-method="getProjectNameList" :loading="searchLoading">
           <el-option v-for="item in projectnameList" :key="item.id" :label="item.projectname" :value="item.projectname" />
         </el-select>
       </el-form-item>
@@ -155,14 +155,14 @@
           </el-form>
           <span v-if="pojo.id">
             <span>{{ departmentName }}</span>
-            <el-select v-model="pojo.departmentid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getDepartmentnameList" :loading="searchLoading">
+            <el-select v-model="pojo.departmentid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getDepartmentnameList" :loading="searchLoading">
               <el-option v-for="item in departmentnameList" :key="item.id" :label="item.departmentname" :value="item.id" />
             </el-select>
           </span>
         </el-form-item>
 
         <el-form-item required label="项目信息">
-          <el-select v-model="pojo.projectname" style="width:300px;" filterable allow-create remote clearable placeholder="请输入关键词" :remote-method="getProjectNameList" :loading="searchLoading">
+          <el-select v-model="pojo.projectname" style="width:300px;" filterable allow-create remote clearable placeholder="请输入" :remote-method="getProjectNameList" :loading="searchLoading">
             <el-option v-for="item in projectnameList" :key="item.id" :label="item.projectname" :value="item.projectname" />
           </el-select>
         </el-form-item>
@@ -191,7 +191,7 @@
               </el-form-item>
             </el-form>
             <span v-if="pojo.id">
-              <el-select v-model="contactIdAdd" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+              <el-select v-model="contactIdAdd" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
                 <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
               <el-button type="info" @click="handleAddContact(pojo.id)">增加</el-button>
             </span>
@@ -210,7 +210,7 @@
           </el-table>
         </span>
         <span v-else>
-          <div slot="tip" class="el-upload__tip">保存后才能编辑部门和负责人</div>
+          <div slot="tip" class="el-upload__tip">保存后才能编辑部门和负责人<br>顺序：项目信息 -> 负责人 -> 部门</div>
         </span>
         <br>
 
@@ -225,7 +225,7 @@
     <el-dialog title="编辑" :visible.sync="dialogFormVisibleDepartment" append-to-body width="40%" center :before-close="cleanCache">
       <el-form label-width="100px">
         <el-form-item label="部门名称">
-          <el-select v-model="departmentPojo.departmentname" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getDepartmentnameList" :loading="searchLoading">
+          <el-select v-model="departmentPojo.departmentname" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getDepartmentnameList" :loading="searchLoading">
             <el-option v-for="item in departmentnameList" :key="item.id" :label="item.departmentname" :value="item.departmentname" />
           </el-select>
         </el-form-item>
@@ -241,12 +241,12 @@
     <el-dialog title="编辑" :visible.sync="dialogFormVisibleContact" append-to-body width="40%" center :before-close="cleanCache">
       <el-form label-width="100px">
         <el-form-item prop="name" label="联系人">
-          <el-select v-model="contactPojo.name" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+          <el-select v-model="contactPojo.name" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
             <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
         </el-form-item>
 
         <el-form-item prop="email" label="邮箱">
-          <el-select v-model="contactPojo.email" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getEmailList" :loading="searchLoading">
+          <el-select v-model="contactPojo.email" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getEmailList" :loading="searchLoading">
             <el-option v-for="item in emailList" :key="item.id" :label="item.email" :value="item.email" /></el-select>
         </el-form-item>
 
@@ -382,6 +382,8 @@ export default {
       this.projectnameList = []
       this.nameList = []
       this.emailList = []
+      this.contactList = []
+      this.departmentnameList = []
     },
     handleSaveContact() {
       contactApi.update(this.contactId, this.contactPojo).then(response => {
@@ -474,6 +476,14 @@ export default {
       this.dialogFormVisible = false
       this.projectnameList = []
       this.departmentName = ''
+      this.nameList = []
+      this.projectnameList = []
+      this.contactList = []
+      this.departmentnameList = []
+      this.contactList = []
+      this.emailList = []
+      this.phoneList = []
+      this.contactIdAdd = ''
     },
     getDepartmentnameList(query) {
       if (query !== '' && query) {
@@ -639,6 +649,7 @@ export default {
     handleEdit(id) {
       this.id = id
       this.dialogFormVisible = true // 打开窗口
+      this.nameList = []
       if (id !== '') { // 修改
         projectinfoApi.findById(id).then(response => {
           if (response.flag) {

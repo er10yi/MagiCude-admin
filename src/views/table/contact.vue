@@ -1,20 +1,20 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
       <el-form-item prop="name" label="联系人">
-        <el-select v-model="searchMap.name" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.name" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
           <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
       </el-form-item>
 
       <el-form-item prop="email" label="邮箱">
-        <el-select v-model="searchMap.email" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getEmailList" :loading="searchLoading">
+        <el-select v-model="searchMap.email" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getEmailList" :loading="searchLoading">
           <el-option v-for="item in emailList" :key="item.id" :label="item.email" :value="item.email" /></el-select>
       </el-form-item>
 
       <el-form-item prop="phone" label="电话">
-        <el-select v-model="searchMap.phone" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getPhoneList" :loading="searchLoading">
+        <el-select v-model="searchMap.phone" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPhoneList" :loading="searchLoading">
           <el-option v-for="item in phoneList" :key="item.id" :label="item.phone" :value="item.phone" /></el-select>
       </el-form-item>
 
@@ -85,12 +85,12 @@
       <el-form label-width="100px">
 
         <el-form-item prop="name" label="联系人">
-          <el-select v-model="pojo.name" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+          <el-select v-model="pojo.name" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
             <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
         </el-form-item>
 
         <el-form-item prop="email" label="邮箱">
-          <el-select v-model="pojo.email" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getEmailList" :loading="searchLoading">
+          <el-select v-model="pojo.email" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getEmailList" :loading="searchLoading">
             <el-option v-for="item in emailList" :key="item.id" :label="item.email" :value="item.email" /></el-select>
         </el-form-item>
         <el-form-item label="电话"><el-input v-model="pojo.phone" clearable style="width:300px;" /></el-form-item>

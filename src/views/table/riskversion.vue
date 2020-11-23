@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -7,7 +7,7 @@
         <el-input v-model="searchMap.version" prop="version" clearable placeholder="高危版本" /></el-form-item> -->
 
       <el-form-item prop="version" label="高危版本">
-        <el-select v-model="searchMap.version" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getVersionList" :loading="searchLoading">
+        <el-select v-model="searchMap.version" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getVersionList" :loading="searchLoading">
           <el-option v-for="item in versionList" :key="item.id" :label="item.version" :value="item.version" /></el-select>
       </el-form-item>
 
@@ -78,7 +78,7 @@
         <el-tooltip placement="top">
           <div slot="content">具体的版本<br></div>
           <el-form-item prop="version" label="高危版本">
-            <el-select v-model="pojo.version" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getVersionList" :loading="searchLoading">
+            <el-select v-model="pojo.version" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getVersionList" :loading="searchLoading">
               <el-option v-for="item in versionList" :key="item.id" :label="item.version" :value="item.version" /></el-select>
           </el-form-item>
         </el-tooltip>

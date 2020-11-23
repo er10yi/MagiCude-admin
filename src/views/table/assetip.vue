@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <el-collapse v-model="activeNames">
       <el-collapse-item name="1">
         <template slot="title"><i class="header-icon el-icon-info" />菜单栏隐藏与显示</template>
@@ -8,17 +8,22 @@
           <!-- <el-input  v-model="searchMap.projectinfoid" placeholder="项目信息编号"  width="8"></el-input> -->
 
           <el-form-item prop="projectinfoid" label="项目信息">
-            <el-select v-model="searchMap.projectinfoid" style="width:180px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getProjectInfoList" :loading="searchLoading">
+            <el-select v-model="searchMap.projectinfoid" style="width:180px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getProjectInfoList" :loading="searchLoading">
               <el-option v-for="item in projectinfoList" :key="item.id" :label="item.projectname" :value="item.id" /></el-select>
           </el-form-item>
 
           <el-form-item prop="ipaddressv4" label="ipv4">
-            <el-select v-model="searchMap.ipaddressv4" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="searchMap.ipaddressv4" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="ipv4模糊查询" :remote-method="getIpaddressv4List" :loading="searchLoading">
+              <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" /></el-select>
+          </el-form-item>
+
+          <el-form-item prop="ipv4" label="ipv4">
+            <el-select v-model="searchMap.ipv4" style="width:150px;" filterable remote clearable placeholder="ipv4精准查询" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" /></el-select>
           </el-form-item>
 
           <el-form-item prop="ipaddressv6" label="ipv6">
-            <el-select v-model="searchMap.ipaddressv6" style="width:180px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv6List" :loading="searchLoading">
+            <el-select v-model="searchMap.ipaddressv6" style="width:180px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpaddressv6List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv6List" :key="item.id" :label="item.ipaddressv6" :value="item.ipaddressv6" /></el-select>
           </el-form-item>
 
@@ -37,7 +42,7 @@
           </el-form-item>
 
           <el-form-item prop="remark" label="备注">
-            <el-select v-model="searchMap.remark" style="width:180px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getRemarkList" :loading="searchLoading">
+            <el-select v-model="searchMap.remark" style="width:180px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getRemarkList" :loading="searchLoading">
               <el-option v-for="item in remarkList" :key="item.id" :label="item.remark" :value="item.remark" /></el-select>
           </el-form-item>
 
@@ -87,7 +92,7 @@
               <td>{{ departmentPojo.departmentname }}</td>
               <el-divider direction="vertical" />
               <td><b>项目信息</b></td>
-              <td>{{ pojo.projectinfoid }}</td>
+              <td>{{ pojo.projectname }}</td>
             </tr>
             <tr>
               <td><b>ipv4</b></td>
@@ -129,7 +134,7 @@
       <!-- 主机信息 -->
       <el-table :data="hostList" fit>
         <el-table-column prop="macaddress" label="mac地址" />
-        <el-table-column prop="hostname" label="主机名" />
+        <el-table-column prop="hostname" label="主机/域名" />
         <el-table-column prop="ostype" label="OS类型" />
         <el-table-column prop="osversion" label="OS版本" />
         <el-table-column prop="type" label="类型" />
@@ -257,7 +262,7 @@
 
       <!-- <el-table-column prop="id" label="资产ip编号" /> -->
 
-      <el-table-column sortable prop="projectinfoid" label="项目信息" />
+      <el-table-column sortable prop="projectname" label="项目信息" />
       <!-- <el-table-column sortable prop="projectinfoid" label="项目信息">
         <template slot-scope="scope">
           {{ getProjectname(scope.row.projectinfoid) }}
@@ -266,16 +271,27 @@
 
       <!-- <el-table-column sortable prop="ipaddressv4" label="ipv4" /> -->
 
-      <el-table-column sortable prop="ipaddressv4" label="ipv4">
-
+      <el-table-column sortable width="200" prop="ipaddressv4" label="ipv4">
+        <template slot="header">
+          <span>ipv4</span>
+          <el-tooltip placement="top">
+            <div slot="content">总端口数:未关闭端口数:总漏洞数:未修复漏洞数</div>
+            <i class="el-icon-info" />
+          </el-tooltip>
+        </template>
         <template slot-scope="scope">
           <el-link :underline="false" @click="handleDrawer(scope.row.id) ">
             {{ scope.row.ipaddressv4 }}
           </el-link>
+          <!-- </template>
+        <template slot-scope="scope"> -->
+          <span v-if=" scope.row.statistic">
+            <el-tag size="mini" type="success" effect="plain">{{ scope.row.statistic }}</el-tag>
+          </span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="statistic" label="统计">
+      <!-- <el-table-column prop="statistic" label="统计">
         <template slot="header">
           <span>统计</span>
           <el-tooltip placement="top">
@@ -283,7 +299,12 @@
             <i class="el-icon-info" />
           </el-tooltip>
         </template>
-      </el-table-column>
+        <template slot-scope="scope">
+          <span v-if=" scope.row.statistic">
+            <el-tag size="mini" type="success" effect="plain">{{ scope.row.statistic }}</el-tag>
+          </span>
+        </template>
+      </el-table-column> -->
 
       <el-table-column sortable prop="ipaddressv6" label="ipv6" />
 
@@ -353,7 +374,7 @@
       <el-form label-width="100px">
         <el-form-item label="项目信息">
           <span>{{ projectname }}</span>
-          <el-select v-model="pojo.projectinfoid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getProjectInfoList" :loading="searchLoading">
+          <el-select v-model="pojo.projectinfoid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectInfoList" :loading="searchLoading">
             <el-option v-for="item in projectinfoList" :key="item.id" :label="item.projectname" :value="item.id" /></el-select>
         </el-form-item>
 
@@ -361,7 +382,7 @@
         <el-form-item prop="ipaddressv4" label="ipv4">
           {{ pojo.ipaddressv4 }}
           <span v-if="pojo.id==null">
-            <el-select v-model="pojo.ipaddressv4" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="pojo.ipaddressv4" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" /></el-select>
           </span>
         </el-form-item>
@@ -488,14 +509,6 @@ export default {
         if (response.flag) {
           this.pojo = response.data
 
-          projectinfoApi.findById(this.pojo.projectinfoid).then(response => {
-            if (response.data) {
-              if (response.data.projectname !== null) {
-                this.pojo.projectinfoid = response.data.projectname
-              }
-            }
-          })
-
           // 资产端口
           assetportApi.findAllByAssetipId(this.id).then(response => {
             this.portList = response.data
@@ -603,7 +616,6 @@ export default {
             this.ipaddressv4List = response.data.rows.filter(item => {
               return item.ipaddressv4.toLowerCase().indexOf(query.toLowerCase()) > -1
             })
-            console.log(this.ipaddressv4List)
           })
         }, 200)
       } else {
@@ -758,11 +770,12 @@ export default {
         assetipApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
-            projectinfoApi.findById(this.pojo.projectinfoid).then((response) => {
-              if (response.flag) {
-                this.projectname = response.data.projectname
-              }
-            })
+            this.projectname = this.pojo.projectname
+            // projectinfoApi.findById(this.pojo.projectinfoid).then((response) => {
+            //   if (response.flag) {
+            //     this.projectname = response.data.projectname
+            //   }
+            // })
           }
         })
       } else {

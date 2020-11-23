@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <el-collapse v-model="activeNames">
       <el-collapse-item name="1">
         <template slot="title"><i class="header-icon el-icon-info" />菜单栏隐藏与显示</template>
@@ -7,57 +7,57 @@
         <el-form ref="searchform" inline size="small" :model="searchMap">
 
           <el-form-item prop="assetip" label="ip">
-            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" />
             </el-select>
           </el-form-item>
           <el-form-item prop="assetport" label="端口">
-            <el-select v-model="searchMap.assetport" style="width:100px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getPortList" :loading="searchLoading">
+            <el-select v-model="searchMap.assetport" style="width:100px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
               <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
           </el-form-item>
 
           <el-form-item prop="title" label="title">
-            <el-select v-model="searchMap.title" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getTitleNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.title" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getTitleNameList" :loading="searchLoading">
               <el-option v-for="item in titleNameList" :key="item.id" :label="item.title" :value="item.title" />
             </el-select>
           </el-form-item>
           <el-form-item prop="bodychildrenstextcontent" label="body内容">
-            <el-select v-model="searchMap.bodychildrenstextcontent" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getBodychildrenstextcontentNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.bodychildrenstextcontent" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getBodychildrenstextcontentNameList" :loading="searchLoading">
               <el-option v-for="item in bodychildrenstextcontentNameList" :key="item.id" :label="item.bodychildrenstextcontent" :value="item.bodychildrenstextcontent" />
             </el-select>
           </el-form-item>
           <el-form-item prop="server" label="server">
-            <el-select v-model="searchMap.server" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getServerNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.server" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getServerNameList" :loading="searchLoading">
               <el-option v-for="item in serverNameList" :key="item.id" :label="item.server" :value="item.server" />
             </el-select>
           </el-form-item>
           <el-form-item v-if="showxpoweredby" prop="xpoweredby" label="xpoweredby">
-            <el-select v-model="searchMap.xpoweredby" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getXpoweredbyNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.xpoweredby" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getXpoweredbyNameList" :loading="searchLoading">
               <el-option v-for="item in xpoweredbyNameList" :key="item.id" :label="item.xpoweredby" :value="item.xpoweredby" />
             </el-select>
           </el-form-item>
           <el-form-item v-if="showsetcookie" prop="setcookie" label="setcookie">
-            <el-select v-model="searchMap.setcookie" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getSetcookieNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.setcookie" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getSetcookieNameList" :loading="searchLoading">
               <el-option v-for="item in setcookieNameList" :key="item.id" :label="item.setcookie" :value="item.setcookie" />
             </el-select>
           </el-form-item>
           <el-form-item v-if="showwwwauthenticate" prop="wwwauthenticate" label="认证方式">
-            <el-select v-model="searchMap.wwwauthenticate" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getWwwauthenticateNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.wwwauthenticate" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getWwwauthenticateNameList" :loading="searchLoading">
               <el-option v-for="item in wwwauthenticateNameList" :key="item.id" :label="item.wwwauthenticate" :value="item.wwwauthenticate" />
             </el-select>
           </el-form-item>
           <el-form-item v-if="showappname" prop="appname" label="应用名称">
-            <el-select v-model="searchMap.appname" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getAppnameNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.appname" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getAppnameNameList" :loading="searchLoading">
               <el-option v-for="item in appnameNameList" :key="item.id" :label="item.appname" :value="item.appname" />
             </el-select>
           </el-form-item>
           <el-form-item v-if="showappversion" prop="appversion" label="应用版本">
-            <el-select v-model="searchMap.appversion" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getAppversionNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.appversion" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getAppversionNameList" :loading="searchLoading">
               <el-option v-for="item in appversionNameList" :key="item.id" :label="item.appversion" :value="item.appversion" />
             </el-select>
           </el-form-item>
           <el-form-item v-if="showdevlanguage" prop="devlanguage" label="开发语言">
-            <el-select v-model="searchMap.devlanguage" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getDevlanguageNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.devlanguage" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getDevlanguageNameList" :loading="searchLoading">
               <el-option v-for="item in devlanguageNameList" :key="item.id" :label="item.devlanguage" :value="item.devlanguage" />
             </el-select>
           </el-form-item>

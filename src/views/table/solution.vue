@@ -1,25 +1,25 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
       <el-form-item prop="name" label="漏洞">
-        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
           <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select></el-form-item>
 
       <el-form-item prop="solution" label="修复方案">
-        <el-select v-model="searchMap.solution" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getSolutionList" :loading="searchLoading">
+        <el-select v-model="searchMap.solution" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getSolutionList" :loading="searchLoading">
           <el-option v-for="item in solutionList" :key="item.id" :label="item.solution" :value="item.solution" />
         </el-select>
       </el-form-item>
       <el-form-item prop="codedemo" label="修复代码示例">
-        <el-select v-model="searchMap.codedemo" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getCodedemoList" :loading="searchLoading">
+        <el-select v-model="searchMap.codedemo" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getCodedemoList" :loading="searchLoading">
           <el-option v-for="item in codedemoList" :key="item.id" :label="item.codedemo" :value="item.codedemo" />
         </el-select>
       </el-form-item>
       <el-form-item prop="configdemo" label="修复配置示例">
-        <el-select v-model="searchMap.configdemo" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getConfigdemoList" :loading="searchLoading">
+        <el-select v-model="searchMap.configdemo" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getConfigdemoList" :loading="searchLoading">
           <el-option v-for="item in configdemoList" :key="item.id" :label="item.configdemo" :value="item.configdemo" />
         </el-select>
       </el-form-item>
@@ -93,7 +93,7 @@
 
         <el-form-item prop="name" label="漏洞">
           {{ vulname }}
-          <el-select v-model="pojo.vulnid" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+          <el-select v-model="pojo.vulnid" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
             <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select></el-form-item>
         <el-form-item label="修复方案"><el-input v-model="pojo.solution" autosize type="textarea" /></el-form-item>

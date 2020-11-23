@@ -1,17 +1,17 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
 
       <el-form-item prop="taskid" label="任务">
-        <el-select v-model="searchMap.taskid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getTaskNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.taskid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getTaskNameList" :loading="searchLoading">
           <el-option v-for="item in taskNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
 
       <el-form-item prop="pluginconfigid" label="插件">
-        <el-select v-model="searchMap.pluginconfigid" style="width:150px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getPluginConfigNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.pluginconfigid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getPluginConfigNameList" :loading="searchLoading">
           <el-option v-for="item in pluginConfigNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -85,14 +85,14 @@
 
         <el-form-item prop="taskid" label="任务">
           {{ taskName }}
-          <el-select v-model="pojo.taskid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getTaskList" :loading="searchLoading">
-            <el-option v-for="item in taskList" :key="item.id" :label="item.name" :value="item.id" />
+          <el-select v-model="pojo.taskid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getTaskNameList" :loading="searchLoading">
+            <el-option v-for="item in taskNameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
         <el-form-item prop="pluginconfigid" label="插件">
           {{ pluginName }}
-          <el-select v-model="pojo.pluginconfigid" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getPluginConfigNameList" :loading="searchLoading">
+          <el-select v-model="pojo.pluginconfigid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getPluginConfigNameList" :loading="searchLoading">
             <el-option v-for="item in pluginConfigNameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -142,7 +142,7 @@ export default {
     cleanCache() {
       this.closeDialogForm()
     },
-    getNameList(query) {
+    getTaskNameList(query) {
       if (query !== '' && query) {
         this.searchLoading = true
         setTimeout(() => {
@@ -163,21 +163,6 @@ export default {
       this.pluginConfigNameList = []
       this.taskName = ''
       this.pluginName = ''
-    },
-    getTaskNameList(query) {
-      if (query !== '' && query) {
-        this.searchLoading = true
-        setTimeout(() => {
-          this.searchLoading = false
-          taskApi.search(1, 10, { 'name': query }).then(response => {
-            this.taskNameList = response.data.rows.filter(item => {
-              return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
-            })
-          })
-        }, 200)
-      } else {
-        this.taskNameList = []
-      }
     },
     getPluginConfigNameList(query) {
       if (query !== '' && query) {

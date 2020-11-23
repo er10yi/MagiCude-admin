@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -7,7 +7,7 @@
         <el-input v-model="searchMap.useragent" prop="useragent" clearable placeholder="useragent" /></el-form-item> -->
 
       <el-form-item prop="useragent" label="ua">
-        <el-select v-model="searchMap.useragent" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getUseragentList" :loading="searchLoading">
+        <el-select v-model="searchMap.useragent" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getUseragentList" :loading="searchLoading">
           <el-option v-for="item in useragentList" :key="item.id" :label="item.useragent" :value="item.useragent" /></el-select>
       </el-form-item>
 

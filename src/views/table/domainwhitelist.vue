@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -7,7 +7,7 @@
         <el-input v-model="searchMap.domain" prop="domain" clearable placeholder="域名" /></el-form-item> -->
 
       <el-form-item prop="domain" label="域名">
-        <el-select v-model="searchMap.domain" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getDomainList" :loading="searchLoading">
+        <el-select v-model="searchMap.domain" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getDomainList" :loading="searchLoading">
           <el-option v-for="item in domainList" :key="item.id" :label="item.domain" :value="item.domain" />
         </el-select>
       </el-form-item>
@@ -88,7 +88,7 @@
         <!-- <el-form-item label="域名"><el-input v-model="pojo.domain" style="width:300px;" /></el-form-item> -->
 
         <el-form-item prop="domain" label="域名">
-          <el-select v-model="pojo.domain" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getDomainList" :loading="searchLoading">
+          <el-select v-model="pojo.domain" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getDomainList" :loading="searchLoading">
             <el-option v-for="item in domainList" :key="item.id" :label="item.domain" :value="item.domain" />
           </el-select>
         </el-form-item>

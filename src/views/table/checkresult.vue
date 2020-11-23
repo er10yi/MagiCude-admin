@@ -1,27 +1,27 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <el-collapse v-model="activeNames">
       <el-collapse-item name="1">
         <template slot="title"><i class="header-icon el-icon-info" />菜单栏隐藏与显示</template>
         <!-- 查询条件 -->
         <el-form ref="searchform" inline size="small" :model="searchMap">
           <el-form-item prop="assetip" label="ip">
-            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" />
             </el-select>
           </el-form-item>
           <el-form-item prop="assetport" label="端口">
-            <el-select v-model="searchMap.assetport" style="width:100px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getPortList" :loading="searchLoading">
+            <el-select v-model="searchMap.assetport" style="width:100px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
               <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
           </el-form-item>
 
           <el-form-item prop="vulname" label="漏洞名称">
-            <el-select v-model="searchMap.vulname" filterable remote allow-create default-first-option clearable placeholder="请输入关键词" :remote-method="getVulNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.vulname" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getVulNameList" :loading="searchLoading">
               <el-option v-for="item in vulNameList" :key="item.id" :label="item.name" :value="item.name" />
             </el-select></el-form-item>
 
           <el-form-item prop="name" label="插件名称">
-            <el-select v-model="searchMap.name" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.name" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
               <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" />
             </el-select>
           </el-form-item>
@@ -38,7 +38,7 @@
           </el-form-item>
 
           <el-form-item prop="result" label="检测结果">
-            <el-select v-model="searchMap.result" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getResultList" :loading="searchLoading">
+            <el-select v-model="searchMap.result" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getResultList" :loading="searchLoading">
               <el-option v-for="item in resultList" :key="item.id" :label="item.result" :value="item.result" />
             </el-select>
           </el-form-item>
@@ -94,7 +94,32 @@
       <el-table-column sortable prop="vulname" label="漏洞名称" />
 
       <el-table-column sortable prop="name" label="插件名称" />
-      <el-table-column sortable prop="risk" label="风险" />
+
+      <el-table-column sortable prop="risk" label="风险">
+        <template slot-scope="scope">
+          <span v-if="scope.row.risk">
+            <span v-if=" scope.row.risk=='致命'">
+              <el-tag size="mini" type="danger" effect="plain">{{ scope.row.risk }}</el-tag>
+            </span>
+            <span v-else-if=" scope.row.risk=='严重'">
+              <el-tag size="mini" type="danger" effect="plain">{{ scope.row.risk }}</el-tag>
+            </span>
+            <span v-else-if=" scope.row.risk=='高危'">
+              <el-tag size="mini" type="warning" effect="plain">{{ scope.row.risk }}</el-tag>
+            </span>
+            <span v-else-if=" scope.row.risk=='中危'">
+              <el-tag size="mini" effect="plain">{{ scope.row.risk }}</el-tag>
+            </span>
+            <span v-else-if=" scope.row.risk=='低危'">
+              <el-tag size="mini" type="success" effect="plain">{{ scope.row.risk }}</el-tag>
+            </span>
+            <span v-else>
+              <el-tag size="mini" type="info" effect="plain">{{ scope.row.risk }}</el-tag>
+            </span>
+          </span>
+        </template>
+      </el-table-column>
+
       <el-table-column sortable prop="result" label="检测结果" show-overflow-tooltip />
 
       <el-table-column sortable prop="activetime" label="发现时间">
@@ -139,7 +164,7 @@
         <el-form-item required label="ip">
           <span>{{ ipv4 }}</span>
           <span v-if="pojo.id==null">
-            <el-select v-model="pojo.assetip" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="pojo.assetip" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" />
             </el-select>
           </span>
@@ -148,7 +173,7 @@
         <el-form-item required label="端口">
           <span>{{ assetport }}</span>
           <span v-if="pojo.id==null">
-            <el-select v-model="pojo.assetport" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getPortList" :loading="searchLoading">
+            <el-select v-model="pojo.assetport" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
               <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
           </span>
         </el-form-item>
@@ -156,7 +181,7 @@
         <el-form-item required label="漏洞名称">
           <span>{{ vulname }}</span>
           <span v-if="pojo.id==null">
-            <el-select v-model="pojo.vulname" style="width:300px;" filterable remote clearable placeholder="请输入关键词" :remote-method="getVulNameList" :loading="searchLoading">
+            <el-select v-model="pojo.vulname" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getVulNameList" :loading="searchLoading">
               <el-option v-for="item in vulNameList" :key="item.id" :label="item.name" :value="item.name" />
             </el-select>
           </span>

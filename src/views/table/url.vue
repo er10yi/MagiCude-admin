@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:5px;">
+  <div>
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
@@ -11,12 +11,12 @@
         <el-input v-model="searchMap.url" prop="url" clearable placeholder="url" /></el-form-item> -->
 
       <el-form-item prop="name" label="名称">
-        <el-select v-model="searchMap.name" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.name" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
           <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" />
         </el-select>
       </el-form-item>
       <el-form-item prop="url" label="url">
-        <el-select v-model="searchMap.url" allow-create default-first-option filterable remote clearable placeholder="请输入关键词" :remote-method="getUrlList" :loading="searchLoading">
+        <el-select v-model="searchMap.url" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getUrlList" :loading="searchLoading">
           <el-option v-for="item in urlList" :key="item.id" :label="item.url" :value="item.url" />
         </el-select>
       </el-form-item>
