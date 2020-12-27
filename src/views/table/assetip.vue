@@ -5,10 +5,10 @@
         <template slot="title"><i class="header-icon el-icon-info" />菜单栏隐藏与显示</template>
         <!-- 查询条件 -->
         <el-form ref="searchform" inline size="small" :model="searchMap">
-          <!-- <el-input  v-model="searchMap.projectinfoid" placeholder="项目信息编号"  width="8"></el-input> -->
+          <!-- <el-input  v-model="searchMap.projectinfoid" placeholder="项目组编号"  width="8"></el-input> -->
 
-          <el-form-item prop="projectinfoid" label="项目信息">
-            <el-select v-model="searchMap.projectinfoid" style="width:180px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getProjectInfoList" :loading="searchLoading">
+          <el-form-item prop="projectinfoid" label="项目组">
+            <el-select v-model="searchMap.projectinfoid" style="width:180px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getProjectInfoList" :loading="searchLoading">
               <el-option v-for="item in projectinfoList" :key="item.id" :label="item.projectname" :value="item.id" /></el-select>
           </el-form-item>
 
@@ -21,9 +21,14 @@
             <el-select v-model="searchMap.ipv4" style="width:150px;" filterable remote clearable placeholder="ipv4精准查询" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" /></el-select>
           </el-form-item>
+          <el-form-item label="标签">
+            <el-select v-model="searchMap.tabbitmap" style="width:180px;" filterable remote clearable placeholder="请输入名称搜索" :remote-method="gettabList" :loading="searchLoading">
+              <el-option v-for="item in tabList" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-form-item>
 
           <el-form-item prop="ipaddressv6" label="ipv6">
-            <el-select v-model="searchMap.ipaddressv6" style="width:180px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpaddressv6List" :loading="searchLoading">
+            <el-select v-model="searchMap.ipaddressv6" style="width:180px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getIpaddressv6List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv6List" :key="item.id" :label="item.ipaddressv6" :value="item.ipaddressv6" /></el-select>
           </el-form-item>
 
@@ -42,7 +47,7 @@
           </el-form-item>
 
           <el-form-item prop="remark" label="备注">
-            <el-select v-model="searchMap.remark" style="width:180px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getRemarkList" :loading="searchLoading">
+            <el-select v-model="searchMap.remark" style="width:180px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getRemarkList" :loading="searchLoading">
               <el-option v-for="item in remarkList" :key="item.id" :label="item.remark" :value="item.remark" /></el-select>
           </el-form-item>
 
@@ -88,11 +93,37 @@
         <div class="text">
           <table border="0">
             <tr>
-              <td><b>部门</b></td>
-              <td>{{ departmentPojo.departmentname }}</td>
+              <td><b>应用系统</b></td>
+              <td>
+                <span v-if="pojo.appsysname">
+                  <span
+                    v-for="item in pojo.appsysname.split(',')"
+                    :key="item.id"
+                    :label="item"
+                    :value="item"
+                  >
+                    <span v-if="item">
+                      <el-tag size="mini" type="info" effect="plain">{{ item }}</el-tag>
+                    </span>
+                  </span>
+                </span>
+              </td>
               <el-divider direction="vertical" />
-              <td><b>项目信息</b></td>
-              <td>{{ pojo.projectname }}</td>
+              <td><b>标签</b></td>
+              <td>
+                <span v-if="pojo.tabname">
+                  <span
+                    v-for="item in pojo.tabname.split(',')"
+                    :key="item.id"
+                    :label="item"
+                    :value="item"
+                  >
+                    <span v-if="item">
+                      <el-tag size="mini" type="info" effect="plain">{{ item }}</el-tag>
+                    </span>
+                  </span>
+                </span>
+              </td>
             </tr>
             <tr>
               <td><b>ipv4</b></td>
@@ -119,17 +150,32 @@
               <td><b>备注</b></td>
               <td>{{ pojo.remark }}</td>
             </tr>
+
           </table>
 
         </div>
       </el-card>
-
-      <!-- 联系人 -->
-      <el-table :data="contactList" fit>
-        <el-table-column prop="name" label="联系人" />
-        <el-table-column prop="email" label="邮箱" />
-        <el-table-column prop="phone" label="电话" />
-      </el-table>
+      <el-card class="box-card">
+        <div class="text">
+          <table border="0">
+            <tr>
+              <td>项目部门 项目组 负责人信息</td>
+            </tr>
+            <tr>
+              <td><b>项目组部门</b></td>
+              <td>{{ departmentPojo.departmentname }}</td>
+              <td><b>项目组</b></td>
+              <td>{{ pojo.projectname }}</td>
+            </tr>
+          </table>
+        </div>
+        <!-- 负责人 -->
+        <el-table :data="contactList" fit>
+          <el-table-column prop="name" label="负责人" />
+          <el-table-column prop="email" label="邮箱" />
+          <el-table-column prop="phone" label="电话" />
+        </el-table>
+      </el-card>
 
       <!-- 主机信息 -->
       <el-table :data="hostList" fit>
@@ -187,13 +233,8 @@
 
       <!-- 检测结果 -->
       <el-table :data="checkresultList" fit>
-        <!-- <el-table-column  prop="vulnid" width="150" label="漏洞名称">
-              <template slot-scope="scope">
-                {{ getVulnName(scope.row.id) }}
-              </template>
-            </el-table-column> -->
-
         <el-table-column prop="assetportid" label="端口" />
+        <el-table-column prop="vulname" label="漏洞名称" />
         <el-table-column prop="name" label="插件名称" />
         <el-table-column prop="risk" label="风险" />
         <el-table-column prop="result" label="检测结果" show-overflow-tooltip />
@@ -262,8 +303,8 @@
 
       <!-- <el-table-column prop="id" label="资产ip编号" /> -->
 
-      <el-table-column sortable prop="projectname" label="项目信息" />
-      <!-- <el-table-column sortable prop="projectinfoid" label="项目信息">
+      <el-table-column sortable prop="projectname" label="项目组" />
+      <!-- <el-table-column sortable prop="projectinfoid" label="项目组">
         <template slot-scope="scope">
           {{ getProjectname(scope.row.projectinfoid) }}
         </template>
@@ -287,6 +328,22 @@
         <template slot-scope="scope"> -->
           <span v-if=" scope.row.statistic">
             <el-tag size="mini" type="success" effect="plain">{{ scope.row.statistic }}</el-tag>
+          </span>
+        </template>
+      </el-table-column>
+
+      <!-- <el-table-column prop="tabname" label="标签" /> -->
+      <el-table-column prop="tabname" label="标签">
+        <template slot-scope="scope">
+          <span v-if="scope.row.tabname">
+            <span
+              v-for="item in scope.row.tabname.split(',')"
+              :key="item.id"
+              :label="item"
+              :value="item"
+            >
+              <el-tag size="mini" type="info" effect="plain">{{ item }}</el-tag>
+            </span>
           </span>
         </template>
       </el-table-column>
@@ -371,29 +428,61 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
-        <el-form-item label="项目信息">
+      <el-form label-width="110px">
+        <el-form-item label="项目组">
           <span>{{ projectname }}</span>
-          <el-select v-model="pojo.projectinfoid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectInfoList" :loading="searchLoading">
+          <el-select v-model="pojo.projectinfoid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getProjectInfoList" :loading="searchLoading">
             <el-option v-for="item in projectinfoList" :key="item.id" :label="item.projectname" :value="item.id" /></el-select>
         </el-form-item>
 
-        <!-- <el-form-item label="ipv4" required><el-input v-model="pojo.ipaddressv4" style="width:300px;" clearable /></el-form-item> -->
+        <!-- <el-form-item label="ipv4" required><el-input v-model="pojo.ipaddressv4" style="width:400px;" clearable /></el-form-item> -->
         <el-form-item prop="ipaddressv4" label="ipv4">
           {{ pojo.ipaddressv4 }}
           <span v-if="pojo.id==null">
-            <el-select v-model="pojo.ipaddressv4" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="pojo.ipaddressv4" style="width:400px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" /></el-select>
           </span>
         </el-form-item>
-        <el-form-item label="ipv6"><el-input v-model="pojo.ipaddressv6" style="width:300px;" clearable /></el-form-item>
+
+        <!-- <el-form-item label="标签"><el-input v-model="pojo.tabbitmap" style="width:400px;" clearable /></el-form-item> -->
+
+        <!-- 新增标签 -->
+        <el-form-item label="标签">
+          <el-form-item>
+            <el-select
+              v-model="selectedTabList"
+              style="width:400px;"
+              multiple
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入名称搜索"
+              :remote-method="remoteSearchTab"
+              :loading="searchLoading"
+            >
+              <el-option
+                v-for="item in remoteTabOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+            <el-button icon="el-icon-delete" size="mini" circle @click="clearSelectedTab()" />
+            <el-tooltip placement="top">
+              <div slot="content">标签可在[分类管理-标签综合分类]中管理</div>
+              <i class="el-icon-info" />
+            </el-tooltip>
+          </el-form-item>
+        </el-form-item>
+
+        <el-form-item label="ipv6"><el-input v-model="pojo.ipaddressv6" style="width:400px;" clearable /></el-form-item>
         <el-form-item label="白名单">
           <el-switch v-model="pojo.checkwhitelist" active-text="安全检测" />
           <el-switch v-model="pojo.assetnotifywhitelist" active-text="资产提醒" />
         </el-form-item>
         <el-form-item label="时间">
-          <el-date-picker v-model="pojo.activetime" style="width:300px;" placeholder="发现时间" type="datetime" />
-          <el-date-picker v-model="pojo.passivetime" style="width:300px;" placeholder="下线时间" type="datetime" />
+          <el-date-picker v-model="pojo.activetime" style="width:400px;" placeholder="发现时间" type="datetime" />
+          <el-date-picker v-model="pojo.passivetime" style="width:400px;" placeholder="下线时间" type="datetime" />
         </el-form-item>
         <el-form-item label="备注"><el-input v-model="pojo.remark" :autosize="{ minRows: 2, maxRows: 10 }" type="textarea" /></el-form-item>
 
@@ -417,6 +506,7 @@ import hostApi from '@/api/host'
 import checkresultApi from '@/api/checkresult'
 import webinfoApi from '@/api/webinfo'
 import urlApi from '@/api/url'
+import categorytabApi from '@/api/categorytab'
 
 import Vue from 'vue'
 const dateformat = Vue.filter('dateformat')
@@ -457,6 +547,15 @@ export default {
       activeNames: ['1'],
       projectname: '',
       drawer: false,
+      tabList: [],
+
+      // 标签
+      tabPojo: {},
+      tabPojoList: [],
+      selectedTabList: [],
+      remoteTabOptions: [],
+      remoteTabList: [],
+      categorytabMap: new Map(),
 
       pickerOptions: { // 日期选择
         disabledDate(time) {
@@ -498,17 +597,58 @@ export default {
       }
     }
   },
+  mounted() {
+    this.getRemoteTabList()
+  },
   created() {
     this.fetchData()
   },
   methods: {
+    clearSelectedTab() {
+      this.selectedTabList = []
+    },
+    getRemoteTabList() {
+      categorytabApi.getList().then(response => {
+        this.remoteTabList = response.data
+      })
+    },
+    remoteSearchTab(query) {
+      if (query !== '') {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          this.remoteTabOptions = this.remoteTabList.filter(item => {
+            return item.name.toLowerCase()
+              .indexOf(query.toLowerCase()) > -1
+          })
+        }, 200)
+      } else {
+        this.remoteTabOptions = []
+      }
+    },
+    gettabList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          categorytabApi.search(1, 10, { 'name': query }).then(response => {
+            this.tabList = response.data.rows.filter(item => {
+              return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.tabList = []
+      }
+    },
     handleDrawer(id) {
       this.id = id
       this.drawer = true
       assetipApi.findById(id).then(response => {
         if (response.flag) {
           this.pojo = response.data
-
+          // 标签
+          this.tabPojoList = this.pojo.tabList
           // 资产端口
           assetportApi.findAllByAssetipId(this.id).then(response => {
             this.portList = response.data
@@ -525,7 +665,7 @@ export default {
                 }
               })
 
-              // 联系人信息
+              // 负责人信息
               contactProjectinfoApi.findAllByProjectinfoid(this.pojo.projectinfoid).then(response => {
                 this.contactProjectinfoList = response.data
                 for (let i = 0; i < this.contactProjectinfoList.length; i++) {
@@ -591,6 +731,11 @@ export default {
       this.portids = []
       this.projectinfoList = []
       this.projectname = ''
+      this.tabList = []
+      this.selectedTabList = []
+      this.remoteTabOptions = []
+      this.tabnameList = []
+      this.tabPojoList = []
     },
     getIpaddressv6List(query) {
       if (query !== '' && query) {
@@ -695,8 +840,8 @@ export default {
       if (this.multipleSelection && this.multipleSelection.length) {
         this.downloadLoading = true
         import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['项目信息', 'ipv4', 'ipv6', '安全检测白名单', '资产提醒白名单', '发现时间', '下线时间', '备注']
-          const filterVal = ['projectinfoid', 'ipaddressv4', 'ipaddressv6', 'checkwhitelist', 'assetnotifywhitelist', 'activetime', 'passivetime', 'remark']
+          const tHeader = ['项目组', 'ipv4', '标签', 'ipv6', '安全检测白名单', '资产提醒白名单', '发现时间', '下线时间', '备注']
+          const filterVal = ['projectname', 'ipaddressv4', 'tabname', 'ipaddressv6', 'checkwhitelist', 'assetnotifywhitelist', 'activetime', 'passivetime', 'remark']
           const list = this.multipleSelection
           for (let i = 0; i < list.length; i++) {
             // list[i].ipaddressv4 = this.list[i].ipaddressv4.split(' : ')[0]
@@ -714,7 +859,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',
@@ -731,6 +875,7 @@ export default {
       this.remarkList = []
       this.ipaddressv4List = []
       this.ipaddressv6List = []
+      this.tabList = []
       this.$message({
         message: '已清空搜索条件',
         type: 'info'
@@ -752,6 +897,19 @@ export default {
       this.listLoading = false
     },
     handleSave() {
+      if (this.selectedTabList.length !== 0) {
+        const submitList = []
+        for (var i = 0; i < this.selectedTabList.length; i++) {
+          if (this.categorytabMap.get(this.selectedTabList[i])) {
+            submitList.push(this.categorytabMap.get(this.selectedTabList[i]))
+          } else {
+            submitList.push(this.selectedTabList[i])
+          }
+        }
+        this.pojo.tabbitmap = submitList.join(',')
+      } else {
+        this.pojo.tabbitmap = null
+      }
       assetipApi.update(this.id, this.pojo).then(response => {
         this.$message({
           message: response.message,
@@ -771,6 +929,11 @@ export default {
           if (response.flag) {
             this.pojo = response.data
             this.projectname = this.pojo.projectname
+            this.tabPojoList = this.pojo.tabList
+            for (var i = 0; i < this.tabPojoList.length; i++) {
+              this.categorytabMap.set(this.tabPojoList[i].name, this.tabPojoList[i].id)
+              this.selectedTabList.push(this.tabPojoList[i].name)
+            }
             // projectinfoApi.findById(this.pojo.projectinfoid).then((response) => {
             //   if (response.flag) {
             //     this.projectname = response.data.projectname

@@ -7,57 +7,57 @@
         <el-form ref="searchform" inline size="small" :model="searchMap">
 
           <el-form-item prop="assetip" label="ip">
-            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" />
             </el-select>
           </el-form-item>
           <el-form-item prop="assetport" label="端口">
-            <el-select v-model="searchMap.assetport" style="width:100px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
+            <el-select v-model="searchMap.assetport" style="width:100px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getPortList" :loading="searchLoading">
               <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
           </el-form-item>
 
           <el-form-item prop="title" label="title">
-            <el-select v-model="searchMap.title" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getTitleNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.title" allow-create default-first-option filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getTitleNameList" :loading="searchLoading">
               <el-option v-for="item in titleNameList" :key="item.id" :label="item.title" :value="item.title" />
             </el-select>
           </el-form-item>
           <el-form-item prop="bodychildrenstextcontent" label="body内容">
-            <el-select v-model="searchMap.bodychildrenstextcontent" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getBodychildrenstextcontentNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.bodychildrenstextcontent" allow-create default-first-option filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getBodychildrenstextcontentNameList" :loading="searchLoading">
               <el-option v-for="item in bodychildrenstextcontentNameList" :key="item.id" :label="item.bodychildrenstextcontent" :value="item.bodychildrenstextcontent" />
             </el-select>
           </el-form-item>
           <el-form-item prop="server" label="server">
-            <el-select v-model="searchMap.server" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getServerNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.server" allow-create default-first-option filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getServerNameList" :loading="searchLoading">
               <el-option v-for="item in serverNameList" :key="item.id" :label="item.server" :value="item.server" />
             </el-select>
           </el-form-item>
           <el-form-item v-if="showxpoweredby" prop="xpoweredby" label="xpoweredby">
-            <el-select v-model="searchMap.xpoweredby" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getXpoweredbyNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.xpoweredby" allow-create default-first-option filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getXpoweredbyNameList" :loading="searchLoading">
               <el-option v-for="item in xpoweredbyNameList" :key="item.id" :label="item.xpoweredby" :value="item.xpoweredby" />
             </el-select>
           </el-form-item>
           <el-form-item v-if="showsetcookie" prop="setcookie" label="setcookie">
-            <el-select v-model="searchMap.setcookie" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getSetcookieNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.setcookie" allow-create default-first-option filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getSetcookieNameList" :loading="searchLoading">
               <el-option v-for="item in setcookieNameList" :key="item.id" :label="item.setcookie" :value="item.setcookie" />
             </el-select>
           </el-form-item>
           <el-form-item v-if="showwwwauthenticate" prop="wwwauthenticate" label="认证方式">
-            <el-select v-model="searchMap.wwwauthenticate" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getWwwauthenticateNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.wwwauthenticate" allow-create default-first-option filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getWwwauthenticateNameList" :loading="searchLoading">
               <el-option v-for="item in wwwauthenticateNameList" :key="item.id" :label="item.wwwauthenticate" :value="item.wwwauthenticate" />
             </el-select>
           </el-form-item>
           <el-form-item v-if="showappname" prop="appname" label="应用名称">
-            <el-select v-model="searchMap.appname" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getAppnameNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.appname" allow-create default-first-option filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getAppnameNameList" :loading="searchLoading">
               <el-option v-for="item in appnameNameList" :key="item.id" :label="item.appname" :value="item.appname" />
             </el-select>
           </el-form-item>
           <el-form-item v-if="showappversion" prop="appversion" label="应用版本">
-            <el-select v-model="searchMap.appversion" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getAppversionNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.appversion" allow-create default-first-option filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getAppversionNameList" :loading="searchLoading">
               <el-option v-for="item in appversionNameList" :key="item.id" :label="item.appversion" :value="item.appversion" />
             </el-select>
           </el-form-item>
           <el-form-item v-if="showdevlanguage" prop="devlanguage" label="开发语言">
-            <el-select v-model="searchMap.devlanguage" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getDevlanguageNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.devlanguage" allow-create default-first-option filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getDevlanguageNameList" :loading="searchLoading">
               <el-option v-for="item in devlanguageNameList" :key="item.id" :label="item.devlanguage" :value="item.devlanguage" />
             </el-select>
           </el-form-item>
@@ -88,7 +88,7 @@
             >
               <el-button slot="reference">增加显示</el-button>
               <el-col :span="12"><el-checkbox @change="showHide('showlinks')">页面链接</el-checkbox> </el-col>
-              <el-col :span="12"><el-checkbox @change="showHide('showtitlewhitelistid')">不记录页面链接</el-checkbox> </el-col>
+              <el-col :span="12"><el-checkbox @change="showHide('showtitlewhitelistid')">不抓取页面链接</el-checkbox> </el-col>
               <el-col :span="12"><el-checkbox @change="showHide('showxpoweredby')">xpoweredby</el-checkbox> </el-col>
               <el-col :span="12"><el-checkbox @change="showHide('showsetcookie')">setcookie</el-checkbox> </el-col>
               <el-col :span="12"><el-checkbox @change="showHide('showwwwauthenticate')">认证方式</el-checkbox> </el-col>
@@ -102,6 +102,35 @@
       </el-form-item> -->
         </el-form>
       </el-collapse-item>    </el-collapse>
+
+    <!-- 原始响应和http头信息 -->
+    <el-drawer
+      title="http响应头信息和原始响应"
+      :visible.sync="drawer"
+      :with-header="false"
+      direction="rtl"
+      size="65%"
+      :before-close="handleDrawerClose"
+    >
+      <el-card class="box-card">
+        <b>  {{ target }} http响应头信息和原始响应</b>
+        <!-- web信息 -->
+        <el-table :data="webrawList" fit>
+          <el-table-column>
+            <template slot-scope="props">
+              <el-form>
+                <el-form-item label="响应头信息">
+                  <el-input v-model="props.row.header" autosize type="textarea" />
+                </el-form-item>
+                <el-form-item label="原始响应">
+                  <el-input v-model="props.row.response" autosize type="textarea" />
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-card>
+    </el-drawer>
 
     <!-- 表格数据 -->
     <el-table
@@ -130,7 +159,8 @@
           >
             <el-link slot="reference" :underline="false">{{ scope.row.assetip }}</el-link>
             <el-link :href="'http://'+scope.row.assetip+':'+scope.row.portid" target="_blank" :underline="false">打开HTTP链接</el-link><br>
-            <el-link :href="'https://'+scope.row.assetip+':'+scope.row.portid" target="_blank" :underline="false">打开HTTPS链接</el-link>
+            <el-link :href="'https://'+scope.row.assetip+':'+scope.row.portid" target="_blank" :underline="false">打开HTTPS链接</el-link><br>
+            <el-link :underline="false" @click="getRawResponseAndHeader(scope.row.id,scope.row.assetip+':'+scope.row.portid)">显示http响应头信息和原始响应</el-link>
           </el-popover>
         </template>
       </el-table-column>
@@ -187,7 +217,17 @@
       </el-table-column>
       <el-table-column v-if="showlinks" key="14" sortable prop="url" label="页面链接">
         <template slot-scope="scope">
-          {{ scope.row.url }}
+          <span v-if="scope.row.url">
+            <span
+              v-for="item in scope.row.url.split('<+>')"
+              :key="item.id"
+              :label="item"
+              :value="item"
+            >
+              <span>{{ item.split('==')[0] }}  </span>
+              <el-link :href="scope.row.accessurl" target="_blank" :underline="false">{{ item.split('==')[1] }}</el-link>
+            </span>
+          </span>
         </template>
       </el-table-column>
 
@@ -216,11 +256,11 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <!-- <el-form-item label="端口编号"><el-input v-model="pojo.portid" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="端口编号"><el-input v-model="pojo.portid" style="width:400px;" /></el-form-item> -->
 
-        <!-- <el-form-item label="标题白名单编号"><el-input v-model="pojo.titlewhitelistid" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="标题白名单编号"><el-input v-model="pojo.titlewhitelistid" style="width:400px;" /></el-form-item> -->
 
         <el-form-item label="ip:port">
           <span>{{ ipv4 }}:{{ assetport }}</span>
@@ -258,6 +298,7 @@ import assetipApi from '@/api/assetip'
 import assetportApi from '@/api/assetport'
 import urlApi from '@/api/url'
 import titlewhitelistApi from '@/api/titlewhitelist'
+import webrawdataApi from '@/api/webrawdata'
 
 import Vue from 'vue'
 const dateformat = Vue.filter('dateformat')
@@ -303,6 +344,9 @@ export default {
       showtitlewhitelistid: false,
       ipaddressv4List: [],
       portList: [],
+      drawer: false,
+      webrawList: [],
+      target: '',
 
       pickerOptions: { // 日期选择
         disabledDate(time) {
@@ -348,6 +392,18 @@ export default {
     this.fetchData()
   },
   methods: {
+    handleDrawerClose() {
+      this.drawer = false
+      this.closeDialogForm()
+    },
+    getRawResponseAndHeader(id, target) {
+      this.id = id
+      this.drawer = true
+      this.target = target
+      webrawdataApi.findAllByWebinfoId(id).then(response => {
+        this.webrawList = response.data
+      })
+    },
     getPortList(query) {
       if (query !== '' && query) {
         this.searchLoading = true
@@ -563,6 +619,8 @@ export default {
       this.assetport = ''
       this.ipv4 = ''
       this.dialogFormVisible = false
+      this.webrawList = []
+      this.target = ''
     },
 
     handleDeleteAll() {
@@ -609,7 +667,7 @@ export default {
           const tHeader = [
             'ip',
             'port',
-            '不记录页面链接',
+            '不抓取页面链接',
             'title',
             'body内容',
             'server',
@@ -620,7 +678,9 @@ export default {
             '应用版本',
             '开发语言',
             '抓取时间',
-            '页面链接'
+            '页面链接',
+            '响应头',
+            '原始响应'
 
           ]
           const filterVal = [
@@ -637,7 +697,9 @@ export default {
             'appversion',
             'devlanguage',
             'crawltime',
-            'url'
+            'url',
+            'header',
+            'response'
 
           ]
 
@@ -657,7 +719,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',
@@ -777,3 +838,13 @@ export default {
   }
 }
 </script>
+
+<style>
+.el-drawer__body {
+   overflow: auto;
+}
+ .text {
+    font-size: 14px;
+    line-height: 20px
+  }
+</style>

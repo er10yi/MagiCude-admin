@@ -7,7 +7,7 @@
         <el-input v-model="searchMap.useragent" prop="useragent" clearable placeholder="useragent" /></el-form-item> -->
 
       <el-form-item prop="useragent" label="ua">
-        <el-select v-model="searchMap.useragent" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getUseragentList" :loading="searchLoading">
+        <el-select v-model="searchMap.useragent" style="width:400px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getUseragentList" :loading="searchLoading">
           <el-option v-for="item in useragentList" :key="item.id" :label="item.useragent" :value="item.useragent" /></el-select>
       </el-form-item>
 
@@ -73,7 +73,7 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
         <el-form-item label="useragent"><el-input v-model="pojo.useragent" autosize type="textarea" /></el-form-item>
 
@@ -194,7 +194,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

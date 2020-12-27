@@ -7,31 +7,38 @@
         <el-form ref="searchform" inline size="small" :model="searchMap">
 
           <el-form-item prop="assetipid" label="ipv4地址">
-            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" />
             </el-select>
           </el-form-item>
 
           <el-form-item prop="port" label="端口">
-            <el-select v-model="searchMap.port" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
+            <el-select v-model="searchMap.port" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getPortList" :loading="searchLoading">
               <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
           </el-form-item>
           <el-form-item prop="protocol" label="协议">
-            <el-select v-model="searchMap.protocol" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getProtocolList" :loading="searchLoading">
+            <el-select v-model="searchMap.protocol" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getProtocolList" :loading="searchLoading">
               <el-option v-for="item in protocolList" :key="item.id" :label="item.protocol" :value="item.protocol" /></el-select>
           </el-form-item>
           <el-form-item prop="state" label="状态">
-            <el-select v-model="searchMap.state" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getStateList" :loading="searchLoading">
+            <el-select v-model="searchMap.state" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getStateList" :loading="searchLoading">
               <el-option v-for="item in stateList" :key="item.id" :label="item.state" :value="item.state" /></el-select>
           </el-form-item>
           <el-form-item prop="service" label="服务">
-            <el-select v-model="searchMap.service" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getServiceList" :loading="searchLoading">
+            <el-select v-model="searchMap.service" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getServiceList" :loading="searchLoading">
               <el-option v-for="item in serviceList" :key="item.id" :label="item.service" :value="item.service" /></el-select>
           </el-form-item>
           <el-form-item prop="version" label="版本">
-            <el-select v-model="searchMap.version" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getVersionList" :loading="searchLoading">
+            <el-select v-model="searchMap.version" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getVersionList" :loading="searchLoading">
               <el-option v-for="item in versionList" :key="item.id" :label="item.version" :value="item.version" /></el-select>
           </el-form-item>
+
+          <el-form-item label="标签">
+            <el-select v-model="searchMap.tabbitmap" style="width:180px;" filterable remote clearable placeholder="请输入名称搜索" :remote-method="getTabList" :loading="searchLoading">
+              <el-option v-for="item in tabList" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-form-item>
+
           <el-form-item prop="checkwhitelist" label="安全检测白名单">
             <el-switch v-model="searchMap.checkwhitelist" />
           </el-form-item>
@@ -86,11 +93,37 @@
         <div class="text">
           <table border="0">
             <tr>
-              <td><b>部门</b></td>
-              <td>{{ departmentPojo.departmentname }}</td>
+              <td><b>应用系统</b></td>
+              <td>
+                <span v-if="pojo.appsysname">
+                  <span
+                    v-for="item in pojo.appsysname.split(',')"
+                    :key="item.id"
+                    :label="item"
+                    :value="item"
+                  >
+                    <span v-if="item">
+                      <el-tag size="mini" type="info" effect="plain">{{ item }}</el-tag>
+                    </span>
+                  </span>
+                </span>
+              </td>
               <el-divider direction="vertical" />
-              <td><b>项目信息</b></td>
-              <td>{{ projectinfoPojo.projectname }}</td>
+              <td><b>标签</b></td>
+              <td>
+                <span v-if="pojo.tabname">
+                  <span
+                    v-for="item in pojo.tabname.split(',')"
+                    :key="item.id"
+                    :label="item"
+                    :value="item"
+                  >
+                    <span v-if="item">
+                      <el-tag size="mini" type="info" effect="plain">{{ item }}</el-tag>
+                    </span>
+                  </span>
+                </span>
+              </td>
             </tr>
             <tr>
               <td><b>协议</b></td>
@@ -137,12 +170,27 @@
         </div>
       </el-card>
 
-      <!-- 联系人 -->
-      <el-table :data="contactList" fit>
-        <el-table-column prop="name" label="联系人" />
-        <el-table-column prop="email" label="邮箱" />
-        <el-table-column prop="phone" label="电话" />
-      </el-table>
+      <el-card class="box-card">
+        <div class="text">
+          <table border="0">
+            <tr>
+              <td>项目部门 项目组 负责人信息</td>
+            </tr>
+            <tr>
+              <td><b>项目组部门</b></td>
+              <td>{{ departmentPojo.departmentname }}</td>
+              <td><b>项目组</b></td>
+              <td>{{ pojo.projectname }}</td>
+            </tr>
+          </table>
+        </div>
+        <!-- 负责人 -->
+        <el-table :data="contactList" fit>
+          <el-table-column prop="name" label="负责人" />
+          <el-table-column prop="email" label="邮箱" />
+          <el-table-column prop="phone" label="电话" />
+        </el-table>
+      </el-card>
 
       <!-- 主机信息 -->
       <el-table :data="hostList" fit>
@@ -162,11 +210,7 @@
 
       <!-- 检测结果 -->
       <el-table :data="checkresultList" fit>
-        <!-- <el-table-column  prop="vulnid" width="150" label="漏洞名称">
-              <template slot-scope="scope">
-                {{ getVulnName(scope.row.id) }}
-              </template>
-            </el-table-column> -->
+        <el-table-column prop="vulname" label="漏洞名称" />
         <el-table-column prop="name" label="插件名称" />
         <el-table-column prop="risk" label="风险" />
         <el-table-column prop="result" label="检测结果" show-overflow-tooltip />
@@ -249,6 +293,21 @@
           </span>
         </template>
       </el-table-column>
+      <!-- <el-table-column prop="tabbitmap" label="标签" /> -->
+      <el-table-column prop="tabname" label="标签">
+        <template slot-scope="scope">
+          <span v-if="scope.row.tabname">
+            <span
+              v-for="item in scope.row.tabname.split(',')"
+              :key="item.id"
+              :label="item"
+              :value="item"
+            >
+              <el-tag size="mini" type="info" effect="plain">{{ item }}</el-tag>
+            </span>
+          </span>
+        </template>
+      </el-table-column>
 
       <el-table-column sortable prop="protocol" label="协议" />
       <el-table-column sortable prop="state" label="状态" />
@@ -321,39 +380,65 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
         <el-form-item required label="ipv4地址">
           <span>{{ ipv4 }}</span>
           <span v-if="pojo.id==null">
-            <el-select v-model="pojo.assetipid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="pojo.assetipid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.id" />
             </el-select>
           </span>
         </el-form-item>
 
-        <!-- <el-form-item label="资产ip编号"><el-input v-model="pojo.assetipid" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="资产ip编号"><el-input v-model="pojo.assetipid" style="width:400px;" /></el-form-item> -->
         <el-form-item required label="端口">
-          <el-input v-model="pojo.port" style="width:300px;" />
+          <el-input v-model="pojo.port" style="width:400px;" />
         </el-form-item>
         <!-- <el-form-item prop="port" label="端口">
-          <el-select v-model="pojo.port" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
+          <el-select v-model="pojo.port" style="width:400px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getPortList" :loading="searchLoading">
             <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
         </el-form-item> -->
+        <!-- 新增标签 -->
+        <el-form-item label="标签">
+          <el-select
+            v-model="selectedTabList"
+            style="width:400px;"
+            multiple
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入名称搜索"
+            :remote-method="remoteSearchTab"
+            :loading="searchLoading"
+          >
+            <el-option
+              v-for="item in remoteTabOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
+          <el-button icon="el-icon-delete" size="mini" circle @click="clearSelectedTab()" />
+          <el-tooltip placement="top">
+            <div slot="content">标签可在[分类管理-标签综合分类]中管理</div>
+            <i class="el-icon-info" />
+          </el-tooltip>
+        </el-form-item>
 
-        <el-form-item label="协议"><el-input v-model="pojo.protocol" style="width:300px;" /></el-form-item>
-        <el-form-item label="状态"><el-input v-model="pojo.state" style="width:300px;" /></el-form-item>
-        <el-form-item label="服务"><el-input v-model="pojo.service" style="width:300px;" /></el-form-item>
-        <el-form-item label="版本"><el-input v-model="pojo.version" style="width:300px;" /></el-form-item>
+        <el-form-item label="协议"><el-input v-model="pojo.protocol" style="width:400px;" /></el-form-item>
+        <el-form-item label="状态"><el-input v-model="pojo.state" style="width:400px;" /></el-form-item>
+        <el-form-item label="服务"><el-input v-model="pojo.service" style="width:400px;" /></el-form-item>
+        <el-form-item label="版本"><el-input v-model="pojo.version" style="width:400px;" /></el-form-item>
 
         <el-form-item label="白名单">
           <el-switch v-model="pojo.checkwhitelist" active-text="安全检测" />
           <el-switch v-model="pojo.assetnotifywhitelist" active-text="资产提醒" />
         </el-form-item>
         <el-form-item label="时间">
-          <el-date-picker v-model="pojo.uptime" style="width:300px;" placeholder="发现时间" type="datetime" />
-          <el-date-picker v-model="pojo.downtime" style="width:300px;" placeholder="关闭时间" type="datetime" />
-          <el-date-picker v-model="pojo.changedtime" style="width:300px;" placeholder="修改时间" type="datetime" />
+          <el-date-picker v-model="pojo.uptime" style="width:400px;" placeholder="发现时间" type="datetime" />
+          <el-date-picker v-model="pojo.downtime" style="width:400px;" placeholder="关闭时间" type="datetime" />
+          <el-date-picker v-model="pojo.changedtime" style="width:400px;" placeholder="修改时间" type="datetime" />
         </el-form-item>
 
       </el-form>
@@ -377,6 +462,7 @@ import hostApi from '@/api/host'
 import checkresultApi from '@/api/checkresult'
 import webinfoApi from '@/api/webinfo'
 import urlApi from '@/api/url'
+import categorytabApi from '@/api/categorytab'
 
 import Vue from 'vue'
 const dateformat = Vue.filter('dateformat')
@@ -417,6 +503,15 @@ export default {
       activeNames: ['1'],
       drawer: false,
       ipv4: '',
+      tabList: [],
+
+      // 标签
+      tabPojo: {},
+      tabPojoList: [],
+      selectedTabList: [],
+      remoteTabOptions: [],
+      remoteTabList: [],
+      categorytabMap: new Map(),
 
       pickerOptions: { // 日期选择
         disabledDate(time) {
@@ -458,16 +553,57 @@ export default {
       }
     }
   },
+  mounted() {
+    this.getRemoteTabList()
+  },
   created() {
     this.fetchData()
   },
   methods: {
+    clearSelectedTab() {
+      this.selectedTabList = []
+    },
+    getRemoteTabList() {
+      categorytabApi.getList().then(response => {
+        this.remoteTabList = response.data
+      })
+    },
+    remoteSearchTab(query) {
+      if (query !== '') {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          this.remoteTabOptions = this.remoteTabList.filter(item => {
+            return item.name.toLowerCase()
+              .indexOf(query.toLowerCase()) > -1
+          })
+        }, 200)
+      } else {
+        this.remoteTabOptions = []
+      }
+    },
+    getTabList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          categorytabApi.search(1, 10, { 'name': query }).then(response => {
+            this.tabList = response.data.rows.filter(item => {
+              return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.tabList = []
+      }
+    },
     handleDrawer(id) {
       this.id = id
       this.drawer = true
       assetportApi.findById(id).then(response => {
         if (response.flag) {
           this.pojo = response.data
+          this.tabPojoList = this.pojo.tabList
           // 资产ip
           const assetipidRespose = this.pojo.assetipid
           if (assetipidRespose) {
@@ -484,7 +620,7 @@ export default {
                     })
                   }
                 })
-                // 联系人信息
+                // 负责人信息
                 contactProjectinfoApi.findAllByProjectinfoid(projectinfoid).then(response => {
                   this.contactProjectinfoList = response.data
                   for (let i = 0; i < this.contactProjectinfoList.length; i++) {
@@ -539,6 +675,11 @@ export default {
       this.webinfoids = []
       this.ipaddressv4List = []
       this.ipv4 = ''
+      this.tabList = []
+      this.selectedTabList = []
+      this.remoteTabOptions = []
+      this.tabnameList = []
+      this.tabPojoList = []
     },
     getIpaddressv4List(query) {
       if (query !== '' && query) {
@@ -674,6 +815,7 @@ export default {
           const tHeader = [
             '资产ip',
             '端口',
+            '标签',
             '协议',
             '状态',
             '服务',
@@ -688,6 +830,7 @@ export default {
           const filterVal = [
             'assetipid',
             'port',
+            'tabname',
             'protocol',
             'state',
             'service',
@@ -716,7 +859,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',
@@ -737,6 +879,7 @@ export default {
       this.versionList = []
       this.portList = []
       this.ipaddressv4List = []
+      this.tabList = []
       this.$message({
         message: '已清空搜索条件',
         type: 'info'
@@ -758,6 +901,19 @@ export default {
       this.listLoading = false
     },
     handleSave() {
+      if (this.selectedTabList.length !== 0) {
+        const submitList = []
+        for (var i = 0; i < this.selectedTabList.length; i++) {
+          if (this.categorytabMap.get(this.selectedTabList[i])) {
+            submitList.push(this.categorytabMap.get(this.selectedTabList[i]))
+          } else {
+            submitList.push(this.selectedTabList[i])
+          }
+        }
+        this.pojo.tabbitmap = submitList.join(',')
+      } else {
+        this.pojo.tabbitmap = null
+      }
       assetportApi.update(this.id, this.pojo).then(response => {
         this.$message({
           message: response.message,
@@ -776,6 +932,11 @@ export default {
         assetportApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
+            this.tabPojoList = this.pojo.tabList
+            for (var i = 0; i < this.tabPojoList.length; i++) {
+              this.categorytabMap.set(this.tabPojoList[i].name, this.tabPojoList[i].id)
+              this.selectedTabList.push(this.tabPojoList[i].name)
+            }
             assetipApi.findById(this.pojo.assetipid).then(response => {
               if (response.flag) {
                 this.ipv4 = response.data.ipaddressv4

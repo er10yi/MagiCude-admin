@@ -7,7 +7,7 @@
         <el-input v-model="searchMap.port" prop="port" clearable placeholder="高危端口" /></el-form-item> -->
 
       <el-form-item prop="port" label="高危端口">
-        <el-select v-model="searchMap.port" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
+        <el-select v-model="searchMap.port" style="width:400px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getPortList" :loading="searchLoading">
           <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
       </el-form-item>
 
@@ -73,14 +73,14 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
         <el-form-item prop="port" label="高危端口">
-          <el-select v-model="pojo.port" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
+          <el-select v-model="pojo.port" style="width:400px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getPortList" :loading="searchLoading">
             <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
         </el-form-item>
 
-        <!-- <el-form-item label="高危端口"><el-input v-model="pojo.port" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="高危端口"><el-input v-model="pojo.port" style="width:400px;" /></el-form-item> -->
 
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -201,7 +201,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

@@ -95,24 +95,24 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <el-form-item label="用户名"><el-input v-model="pojo.username" style="width:300px;" /></el-form-item>
+        <el-form-item label="用户名"><el-input v-model="pojo.username" style="width:400px;" /></el-form-item>
 
         <!-- <span v-if="pojo.id ==null">
-          <el-form-item label="密码"><el-input v-model="pojo.password" style="width:300px;" /></el-form-item>
+          <el-form-item label="密码"><el-input v-model="pojo.password" style="width:400px;" /></el-form-item>
         </span>
         <span v-else>
           <el-form-item label="旧密码">
-            <el-input v-model="pojo.oldpassword" style="width:300px;" /> 酱紫是不行的
+            <el-input v-model="pojo.oldpassword" style="width:400px;" /> 酱紫是不行的
             <span>修改密码:TODO</span>
           </el-form-item>
           <el-form-item label="密码">
-            <el-input v-model="pojo.password" style="width:300px;" />
+            <el-input v-model="pojo.password" style="width:400px;" />
           </el-form-item>
         </span> -->
 
-        <el-form-item label="密码"><el-input v-model="pojo.password" style="width:300px;" /></el-form-item>
+        <el-form-item label="密码"><el-input v-model="pojo.password" style="width:400px;" /></el-form-item>
 
         <el-form-item label="管理员">
           <el-switch v-model="pojo.admin" active-text="管理员" />
@@ -121,9 +121,9 @@
           <el-switch v-model="pojo.active" active-text="有效" />
         </el-form-item>
 
-        <el-form-item label="头像地址"><el-input v-model="pojo.avatar" style="width:300px;" /></el-form-item>
+        <el-form-item label="头像地址"><el-input v-model="pojo.avatar" style="width:400px;" /></el-form-item>
         <el-form-item label="最后登录时间">
-          <el-date-picker v-model="pojo.lastdate" style="width:300px;" placeholder="最后登录时间" type="datetime" /></el-form-item>
+          <el-date-picker v-model="pojo.lastdate" style="width:400px;" placeholder="最后登录时间" type="datetime" /></el-form-item>
 
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -283,7 +283,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

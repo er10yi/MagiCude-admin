@@ -99,10 +99,24 @@ export const constantRoutes = [
     name: 'Asset',
     meta: { title: '资产管理', icon: '资产' },
     children: [
-      { path: 'projectinfo', name: 'projectinfo', component: () => import('@/views/table/projectinfo'), meta: { title: '项目信息', icon: '项目' }},
+      {
+        path: '/ipdepartment',
+        component: () => import('@/views/nested/index.vue'),
+        redirect: 'noRedirect',
+        name: 'ipdepartment',
+        meta: { title: 'ip项目组', icon: '项目' },
+        children: [
+          { path: 'department', name: 'department', component: () => import('@/views/table/department'), meta: { title: '项目组部门', icon: '部门' }},
+          { path: 'projectinfo', name: 'projectinfo', component: () => import('@/views/table/projectinfo'), meta: { title: '项目组', icon: '项目' }},
+          { path: 'contactProjectinfo', name: 'contactProjectinfo', component: () => import('@/views/table/contactProjectinfo'), meta: { title: '项目组负责人', icon: '关联' }},
+          { path: 'contact', name: 'contact', component: () => import('@/views/table/contact'), meta: { title: '负责人信息', icon: 'user' }}
+        ]
+      },
+      { path: 'appsystem', name: 'appsystem', component: () => import('@/views/table/appsystem'), meta: { title: '应用系统', icon: '应用' }},
       { path: 'assetip', name: 'assetip', component: () => import('@/views/table/assetip'), meta: { title: '资产ip', icon: 'ip' }},
       { path: 'assetport', name: 'assetport', component: () => import('@/views/table/assetport'), meta: { title: '资产端口', icon: '端口' }},
       { path: 'host', name: 'host', component: () => import('@/views/table/host'), meta: { title: '主机/域名', icon: '主机' }}
+      // { path: 'api', name: 'api', component: () => import('@/views/table/api'), meta: { title: '资产api', icon: 'list' }},
     ]
   },
   {
@@ -112,9 +126,33 @@ export const constantRoutes = [
     name: 'Checkresult',
     meta: { title: '检测结果', icon: '任务结果' },
     children: [
-      { path: 'checkresult', name: 'checkresult', component: () => import('@/views/table/checkresult'), meta: { title: '检测结果', icon: '漏洞' }},
-      { path: 'webinfo', name: 'webinfo', component: () => import('@/views/table/webinfo'), meta: { title: 'web信息', icon: 'web' }},
-      { path: 'url', name: 'url', component: () => import('@/views/table/url'), meta: { title: 'url', icon: 'url' }}
+      { path: 'checkresult', name: 'checkresult', component: () => import('@/views/table/checkresult'), meta: { title: '漏洞', icon: '漏洞' }},
+
+      {
+        path: '/webinfos',
+        component: () => import('@/views/nested/index.vue'),
+        redirect: 'noRedirect',
+        name: 'webinfos',
+        meta: { title: 'web相关', icon: '任务结果' },
+        children: [
+          { path: 'webinfo', name: 'webinfo', component: () => import('@/views/table/webinfo'), meta: { title: 'web信息', icon: 'web' }}
+          // { path: 'webrawdata', name: 'webrawdata', component: () => import('@/views/table/webrawdata'), meta: { title: '原始响应和头信息', icon: '关于' }},
+          // { path: 'url', name: 'url', component: () => import('@/views/table/url'), meta: { title: 'url', icon: 'url' }}
+        ]
+      }
+
+    ]
+  },
+
+  {
+    path: '/category',
+    component: Layout,
+    redirect: 'noRedirect',
+    meta: { title: '分类管理', icon: 'tree' },
+    children: [
+      { path: 'categorycomstru', name: 'categorycomstru', component: () => import('@/views/table/categorycomstru'), meta: { title: '公司部门人员', icon: '公司' }},
+      { path: 'categorytab', name: 'categorytab', component: () => import('@/views/table/categorytab'), meta: { title: '标签综合分类', icon: '标签' }}
+
     ]
   },
   {
@@ -131,11 +169,11 @@ export const constantRoutes = [
         name: 'Plugin',
         meta: { title: '杂项', icon: '其他' },
         children: [
-          { path: 'pluginconfigsingle', name: 'pluginconfigsingle', component: () => import('@/views/table/pluginconfigsingle'), meta: { title: '插件配置', icon: '配置' }},
+          { path: 'pluginconfigsingle', name: 'pluginconfigsingle', component: () => import('@/views/table/pluginconfigsingle'), meta: { title: '插件', icon: '配置' }},
           { path: 'pluginassetservice', name: 'pluginassetservice', component: () => import('@/views/table/pluginassetservice'), meta: { title: '资产服务', icon: '服务' }},
           { path: 'pluginassetversion', name: 'pluginassetversion', component: () => import('@/views/table/pluginassetversion'), meta: { title: '资产版本', icon: '版本' }},
           { path: 'vulnkeyword', name: 'vulnkeyword', component: () => import('@/views/table/vulnkeyword'), meta: { title: '漏洞关键词', icon: '关键词' }},
-          { path: 'vulnpluginconfig', name: 'vulnpluginconfig', component: () => import('@/views/table/vulnpluginconfig'), meta: { title: '漏洞插件配置关联', icon: '关联' }}
+          { path: 'vulnpluginconfig', name: 'vulnpluginconfig', component: () => import('@/views/table/vulnpluginconfig'), meta: { title: '漏洞插件关联', icon: '关联' }}
         ]
       }
     ]
@@ -147,18 +185,6 @@ export const constantRoutes = [
     name: 'Config',
     meta: { title: '设置', icon: '设置' },
     children: [
-      {
-        path: '/contactinfo',
-        component: () => import('@/views/nested/index.vue'),
-        name: 'contactinfo',
-        redirect: 'noRedirect',
-        meta: { title: '联系信息管理', icon: '联系管理' },
-        children: [
-          { path: 'department', name: 'department', component: () => import('@/views/table/department'), meta: { title: '部门', icon: '部门' }},
-          { path: 'contact', name: 'contact', component: () => import('@/views/table/contact'), meta: { title: '联系人', icon: 'user' }},
-          { path: 'contactProjectinfo', name: 'contactProjectinfo', component: () => import('@/views/table/contactProjectinfo'), meta: { title: '联系人项目信息关联', icon: '关联' }}
-        ]
-      },
       { path: 'batchmanipulation', name: 'batchmanipulation', component: () => import('@/views/table/batchmanipulation'), meta: { title: '批量导入', icon: '导入' }},
       { path: 'cronjob', name: 'cronjob', component: () => import('@/views/table/cronjob'), meta: { title: '定时任务', icon: '定时' }},
       { path: 'notifysetting', name: 'notifysetting', component: () => import('@/views/table/notifysetting'), meta: { title: '通知', icon: '提醒' }},
@@ -197,7 +223,7 @@ export const constantRoutes = [
           { path: 'titlewhitelist', name: 'titlewhitelist', component: () => import('@/views/table/titlewhitelist'), meta: { title: '标题', icon: '标题' }},
           { path: 'ipwhitelist', name: 'ipwhitelist', component: () => import('@/views/table/ipwhitelist'), meta: { title: 'ip', icon: 'ip' }},
           { path: 'ipportwhitelist', name: 'ipportwhitelist', component: () => import('@/views/table/ipportwhitelist'), meta: { title: 'ip-端口', icon: '端口' }},
-          { path: 'projectportwhitelist', name: 'projectportwhitelist', component: () => import('@/views/table/projectportwhitelist'), meta: { title: '项目信息-端口', icon: '项目' }}
+          { path: 'projectportwhitelist', name: 'projectportwhitelist', component: () => import('@/views/table/projectportwhitelist'), meta: { title: '项目组-端口', icon: '项目' }}
         ]
       },
       {
@@ -246,15 +272,6 @@ export const constantRoutes = [
       { path: 'notifylog', name: 'notifylog', component: () => import('@/views/table/notifylog'), meta: { title: '提醒日志', icon: '提醒' }}
     ]
   },
-  // {
-  //   path: '/other',
-  //   component: Layout,
-  //   meta: { title: '其他', icon: 'component' },
-  //   children: [
-  //      { path: 'checkresultVuln', name: 'checkresultVuln', component: () => import('@/views/table/checkresultVuln'), meta: { title: '检测结果漏洞关联', icon: 'list' }},
-
-  //   ]
-  // },
   {
     path: '/about',
     component: Layout,
@@ -265,6 +282,8 @@ export const constantRoutes = [
     ]
   },
 
+  // hidden page
+  //
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

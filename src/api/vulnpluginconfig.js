@@ -62,6 +62,12 @@ export default {
       method: 'post',
       data: ids
     })
+  },
+  deleteByPluginIdVulnId(pluginId, vulnId) {
+    return request({
+      url: `/${group_name}/${api_name}/plugin/${pluginId}/${vulnId}`,
+      method: 'delete'
+    })
   }
 
 }

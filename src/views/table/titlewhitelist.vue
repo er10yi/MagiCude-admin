@@ -7,7 +7,7 @@
         <el-input v-model="searchMap.title" prop="title" clearable placeholder="标题" /></el-form-item> -->
 
       <el-form-item prop="title" label="标题">
-        <el-select v-model="searchMap.title" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getTitleList" :loading="searchLoading">
+        <el-select v-model="searchMap.title" allow-create default-first-option filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getTitleList" :loading="searchLoading">
           <el-option v-for="item in titleList" :key="item.id" :label="item.title" :value="item.title" />
         </el-select>
       </el-form-item>
@@ -84,12 +84,12 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <!-- <el-form-item label="标题"><el-input v-model="pojo.title" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="标题"><el-input v-model="pojo.title" style="width:400px;" /></el-form-item> -->
 
         <el-form-item prop="title" label="标题">
-          <el-select v-model="pojo.title" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getTitleList" :loading="searchLoading">
+          <el-select v-model="pojo.title" allow-create default-first-option filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getTitleList" :loading="searchLoading">
             <el-option v-for="item in titleList" :key="item.id" :label="item.title" :value="item.title" />
           </el-select>
         </el-form-item>
@@ -212,7 +212,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

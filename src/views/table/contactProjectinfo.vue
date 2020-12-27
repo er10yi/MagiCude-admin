@@ -3,14 +3,14 @@
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
-      <el-form-item prop="contactid" label="联系人">
-        <el-select v-model="searchMap.contactid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getContactList" :loading="searchLoading">
+      <el-form-item prop="contactid" label="负责人">
+        <el-select v-model="searchMap.contactid" style="width:150px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getContactList" :loading="searchLoading">
           <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
 
-      <el-form-item prop="projectinfoid" label="项目信息">
-        <el-select v-model="searchMap.projectinfoid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectinfoList" :loading="searchLoading">
+      <el-form-item prop="projectinfoid" label="项目组">
+        <el-select v-model="searchMap.projectinfoid" style="width:150px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getProjectinfoList" :loading="searchLoading">
           <el-option v-for="item in projectnameList" :key="item.id" :label="item.projectname" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -31,7 +31,7 @@
 
       <el-form-item>
         <el-tooltip placement="top">
-          <div slot="content">需要新建联系人及<br>项目信息<br>才能新增关联</div>
+          <div slot="content">需要新建负责人及<br>项目组<br>才能新增关联</div>
           <el-button type="primary" @click="handleEdit('')">新增</el-button>
         </el-tooltip>
 
@@ -55,9 +55,9 @@
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="编号" /> -->
 
-      <el-table-column sortable prop="contactid" label="联系人" />
+      <el-table-column sortable prop="contactid" label="负责人" />
 
-      <el-table-column sortable prop="projectinfoid" label="项目信息" />
+      <el-table-column sortable prop="projectinfoid" label="项目组" />
 
       <el-table-column
         fixed="right"
@@ -84,21 +84,21 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <!-- <el-form-item label="联系编号"><el-input v-model="pojo.contactid" style="width:300px;" /></el-form-item> -->
-        <!-- <el-form-item label="项目信息编号"><el-input v-model="pojo.projectinfoid" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="联系编号"><el-input v-model="pojo.contactid" style="width:400px;" /></el-form-item> -->
+        <!-- <el-form-item label="项目组编号"><el-input v-model="pojo.projectinfoid" style="width:400px;" /></el-form-item> -->
 
-        <el-form-item prop="contactid" label="联系人">
+        <el-form-item prop="contactid" label="负责人">
           <span>{{ contactName }}</span>
-          <el-select v-model="pojo.contactid" style="width:400px;" filterable remote clearable placeholder="请输入" :remote-method="getContactList" :loading="searchLoading">
+          <el-select v-model="pojo.contactid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getContactList" :loading="searchLoading">
             <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
-        <el-form-item prop="projectinfoid" label="项目信息">
+        <el-form-item prop="projectinfoid" label="项目组">
           <span>{{ projectinfoName }}</span>
-          <el-select v-model="pojo.projectinfoid" style="width:400px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectinfoList" :loading="searchLoading">
+          <el-select v-model="pojo.projectinfoid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getProjectinfoList" :loading="searchLoading">
             <el-option v-for="item in projectnameList" :key="item.id" :label="item.projectname" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -229,8 +229,8 @@ export default {
         this.downloadLoading = true
         import('@/vendor/Export2Excel').then(excel => {
           const tHeader = [
-            '联系人',
-            '项目信息'
+            '负责人',
+            '项目组'
           ]
           const filterVal = [
             'contactid',
@@ -246,7 +246,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

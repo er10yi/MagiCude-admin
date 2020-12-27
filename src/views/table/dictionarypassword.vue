@@ -5,7 +5,7 @@
     <el-form ref="searchform" inline size="small" :model="searchMap">
 
       <el-form-item prop="password" label="密码">
-        <el-select v-model="searchMap.password" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPasswordList" :loading="searchLoading">
+        <el-select v-model="searchMap.password" style="width:400px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getPasswordList" :loading="searchLoading">
           <el-option v-for="item in passwordList" :key="item.id" :label="item.password" :value="item.password" /></el-select>
       </el-form-item>
 
@@ -70,10 +70,10 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
         <el-form-item prop="password" label="密码">
-          <el-select v-model="pojo.password" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPasswordList" :loading="searchLoading">
+          <el-select v-model="pojo.password" style="width:400px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getPasswordList" :loading="searchLoading">
             <el-option v-for="item in passwordList" :key="item.id" :label="item.password" :value="item.password" /></el-select>
         </el-form-item>
 
@@ -191,7 +191,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

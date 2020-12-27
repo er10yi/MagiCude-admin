@@ -6,16 +6,16 @@
       <!-- <el-form-item label="漏洞编号">
         <el-input v-model="searchMap.vulnid" prop="vulnid" clearable placeholder="漏洞编号" /></el-form-item> -->
       <el-form-item prop="name" label="漏洞">
-        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getNameList" :loading="searchLoading">
           <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select></el-form-item>
       <el-form-item prop="democode" label="示例代码">
-        <el-select v-model="searchMap.democode" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getDemocodeList" :loading="searchLoading">
+        <el-select v-model="searchMap.democode" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getDemocodeList" :loading="searchLoading">
           <el-option v-for="item in democodeList" :key="item.id" :label="item.democode" :value="item.democode" />
         </el-select>
       </el-form-item>
       <el-form-item prop="poc" label="poc">
-        <el-select v-model="searchMap.poc" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPocList" :loading="searchLoading">
+        <el-select v-model="searchMap.poc" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getPocList" :loading="searchLoading">
           <el-option v-for="item in pocList" :key="item.id" :label="item.poc" :value="item.poc" />
         </el-select>
       </el-form-item>
@@ -94,15 +94,15 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
         <el-form-item prop="name" label="漏洞">
           {{ vulname }}
-          <el-select v-model="pojo.vulnid" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
+          <el-select v-model="pojo.vulnid" style="width:400px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getNameList" :loading="searchLoading">
             <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select></el-form-item>
 
-        <!-- <el-form-item label="漏洞编号"><el-input v-model="pojo.vulnid" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="漏洞编号"><el-input v-model="pojo.vulnid" style="width:400px;" /></el-form-item> -->
         <el-form-item label="示例代码"><code><el-input v-model="pojo.democode" autosize type="textarea" /></code></el-form-item>
         <el-form-item label="poc"><code><el-input v-model="pojo.poc" autosize type="textarea" /></code></el-form-item>
 
@@ -281,7 +281,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

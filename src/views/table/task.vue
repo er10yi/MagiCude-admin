@@ -8,7 +8,7 @@
           <!-- <el-form-item label="任务父编号"> -->
           <!-- <el-input v-model="searchMap.taskparentid" prop="taskparentid" clearable placeholder="任务父编号" /></el-form-item> -->
           <!-- <el-form-item prop="projectid" label="父任务">
-            <el-select v-model="searchMap.taskparentid" filterable clearable placeholder="请输入">
+            <el-select v-model="searchMap.taskparentid" filterable clearable placeholder="请输入关键词搜索并手动选择">
               <el-option
                 v-for="item in list"
                 :key="item.id"
@@ -26,12 +26,12 @@
           </el-form-item>
 
           <el-form-item v-if="showproject" prop="projectid" label="任务项目">
-            <el-select v-model="searchMap.projectid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectnameList" :loading="searchLoading">
+            <el-select v-model="searchMap.projectid" style="width:150px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getProjectnameList" :loading="searchLoading">
               <el-option v-for="item in projectnameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
           </el-form-item>
 
           <el-form-item prop="name" label="名称">
-            <el-select v-model="searchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getTaskNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getTaskNameList" :loading="searchLoading">
               <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
           </el-form-item>
 
@@ -43,27 +43,27 @@
           </el-form-item>
 
           <el-form-item prop="worktype" label="类型">
-            <el-select v-model="searchMap.worktype" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getWorktypeList" :loading="searchLoading">
+            <el-select v-model="searchMap.worktype" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getWorktypeList" :loading="searchLoading">
               <el-option v-for="item in worktypeList" :key="item.id" :label="item.worktype" :value="item.worktype" /></el-select>
           </el-form-item>
           <el-form-item v-if="showcheck" prop="checktype" label="检测">
-            <el-select v-model="searchMap.checktype" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getChecktypeList" :loading="searchLoading">
+            <el-select v-model="searchMap.checktype" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getChecktypeList" :loading="searchLoading">
               <el-option v-for="item in checktypeList" :key="item.id" :label="item.checktype" :value="item.checktype" /></el-select>
           </el-form-item>
           <el-form-item v-if="showadditionoption" prop="additionoption" label="选项">
-            <el-select v-model="searchMap.additionoption" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getAdditionoptionList" :loading="searchLoading">
+            <el-select v-model="searchMap.additionoption" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getAdditionoptionList" :loading="searchLoading">
               <el-option v-for="item in additionoptionList" :key="item.id" :label="item.additionoption" :value="item.additionoption" /></el-select>
           </el-form-item>
           <el-form-item prop="targetip" label="目标">
-            <el-select v-model="searchMap.targetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getTargetipList" :loading="searchLoading">
+            <el-select v-model="searchMap.targetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getTargetipList" :loading="searchLoading">
               <el-option v-for="item in targetipList" :key="item.id" :label="item.targetip" :value="item.targetip" /></el-select>
           </el-form-item>
           <el-form-item prop="targetport" label="端口">
-            <el-select v-model="searchMap.targetport" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getTargetportList" :loading="searchLoading">
+            <el-select v-model="searchMap.targetport" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getTargetportList" :loading="searchLoading">
               <el-option v-for="item in targetportList" :key="item.id" :label="item.targetport" :value="item.targetport" /></el-select>
           </el-form-item>
           <el-form-item v-if="showexcludeip" prop="excludeip" label="排除ip">
-            <el-select v-model="searchMap.excludeip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getExcludeipList" :loading="searchLoading">
+            <el-select v-model="searchMap.excludeip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getExcludeipList" :loading="searchLoading">
               <el-option v-for="item in excludeipList" :key="item.id" :label="item.excludeip" :value="item.excludeip" /></el-select>
           </el-form-item>
 
@@ -133,7 +133,7 @@
           <el-form ref="searchformchild" inline size="small" :model="childSearchMap">
 
             <!-- <el-form-item prop="name" label="名称">
-              <el-select v-model="childSearchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getTaskNameList" :loading="searchLoading">
+              <el-select v-model="childSearchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getTaskNameList" :loading="searchLoading">
                 <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
             </el-form-item> -->
 
@@ -145,23 +145,23 @@
             </el-form-item>
 
             <!-- <el-form-item prop="worktype" label="类型">
-              <el-select v-model="childSearchMap.worktype" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getWorktypeList" :loading="searchLoading">
+              <el-select v-model="childSearchMap.worktype" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getWorktypeList" :loading="searchLoading">
                 <el-option v-for="item in worktypeList" :key="item.id" :label="item.worktype" :value="item.worktype" /></el-select>
             </el-form-item>
             <el-form-item prop="additionoption" label="选项">
-              <el-select v-model="childSearchMap.additionoption" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getAdditionoptionList" :loading="searchLoading">
+              <el-select v-model="childSearchMap.additionoption" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getAdditionoptionList" :loading="searchLoading">
                 <el-option v-for="item in additionoptionList" :key="item.id" :label="item.additionoption" :value="item.additionoption" /></el-select>
             </el-form-item>
             <el-form-item prop="targetip" label="目标">
-              <el-select v-model="childSearchMap.targetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getTargetipList" :loading="searchLoading">
+              <el-select v-model="childSearchMap.targetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getTargetipList" :loading="searchLoading">
                 <el-option v-for="item in targetipList" :key="item.id" :label="item.targetip" :value="item.targetip" /></el-select>
             </el-form-item>
             <el-form-item prop="targetport" label="端口">
-              <el-select v-model="childSearchMap.targetport" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getTargetportList" :loading="searchLoading">
+              <el-select v-model="childSearchMap.targetport" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getTargetportList" :loading="searchLoading">
                 <el-option v-for="item in targetportList" :key="item.id" :label="item.targetport" :value="item.targetport" /></el-select>
             </el-form-item>
             <el-form-item prop="excludeip" label="排除ip">
-              <el-select v-model="childSearchMap.excludeip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getExcludeipList" :loading="searchLoading">
+              <el-select v-model="childSearchMap.excludeip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getExcludeipList" :loading="searchLoading">
                 <el-option v-for="item in excludeipList" :key="item.id" :label="item.excludeip" :value="item.excludeip" /></el-select>
             </el-form-item> -->
 
@@ -571,7 +571,7 @@
       <!-- 选择目标类型 -->
       <el-form label-width="200px">
         <div v-if="active==0">
-          <el-form label-width="100px">
+          <el-form label-width="110px">
             <el-form-item required label="任务名称"><el-input v-model="pojo.name" clearable /></el-form-item>
             <el-form-item required label="扫描类型">
               <el-radio-group v-model="targetType">
@@ -584,7 +584,7 @@
 
         <!-- 选择任务类型 -->
         <div v-if="active==1">
-          <el-form label-width="100px">
+          <el-form label-width="110px">
             <span v-if="targetType =='端口扫描'">
               <el-form-item required label="类型">
                 <el-radio-group v-model="pojo.worktype">
@@ -626,7 +626,7 @@
 
         <!-- 目标或插件 -->
         <div v-if="active==2">
-          <el-form label-width="100px">
+          <el-form label-width="110px">
             <span v-if="targetType =='端口扫描' && pojo.worktype=='nmap'">
               <el-form-item required label="目标">
                 <el-radio-group v-model="assetTargetOrInput">
@@ -674,7 +674,7 @@
             </span>
           </el-form>
 
-          <el-form label-width="100px">
+          <el-form label-width="110px">
             <span v-if="targetType =='安全扫描'">
               <el-form-item required label="目标">
                 <el-radio-group v-model="assetTargetOrInput">
@@ -697,11 +697,11 @@
 
           <!-- 高级选项 -->
           <span v-if="assetTargetOrInput=='数据库中的ip'||assetTargetOrInput =='数据库中的域名'||assetTargetOrInput=='手动填写的ip或域名'||pojo.worktype=='mass'||pojo.worktype=='mass2Nmap'">
-            <el-form label-width="100px">
+            <el-form label-width="110px">
               <el-collapse v-model="activeNames">
                 <el-collapse-item title="高级选项(可选配置)">
                   <el-form-item prop="projectid" label="任务项目">
-                    <el-select v-model="pojo.projectid" style="width:400px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectnameList" :loading="searchLoading">
+                    <el-select v-model="pojo.projectid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getProjectnameList" :loading="searchLoading">
                       <el-option v-for="item in projectnameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
 
                   </el-form-item>
@@ -828,7 +828,7 @@
             <br> -->
                     <el-form ref="searchform" inline size="small" :model="searchMap">
                       <el-form-item label="cron表达式">
-                        <cron-input v-model="cron" clearable style="width:300px;" @change="change" @reset="reset" />
+                        <cron-input v-model="cron" clearable style="width:400px;" @change="change" @reset="reset" />
                       </el-form-item>
                       <el-form-item>
                         <el-button type="info" @click="parseCron('')">解析</el-button>
@@ -921,12 +921,12 @@
                         <el-form ref="searchform2" inline size="mini" :model="searchMap">
 
                           <el-form-item prop="name" label="名称">
-                            <el-select v-model="searchMap.name" filterable remote allow-create default-first-option clearable placeholder="请输入" style="width:130px;" :remote-method="getNameList" :loading="searchLoading">
+                            <el-select v-model="searchMap.name" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" style="width:130px;" :remote-method="getNameList" :loading="searchLoading">
                               <el-option v-for="item in pluginnameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
                           </el-form-item>
 
                           <el-form-item prop="args" label="参数">
-                            <el-select v-model="searchMap.args" filterable remote allow-create default-first-option clearable placeholder="请输入" style="width:130px;" :remote-method="getArgsList" :loading="searchLoading">
+                            <el-select v-model="searchMap.args" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" style="width:130px;" :remote-method="getArgsList" :loading="searchLoading">
                               <el-option v-for="item in argsList" :key="item.id" :label="item.args" :value="item.args" /></el-select>
                           </el-form-item>
 
@@ -1020,7 +1020,7 @@
         </div>
 
         <!-- 步骤跳跃 -->
-        <el-form label-width="100px">
+        <el-form label-width="110px">
           <el-form-item>
             <span v-if="active==2 &&(pojo.targetip||assetTargetOrInput)">
               <!-- <el-button type="info" style="margin-top: 12px;" @click="forward">保存并开始</el-button> -->
@@ -1047,11 +1047,11 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
         <!-- <el-form-item label="父任务"><el-input v-model="pojo.taskparentid" /></el-form-item> -->
         <!-- <el-form-item label="父任务">
-          <el-select v-model="pojo.taskparentid" style="width:400px;" filterable clearable placeholder="请输入">
+          <el-select v-model="pojo.taskparentid" style="width:400px;" filterable clearable placeholder="请输入关键词搜索并手动选择">
             <el-option
               v-for="item in list"
               :key="item.id"
@@ -1063,7 +1063,7 @@
 
         <el-form-item prop="projectid" label="任务项目">
           <span>{{ projectName }}</span>
-          <el-select v-model="pojo.projectid" style="width:400px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectnameList" :loading="searchLoading">
+          <el-select v-model="pojo.projectid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getProjectnameList" :loading="searchLoading">
             <el-option v-for="item in projectnameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
 
         </el-form-item>
@@ -1281,7 +1281,7 @@
             <br> -->
           <el-form ref="searchform" inline size="small" :model="searchMap">
             <el-form-item label="cron表达式">
-              <cron-input v-model="cron" clearable style="width:300px;" @change="change" @reset="reset" />
+              <cron-input v-model="cron" clearable style="width:400px;" @change="change" @reset="reset" />
             </el-form-item>
             <el-form-item>
               <el-button type="info" @click="parseCron('')">解析</el-button>
@@ -1365,12 +1365,12 @@
         <el-input v-model="searchMap.name" prop="name" clearable placeholder="名称" /></el-form-item> -->
 
                 <el-form-item prop="name" label="名称">
-                  <el-select v-model="searchMap.name" filterable remote allow-create default-first-option clearable placeholder="请输入" style="width:130px;" :remote-method="getNameList" :loading="searchLoading">
+                  <el-select v-model="searchMap.name" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" style="width:130px;" :remote-method="getNameList" :loading="searchLoading">
                     <el-option v-for="item in pluginnameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
                 </el-form-item>
 
                 <el-form-item prop="args" label="参数">
-                  <el-select v-model="searchMap.args" filterable remote allow-create default-first-option clearable placeholder="请输入" style="width:130px;" :remote-method="getArgsList" :loading="searchLoading">
+                  <el-select v-model="searchMap.args" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" style="width:130px;" :remote-method="getArgsList" :loading="searchLoading">
                     <el-option v-for="item in argsList" :key="item.id" :label="item.args" :value="item.args" /></el-select>
                 </el-form-item>
 
@@ -2487,7 +2487,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',
@@ -2692,4 +2691,5 @@ export default {
 .el-bg-inner-done .el-progress-bar__inner{
   background-image: linear-gradient(to right, #5991c9 , #41b341);
 }
+
 </style>

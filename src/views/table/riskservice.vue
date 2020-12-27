@@ -7,7 +7,7 @@
         <el-input v-model="searchMap.service" prop="service" clearable placeholder="高危服务" /></el-form-item> -->
 
       <el-form-item prop="service" label="高危服务">
-        <el-select v-model="searchMap.service" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getServiceList" :loading="searchLoading">
+        <el-select v-model="searchMap.service" style="width:400px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getServiceList" :loading="searchLoading">
           <el-option v-for="item in serviceList" :key="item.id" :label="item.service" :value="item.service" /></el-select>
       </el-form-item>
 
@@ -73,19 +73,19 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
         <el-tooltip placement="top">
           <div slot="content">具体的服务<br></div>
           <el-form-item prop="service" label="高危服务">
-            <el-select v-model="pojo.service" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getServiceList" :loading="searchLoading">
+            <el-select v-model="pojo.service" style="width:400px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getServiceList" :loading="searchLoading">
               <el-option v-for="item in serviceList" :key="item.id" :label="item.service" :value="item.service" /></el-select>
           </el-form-item>
         </el-tooltip>
 
         <!-- <el-tooltip placement="top">
           <div slot="content">具体的服务<br></div>
-          <el-form-item label="高危服务"><el-input v-model="pojo.service" style="width:300px;" /></el-form-item>
+          <el-form-item label="高危服务"><el-input v-model="pojo.service" style="width:400px;" /></el-form-item>
         </el-tooltip> -->
 
       </el-form>
@@ -207,7 +207,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

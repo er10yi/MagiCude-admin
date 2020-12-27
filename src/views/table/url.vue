@@ -11,12 +11,12 @@
         <el-input v-model="searchMap.url" prop="url" clearable placeholder="url" /></el-form-item> -->
 
       <el-form-item prop="name" label="名称">
-        <el-select v-model="searchMap.name" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.name" allow-create default-first-option filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getNameList" :loading="searchLoading">
           <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" />
         </el-select>
       </el-form-item>
       <el-form-item prop="url" label="url">
-        <el-select v-model="searchMap.url" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getUrlList" :loading="searchLoading">
+        <el-select v-model="searchMap.url" allow-create default-first-option filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getUrlList" :loading="searchLoading">
           <el-option v-for="item in urlList" :key="item.id" :label="item.url" :value="item.url" />
         </el-select>
       </el-form-item>
@@ -90,11 +90,11 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <!-- <el-form-item label="web信息编号"><el-input v-model="pojo.webinfoid" style="width:300px;" /></el-form-item> -->
-        <el-form-item label="名称"><el-input v-model="pojo.name" style="width:300px;" /></el-form-item>
-        <el-form-item label="url"><el-input v-model="pojo.url" style="width:300px;" /></el-form-item>
+        <!-- <el-form-item label="web信息编号"><el-input v-model="pojo.webinfoid" style="width:400px;" /></el-form-item> -->
+        <el-form-item label="名称"><el-input v-model="pojo.name" style="width:400px;" /></el-form-item>
+        <el-form-item label="url"><el-input v-model="pojo.url" style="width:400px;" /></el-form-item>
 
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -233,7 +233,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

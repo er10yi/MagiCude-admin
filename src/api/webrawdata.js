@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 const group_name = 'center'
-const api_name = 'location'
+const api_name = 'webrawdata'
 export default {
   getList() {
     return request({
@@ -50,6 +50,11 @@ export default {
       method: 'post',
       data: ids
     })
+  },
+  findAllByWebinfoId(webinfoid) {
+    return request({
+      url: `/${group_name}/${api_name}/webinfo/${webinfoid}`,
+      method: 'get'
+    })
   }
-
 }

@@ -7,14 +7,14 @@
         <el-input v-model="searchMap.categorytopid" prop="categorytopid" clearable placeholder="漏洞一级分类编号" /></el-form-item> -->
 
       <el-form-item prop="categorytopid" label="一级分类">
-        <el-select v-model="searchMap.categorytopid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getCategorytopNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.categorytopid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getCategorytopNameList" :loading="searchLoading">
           <el-option v-for="item in categorytopNameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
       </el-form-item>
 
       <!-- <el-form-item label="二级分类">
         <el-input v-model="searchMap.name" prop="name" clearable placeholder="二级分类" /></el-form-item> -->
       <el-form-item prop="name" label="二级分类">
-        <el-select v-model="searchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getNameList" :loading="searchLoading">
           <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
       </el-form-item>
 
@@ -82,21 +82,21 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <!-- <el-form-item label="漏洞一级分类编号"><el-input v-model="pojo.categorytopid" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="漏洞一级分类编号"><el-input v-model="pojo.categorytopid" style="width:400px;" /></el-form-item> -->
 
         <el-form-item prop="categorytopid" label="一级分类">
 
           <span>{{ categorytopName }}</span>
-          <el-select v-model="pojo.categorytopid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getCategorytopNameList" :loading="searchLoading">
+          <el-select v-model="pojo.categorytopid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getCategorytopNameList" :loading="searchLoading">
             <el-option v-for="item in categorytopNameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
         </el-form-item>
 
-        <!-- <el-form-item required label="二级分类"><el-input v-model="pojo.name" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item required label="二级分类"><el-input v-model="pojo.name" style="width:400px;" /></el-form-item> -->
 
         <el-form-item prop="name" label="二级分类">
-          <el-select v-model="pojo.name" filterable remote style="width:300px;" allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
+          <el-select v-model="pojo.name" filterable remote style="width:400px;" allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getNameList" :loading="searchLoading">
             <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
         </el-form-item>
 
@@ -237,7 +237,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

@@ -1,29 +1,29 @@
 export const
   /** 12 months */
-  JAN = 'JAN', FEB = 'FEB', MAR = 'MAR', APR = 'APR', MAY = 'MAY', JUN = 'JUN', // 1 - 6
-  JUL = 'JUL', AUG = 'AUG', SEP = 'SEP', OCT = 'OCT', NOV = 'NOV', DEC = 'DEC', // 7 - 12
-  MONTHS = [JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC],
-  /** 7 days of week */
-  SUN = 'SUN', MON = 'MON', TUE = 'TUE', WED = 'WED', THU = 'THU', FRI = 'FRI', SAT = 'SAT',
-  DAYS_OF_WEEK = [SUN, MON, TUE, WED, THU, FRI, SAT],
-  /** symbols */
-  EVERY = '*',
-  PERIOD = '/',
-  RANGE = '-',
-  FIXED = ',',
-  UNFIXED = '?',
-  LAST = 'L',
-  WORK_DAY = 'W',
-  WEEK_DAY = '#',
-  CALENDAR = 'C',
-  BASE_SYMBOL = EVERY + ' ' + PERIOD + ' ' + RANGE + ' ' + FIXED,
-  DAY_OF_MONTH_SYMBOL = BASE_SYMBOL + ' ' + LAST + ' ' + WORK_DAY + ' ' + CALENDAR,
-  DAY_OF_WEEK_SYMBOL = BASE_SYMBOL + ' ' + UNFIXED + ' ' + LAST + ' ' + WEEK_DAY + ' ' + CALENDAR,
-  EMPTY = '',
-  LAST_WORK_DAY = 'LW',
-  // current year like 2019
-  CUR_YEAR = new Date().getFullYear(),
-  //
-  UPPER_LIMIT_YEAR = 2099,
-  // default cron expression
-  DEFAULT_CRON_EXPRESSION = '0 0 12 * * ?'
+  JAN = 'JAN'; const FEB = 'FEB'; const MAR = 'MAR'; const APR = 'APR'; const MAY = 'MAY'; const JUN = 'JUN' // 1 - 6
+const JUL = 'JUL'; const AUG = 'AUG'; const SEP = 'SEP'; const OCT = 'OCT'; const NOV = 'NOV'; const DEC = 'DEC' // 7 - 12
+const MONTHS = [JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC]
+/** 7 days of week */
+const SUN = 'SUN'; const MON = 'MON'; const TUE = 'TUE'; const WED = 'WED'; const THU = 'THU'; const FRI = 'FRI'; const SAT = 'SAT'
+const DAYS_OF_WEEK = [SUN, MON, TUE, WED, THU, FRI, SAT]
+/** symbols */
+const EVERY = '*'
+const PERIOD = '/'
+const RANGE = '-'
+const FIXED = ','
+const UNFIXED = '?'
+const LAST = 'L'
+const WORK_DAY = 'W'
+const WEEK_DAY = '#'
+const CALENDAR = 'C'
+const BASE_SYMBOL = EVERY + ' ' + PERIOD + ' ' + RANGE + ' ' + FIXED
+const DAY_OF_MONTH_SYMBOL = BASE_SYMBOL + ' ' + LAST + ' ' + WORK_DAY + ' ' + CALENDAR
+const DAY_OF_WEEK_SYMBOL = BASE_SYMBOL + ' ' + UNFIXED + ' ' + LAST + ' ' + WEEK_DAY + ' ' + CALENDAR
+const EMPTY = ''
+const LAST_WORK_DAY = 'LW'
+// current year like 2019
+const CUR_YEAR = new Date().getFullYear()
+//
+const UPPER_LIMIT_YEAR = 2099
+// default cron expression
+const DEFAULT_CRON_EXPRESSION = '0 0 12 * * ?'

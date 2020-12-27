@@ -9,13 +9,13 @@
         <el-input v-model="searchMap.pluginconfigid" prop="pluginconfigid" clearable placeholder="插件配置编号" /></el-form-item> -->
 
       <el-form-item prop="vulnid" label="漏洞">
-        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getVulnNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getVulnNameList" :loading="searchLoading">
           <el-option v-for="item in vulnNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
 
       <el-form-item prop="pluginconfigid" label="插件">
-        <el-select v-model="searchMap.pluginconfigid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getPluginConfigNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.pluginconfigid" style="width:150px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getPluginConfigNameList" :loading="searchLoading">
           <el-option v-for="item in pluginConfigNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -86,21 +86,21 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <!-- <el-form-item label="漏洞编号"><el-input v-model="pojo.vulnid" style="width:300px;" /></el-form-item> -->
-        <!-- <el-form-item label="插件配置编号"><el-input v-model="pojo.pluginconfigid" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="漏洞编号"><el-input v-model="pojo.vulnid" style="width:400px;" /></el-form-item> -->
+        <!-- <el-form-item label="插件配置编号"><el-input v-model="pojo.pluginconfigid" style="width:400px;" /></el-form-item> -->
 
         <el-form-item prop="vulnid" label="漏洞">
           {{ vulName }}
-          <el-select v-model="pojo.vulnid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getVulnNameList" :loading="searchLoading">
+          <el-select v-model="pojo.vulnid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getVulnNameList" :loading="searchLoading">
             <el-option v-for="item in vulnNameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
         <el-form-item prop="pluginconfigid" label="插件">
           {{ pluginName }}
-          <el-select v-model="pojo.pluginconfigid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getPluginConfigNameList" :loading="searchLoading">
+          <el-select v-model="pojo.pluginconfigid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getPluginConfigNameList" :loading="searchLoading">
             <el-option v-for="item in pluginConfigNameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -247,7 +247,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

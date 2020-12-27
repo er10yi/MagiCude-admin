@@ -9,13 +9,13 @@
         <el-input v-model="searchMap.vulnid" prop="vulnid" clearable placeholder="漏洞编号" /></el-form-item> -->
 
       <el-form-item prop="checkresultid" label="检测结果">
-        <el-select v-model="searchMap.checkresultid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getCheckResultNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.checkresultid" style="width:150px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getCheckResultNameList" :loading="searchLoading">
           <el-option v-for="item in checkResultNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
 
       <el-form-item prop="vulnid" label="漏洞">
-        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getVulnNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.vulnid" style="width:150px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getVulnNameList" :loading="searchLoading">
           <el-option v-for="item in vulnNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -86,10 +86,10 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <el-form-item label="检测结果编号"><el-input v-model="pojo.checkresultid" style="width:300px;" /></el-form-item>
-        <el-form-item label="漏洞编号"><el-input v-model="pojo.vulnid" style="width:300px;" /></el-form-item>
+        <el-form-item label="检测结果编号"><el-input v-model="pojo.checkresultid" style="width:400px;" /></el-form-item>
+        <el-form-item label="漏洞编号"><el-input v-model="pojo.vulnid" style="width:400px;" /></el-form-item>
 
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -233,7 +233,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

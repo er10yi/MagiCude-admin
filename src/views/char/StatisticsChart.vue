@@ -3,28 +3,28 @@
     <br>
     <el-row type="flex" class="row-bg el-row-two" justify="space-between">
       <el-col :xs="6" :sm="12" :lg="24">
-        <v-chart :options="polar" autoresize><div ref="ipDiv" style="height:300px" /></v-chart>
+        <div ref="ipDiv" style="height:300px" />
       </el-col>
       <el-col :xs="6" :sm="12" :lg="24">
-        <v-chart :options="polar" autoresize><div ref="portDiv" style="height:300px" /></v-chart>
+        <div ref="portDiv" style="height:300px" />
       </el-col>
     </el-row>
     <br>
     <el-row type="flex" class="row-bg el-row-two" justify="space-between">
       <el-col :xs="6" :sm="12" :lg="24">
-        <v-chart :options="polar" autoresize><div ref="checkresultDiv" style="height:300px" /></v-chart>
+        <div ref="checkresultDiv" style="height:300px" />
       </el-col>
       <el-col :xs="6" :sm="12" :lg="24">
-        <v-chart :options="polar" autoresize><div ref="riskDiv" style="height:300px" /></v-chart>
+        <div ref="riskDiv" style="height:300px" />
       </el-col>
     </el-row>
     <br><br>
     <el-row type="flex" class="row-bg el-row-two" justify="space-between">
       <el-col :xs="6" :sm="12" :lg="24">
-        <v-chart :options="polar" autoresize> <div style="height:300px"><checkresult-vuln-pie-nest-chart /></div></v-chart>
+        <div style="height:300px"><checkresult-vuln-pie-nest-chart /></div>
       </el-col>
       <el-col :xs="6" :sm="12" :lg="24">
-        <v-chart :options="polar" autoresize> <div style="height:300px"><checkresult-vuln-online-pie-nest-chart /></div></v-chart>
+        <div style="height:300px"><checkresult-vuln-online-pie-nest-chart /></div>
       </el-col>
     </el-row>
 

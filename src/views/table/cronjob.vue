@@ -5,8 +5,8 @@
       每天执行一次的任务包括以下:<br>
       1.dns解析获取hostname<br>
       2.nse结果获取hostname<br>
-      3.根据ip更新白名单（可在设置-批量导入-立即更新数据库ip端口白名单, 手动更新）<br>
-      4.根据项目更新白名单（可在设置-批量导入-立即更新数据库项目信息端口白名单, 手动更新）<br>
+      3.根据ip更新白名单（可在[设置-批量导入-立即更新数据库ip端口白名单]手动更新）<br>
+      4.根据项目更新白名单（可在[设置-批量导入-立即更新数据库项目信息端口白名单]手动更新）<br>
     </div>
     <br>
     <!-- 表格数据 -->
@@ -17,8 +17,8 @@
       style="width: 100%;"
     >
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
-      <el-table-column sortable prop="name" label="名称" width="300" />
-      <el-table-column width="400" prop="cronexpression" label="cron表达式">
+      <el-table-column align="center" prop="name" label="名称" width="300" />
+      <el-table-column align="center" width="400" prop="cronexpression" label="cron表达式">
         <template slot="header">
           <span>cron表达式</span>
           <el-tooltip placement="top">
@@ -58,7 +58,7 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
         <el-form-item label="名称"><span>{{ pojo.name }}</span></el-form-item>
         <el-form-item label="cron表达式"><el-input v-model="pojo.cronexpression" style="width:400px;" /></el-form-item>
@@ -73,10 +73,10 @@
     <el-form ref="searchform" inline size="small" :model="searchMap">
 
       <el-form-item label="cron表达式设置及解析">
-        <cron-input v-model="cron" @change="change" @reset="reset" />
+        <cron-input v-model="cron" style="width:300px;" @change="change" @reset="reset" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="parseCron()">解析</el-button>
+        <el-button type="primary" size="mini" @click="parseCron()">解析</el-button>
       </el-form-item>
       <br>
       <el-form-item>

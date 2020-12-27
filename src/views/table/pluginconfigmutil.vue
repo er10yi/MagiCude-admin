@@ -7,12 +7,12 @@
         <el-input v-model="searchMap.name" prop="name" clearable placeholder="名称" /></el-form-item> -->
 
       <el-form-item prop="name" label="名称">
-        <el-select v-model="searchMap.name" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.name" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getNameList" :loading="searchLoading">
           <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
       </el-form-item>
 
       <el-form-item prop="args" label="参数">
-        <el-select v-model="searchMap.args" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getArgsList" :loading="searchLoading">
+        <el-select v-model="searchMap.args" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getArgsList" :loading="searchLoading">
           <el-option v-for="item in argsList" :key="item.id" :label="item.args" :value="item.args" /></el-select>
       </el-form-item>
 
@@ -106,7 +106,7 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
         <el-form-item label="名称" required><el-input v-model="pojo.name" style="width:400px;" /></el-form-item>
 
@@ -157,7 +157,7 @@
               reserve-keyword
               allow-create
               default-first-option
-              placeholder="请输入搜索"
+              placeholder="请输入关键词搜索并手动选择"
               :remote-method="remoteSearchService"
               :loading="searchLoading"
             >
@@ -208,7 +208,7 @@
               reserve-keyword
               allow-create
               default-first-option
-              placeholder="请输入搜索"
+              placeholder="请输入关键词搜索并手动选择"
               :remote-method="remoteSearchVersion"
               :loading="searchLoading"
             >
@@ -253,7 +253,7 @@
               reserve-keyword
               allow-create
               default-first-option
-              placeholder="请输入搜索"
+              placeholder="请输入关键词搜索并手动选择"
               :remote-method="remoteSearchVulnkeyword"
               :loading="searchLoading"
             >
@@ -296,7 +296,7 @@
               remote
               reserve-keyword
               default-first-option
-              placeholder="请输入搜索"
+              placeholder="请输入关键词搜索并手动选择"
               :remote-method="remoteSearchVuln"
               :loading="searchLoading"
             >
@@ -321,16 +321,22 @@
               <el-table-column width="400" prop="name" label="漏洞" />
               <el-table-column width="50">
                 <template slot-scope="scope">
-                  <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="handleDeleteVulnPlugin(scope.row.id)" />
+                  <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="handleDeleteVulnPlugin(pojo.id,scope.row.id)" />
                 </template>
               </el-table-column>
             </el-table>
           </el-form-item>
         </span>
-        <!-- <span v-if="pojo.type === 'selfd'"> -->
-        <el-form-item label="插件代码">
-          <!-- <code><el-input v-model="pojo.plugincode" type="textarea" :autosize="{maxRows: 50}" /></code> -->
+        <span v-if="pojo.type === 'selfd'">
+          <el-form-item label="插件代码">
+            <el-tooltip placement="top">
+              <div slot="content"><pre>{{ plugindemocdoe }}</pre></div>
+              <i class="el-icon-info" />
+            </el-tooltip>
+            <code><el-input v-model="pojo.plugincode" type="textarea" :autosize="{maxRows: 50}" /></code>
 
+          </el-form-item>
+        <!-- <el-form-item label="插件代码">
           <div class="in-coder-panel">
             <textarea ref="textarea" v-model="nodearea" />
             <el-select
@@ -346,8 +352,8 @@
               />
             </el-select>
           </div>
-        </el-form-item>
-        <!-- </span> -->
+        </el-form-item> -->
+        </span>
 
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -463,7 +469,7 @@ export default {
       vulnPluginPojoList: [],
       vulnName: '',
 
-      plugindemocdoe: '# -*- coding:utf-8 -*-\n' +
+      plugindemocdoe: '# python3 插件代码说明:\n# -*- coding:utf-8 -*-\n' +
 '# plugin code demo\n' +
 '# @auther 贰拾壹\n' +
 '# https://github.com/er10yi\n' +
@@ -836,14 +842,14 @@ export default {
       this.vulnPluginPojo = {}
       // this.handleEdit(this.id)
     },
-    handleDeleteVulnPlugin(id) {
+    handleDeleteVulnPlugin(pluginconfigid, vulnid) {
       this.$confirm('此操作将永久删除已选记录, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
         center: true
       }).then(() => {
-        vulnpluginconfigApi.deleteById(id).then(response => {
+        vulnpluginconfigApi.deleteByPluginIdVulnId(pluginconfigid, vulnid).then(response => {
           this.$message({
             message: response.message,
             type: (response.flag ? 'success' : 'error')
@@ -982,7 +988,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',
@@ -1026,13 +1031,13 @@ export default {
       } else {
         this.pojo.validatetype = null
       }
-      if (this.pojo.type === 'selfd') {
-        if (this.pojo.plugincode === '') {
-          this.pojo.plugincode = null
-        } else {
-          this.pojo.plugincode = this.coder.getValue()
-        }
-      }
+      // if (this.pojo.type === 'selfd') {
+      //   if (this.pojo.plugincode === '') {
+      //     this.pojo.plugincode = null
+      //   } else {
+      //     this.pojo.plugincode = this.coder.getValue()
+      //   }
+      // }
 
       pluginconfigApi.update(this.id, this.pojo).then(response => {
         this.$message({

@@ -3,8 +3,8 @@
     <br>
     <!-- 查询条件 -->
     <el-form ref="searchform" inline size="small" :model="searchMap">
-      <!-- <el-form-item label="项目信息编号">
-        <el-input v-model="searchMap.projectinfoid" prop="projectinfoid" clearable placeholder="项目信息编号" /></el-form-item>
+      <!-- <el-form-item label="项目组编号">
+        <el-input v-model="searchMap.projectinfoid" prop="projectinfoid" clearable placeholder="项目组编号" /></el-form-item>
       <el-form-item label="端口">
         <el-input v-model="searchMap.port" prop="port" clearable placeholder="端口" /></el-form-item>
       <el-form-item label="检测白名单">
@@ -12,14 +12,14 @@
       <el-form-item label="提醒白名单">
         <el-input v-model="searchMap.notifywhitelist" prop="notifywhitelist" clearable placeholder="提醒白名单" /></el-form-item> -->
 
-      <el-form-item prop="projectinfoid" label="项目信息">
-        <el-select v-model="searchMap.projectinfoid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectNameList" :loading="searchLoading">
+      <el-form-item prop="projectinfoid" label="项目组">
+        <el-select v-model="searchMap.projectinfoid" style="width:150px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getProjectNameList" :loading="searchLoading">
           <el-option v-for="item in projectnameList" :key="item.id" :label="item.projectname" :value="item.id" />
         </el-select>
       </el-form-item>
 
       <el-form-item prop="port" label="端口">
-        <el-select v-model="searchMap.port" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
+        <el-select v-model="searchMap.port" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getPortList" :loading="searchLoading">
           <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
       </el-form-item>
 
@@ -66,9 +66,9 @@
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="编号" /> -->
 
-      <!-- <el-table-column sortable prop="projectinfoid" label="项目信息编号" /> -->
+      <!-- <el-table-column sortable prop="projectinfoid" label="项目组编号" /> -->
 
-      <el-table-column sortable prop="projectinfoid" label="项目信息" />
+      <el-table-column sortable prop="projectinfoid" label="项目组" />
 
       <el-table-column sortable prop="port" label="端口" width="80" />
 
@@ -123,16 +123,16 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <el-form-item prop="projectinfoid" label="项目信息">
+        <el-form-item prop="projectinfoid" label="项目组">
           {{ projectname }}
-          <el-select v-model="pojo.projectinfoid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getProjectNameList" :loading="searchLoading">
+          <el-select v-model="pojo.projectinfoid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getProjectNameList" :loading="searchLoading">
             <el-option v-for="item in projectnameList" :key="item.id" :label="item.projectname" :value="item.id" />
           </el-select>
         </el-form-item>
 
-        <el-form-item label="端口"><el-input v-model="pojo.port" style="width:300px;" /></el-form-item>
+        <el-form-item label="端口"><el-input v-model="pojo.port" style="width:400px;" /></el-form-item>
 
         <el-form-item label="检测白名单">
           <el-switch v-model="pojo.checkwhitelist" active-text="检测白名单" />
@@ -263,7 +263,7 @@ export default {
         this.downloadLoading = true
         import('@/vendor/Export2Excel').then(excel => {
           const tHeader = [
-            '项目信息',
+            '项目组',
             '端口',
             '检测白名单',
             '提醒白名单'
@@ -290,7 +290,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

@@ -4,21 +4,22 @@
       <div slot="header" class="clearfix">
         <span><b>魔方-MagiCude </b></span>
         <el-link :underline="false" @click="handleDrawer()">
-          <b>v2.0.28</b>
+          <b>v2.1</b>
         </el-link>
         <el-link style="float: right;" href="https://github.com/er10yi/MagiCude" target="_blank">GitHub</el-link>
       </div>
       <div class="text">
         <ol>
-          <li>高效获取服务器IP, 端口信息, web信息, url链接, 漏洞等资产信息</li>
-          <li>对资产进行有效的安全管理</li>
-          <li>建立漏洞wiki并自动闭环漏洞, 减少安全部门与业务部门的沟通</li>
-          <li>即时漏洞提醒</li>
-          <li>定时发送资产报告和漏洞报告</li>
-          <li>及时发送资产信息和处理结果给负责人进行整改并自动确认整改完成</li>
-          <li>有效获取DHCP的办公机IP与用户关联</li>
-          <li>丰富的图表统计</li>
-          <li>POC框架</li>
+          <li>手动资产管理：应用系统-域名-ip-端口-负责人-标签等信息关联</li>
+          <li>自动资产管理：ip、端口(协议、状态、服务、版本)、域内DNS反解析域名、web页面及链接抓取</li>
+          <li>高危资产及漏洞实时推送：钉钉群机器人、企微群机器人实时推送</li>
+          <li>资产报告和漏洞报告定时推送：邮件汇总报告到默认邮箱、项目负责人只收到自己相关的报告，可配置定时周期</li>
+          <li>资产、漏洞统计：折线图、饼图展示相关信息</li>
+          <li>漏洞wiki：漏洞原理和修复方案等相关信息，需要持续维护和管理</li>
+          <li>基于Python3的自定义插件：方便应急响应</li>
+          <li>标签分类：分类可任意添加，可对ip、端口、应用系统手动加标签</li>
+          <li>扫描任务管理：实时任务状态，便捷的任务操作</li>
+          <li>白名单机制：项目组端口白名单、ip端口扫描白名单、提醒白名单、页面标题白名单、链接域名白名单</li>
         </ol>
       </div>
       <div class="item">
@@ -29,6 +30,38 @@
 
     <!--更新日志显示 -->
     <el-drawer title="ChangeLog" :visible.sync="drawer" direction="rtl" size="60%">
+
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span><b>v2.1 - 20201227</b></span>
+          <div class="text">
+            <ol>
+              <li>增加 nmap局域网扫描结果解析，包括mac地址和设备类型</li>
+              <li>增加 检测结果-web信息新增http响应头信息和原始响应，及url链接显示</li>
+              <li>检测结果-漏洞 可新增漏洞</li>
+              <li>资产管理新增应用系统</li>
+              <li>新增分类管理，包含公司部门人员和标签综合分类</li>
+              <li>主机/域名，增加应用系统显示，子域名编辑</li>
+              <li>资产ip、端口drawer，新增应用系统显示</li>
+              <li>新增ip标签，端口标签</li>
+              <li>优化通知设置页面</li>
+              <li>优化IM实时通知</li>
+              <li>增加企业微信群机器人通知</li>
+              <li>增加钉钉群机器人、企微群机器人发送测试消息功能，增加发送测试邮件功能</li>
+              <li>增加IM消息，邮件发送日志，可在提醒日志查看（包括异常信息）</li>
+              <li>增加高危资产推送，实时推送到企微群和钉钉群</li>
+              <li>修复 JavaSambaWeakPass无法使用的问题</li>
+              <li>修复 域名不规范时，ip端口信息无法入库问题</li>
+              <li>修复 httpp任务可能无法结束的问题</li>
+              <li>HTTPElasticsearchUnauth插件，去除http服务</li>
+              <li>优化404页面显示</li>
+              <li>ip项目组相关信息，移动到资产管理</li>
+              <li>移除插件-代码编辑器</li>
+              <li>检测结果，移除url页面</li>
+            </ol>
+          </div>
+        </div>
+      </el-card>
 
       <el-card class="box-card">
         <div slot="header" class="clearfix">

@@ -12,8 +12,8 @@
           <el-form inline>
             <el-form-item>
               <el-tooltip placement="top">
-                <div slot="content">部门|项目信息|联系人|邮箱|电话<br>测试部门|测试项目部|贰拾壹|test@test.com|1234567<br>测试部门|魔方项目部|名字|邮箱|暂无</div>
-                <span>部门项目信息联系人</span>
+                <div slot="content">项目组部门|项目组|联系人|邮箱|电话<br>测试部门|测试项目部|贰拾壹|test@test.com|1234567<br>测试部门|魔方项目部|名字|邮箱|暂无</div>
+                <span>项目组部门项目组联系人</span>
               </el-tooltip>
             </el-form-item>
             <el-form-item>
@@ -39,8 +39,8 @@
           <el-form inline>
             <el-form-item>
               <el-tooltip placement="top">
-                <div slot="content">项目信息|ip<br>项目信息|ip段<br>项目信息|ip cidr<br>魔方项目部|192.168.1.1<br>测试项目|192.168.1.1-192.168.2.11<br>测试项目|192.168.3.0/24</div>
-                <span>项目信息ip</span>
+                <div slot="content">项目组|ip<br>项目组|ip段<br>项目组|ip cidr<br>魔方项目部|192.168.1.1<br>测试项目|192.168.1.1-192.168.2.11<br>测试项目|192.168.3.0/24</div>
+                <span>项目组ip</span>
               </el-tooltip>
             </el-form-item>
             <el-form-item>
@@ -337,12 +337,12 @@ def start(ip, port, cmd, timeout, payload_map):
             <el-form-item>
               <el-tooltip placement="top">
                 <div slot="content">
-                  对项目下的ip和ip端口进行白名单<br>
+                  对项目组下的ip和ip端口进行白名单<br>
                   项目名称|端口|检测白名单|提醒白名单<br>
                   指定端口：测试项目|3333|0|1<br>
                   不指定端口（对整个项目设置白名单）：测试项目||0|1
                 </div>
-                <span>项目信息端口白名单</span>
+                <span>项目组端口白名单</span>
               </el-tooltip>
             </el-form-item>
             <el-form-item>
@@ -362,8 +362,8 @@ def start(ip, port, cmd, timeout, payload_map):
             <el-form-item>
               <el-tooltip placement="top">
                 <div slot="content">
-                  立即更新数据库项目信息端口白名单<br>
-                  如果是ip白名单, 需要到联系信息管理-项目信息, 开启覆盖ip白名单, 更新ip白名单才生效
+                  立即更新数据库项目组端口白名单<br>
+                  如果是ip白名单, 需要到联系信息管理-项目组, 开启覆盖ip白名单, 更新ip白名单才生效
                 </div>
                 <el-button type="info" size="small" @click="updateProjectinfoPortWhitelist">立即更新</el-button>
               </el-tooltip>
@@ -827,7 +827,7 @@ export default {
       this.$refs.uploadUa.submit()
     },
     updateProjectinfoPortWhitelist() {
-      this.$confirm('更新项目信息端口白名单耗时较久, 且非常占CPU, 建议在无多任务情况下更新, 是否继续?', '警告', {
+      this.$confirm('更新项目组端口白名单耗时较久, 且非常占CPU, 建议在无多任务情况下更新, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',

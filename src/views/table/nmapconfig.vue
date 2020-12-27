@@ -6,7 +6,7 @@
       <!-- <el-form-item label="任务编号">
         <el-input v-model="searchMap.taskid" prop="taskid" clearable placeholder="任务编号" /></el-form-item> -->
       <el-form-item prop="taskid" label="任务">
-        <el-select v-model="searchMap.taskid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getTaskNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.taskid" style="width:150px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getTaskNameList" :loading="searchLoading">
           <el-option v-for="item in taskNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -76,19 +76,19 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <!-- <el-form-item label="任务编号"><el-input v-model="pojo.taskid" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="任务编号"><el-input v-model="pojo.taskid" style="width:400px;" /></el-form-item> -->
 
         <el-form-item prop="taskid" label="任务">
           {{ taskName }}
-          <el-select v-model="pojo.taskid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getTaskNameList" :loading="searchLoading">
+          <el-select v-model="pojo.taskid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getTaskNameList" :loading="searchLoading">
             <el-option v-for="item in taskNameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="线程数量"><el-input v-model="pojo.threadnumber" style="width:300px;" /></el-form-item>
-        <el-form-item label="ip扫描次数"><el-input v-model="pojo.singleipscantime" style="width:300px;" /></el-form-item>
-        <el-form-item label="附加选项"><el-input v-model="pojo.additionoption" style="width:300px;" /></el-form-item>
+        <el-form-item label="线程数量"><el-input v-model="pojo.threadnumber" style="width:400px;" /></el-form-item>
+        <el-form-item label="ip扫描次数"><el-input v-model="pojo.singleipscantime" style="width:400px;" /></el-form-item>
+        <el-form-item label="附加选项"><el-input v-model="pojo.additionoption" style="width:400px;" /></el-form-item>
 
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -217,7 +217,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

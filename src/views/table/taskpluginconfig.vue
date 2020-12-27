@@ -5,13 +5,13 @@
     <el-form ref="searchform" inline size="small" :model="searchMap">
 
       <el-form-item prop="taskid" label="任务">
-        <el-select v-model="searchMap.taskid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getTaskNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.taskid" style="width:150px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getTaskNameList" :loading="searchLoading">
           <el-option v-for="item in taskNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
 
       <el-form-item prop="pluginconfigid" label="插件">
-        <el-select v-model="searchMap.pluginconfigid" style="width:150px;" filterable remote clearable placeholder="请输入" :remote-method="getPluginConfigNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.pluginconfigid" style="width:150px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getPluginConfigNameList" :loading="searchLoading">
           <el-option v-for="item in pluginConfigNameList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -81,18 +81,18 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="40%" :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
         <el-form-item prop="taskid" label="任务">
           {{ taskName }}
-          <el-select v-model="pojo.taskid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getTaskNameList" :loading="searchLoading">
+          <el-select v-model="pojo.taskid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getTaskNameList" :loading="searchLoading">
             <el-option v-for="item in taskNameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
         <el-form-item prop="pluginconfigid" label="插件">
           {{ pluginName }}
-          <el-select v-model="pojo.pluginconfigid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getPluginConfigNameList" :loading="searchLoading">
+          <el-select v-model="pojo.pluginconfigid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getPluginConfigNameList" :loading="searchLoading">
             <el-option v-for="item in pluginConfigNameList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -240,7 +240,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

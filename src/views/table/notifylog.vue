@@ -20,6 +20,7 @@
       <el-form-item label="类型">
         <el-radio-group v-model="searchMap.type" size="mini">
           <el-radio-button label="D" />
+          <el-radio-button label="W" />
           <el-radio-button label="E" />
         </el-radio-group>
       </el-form-item>
@@ -69,15 +70,7 @@
       <el-table-column sortable prop="recipient" label="接收人" />
       <el-table-column sortable prop="receiveuser" label="接收账户" />
 
-      <el-table-column align="center" prop="content" sortable label="内容" show-overflow-tooltip>
-        <template slot="header">
-          <span>内容</span>
-          <el-tooltip placement="top">
-            <div slot="content">漏洞名称 风险 ip 端口 服务 版本 检测插件</div>
-            <i class="el-icon-info" />
-          </el-tooltip>
-        </template>
-      </el-table-column>
+      <el-table-column prop="content" label="内容" show-overflow-tooltip />
       <el-table-column sortable prop="type" label="类型" align="center" width="80" />
 
       <el-table-column align="center" sortable label="成功" width="80">
@@ -128,6 +121,7 @@
         <el-form-item label="类型">
           <el-radio-group v-model="pojo.type" size="mini">
             <el-radio-button label="D" />
+            <el-radio-button label="W" />
             <el-radio-button label="E" />
           </el-radio-group>
         </el-form-item>

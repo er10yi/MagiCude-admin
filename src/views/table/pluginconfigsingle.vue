@@ -7,12 +7,12 @@
         <el-input v-model="searchMap.name" prop="name" clearable placeholder="名称" /></el-form-item> -->
 
       <el-form-item prop="name" label="名称">
-        <el-select v-model="searchMap.name" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.name" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getNameList" :loading="searchLoading">
           <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
       </el-form-item>
 
       <el-form-item prop="args" label="参数">
-        <el-select v-model="searchMap.args" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getArgsList" :loading="searchLoading">
+        <el-select v-model="searchMap.args" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getArgsList" :loading="searchLoading">
           <el-option v-for="item in argsList" :key="item.id" :label="item.args" :value="item.args" /></el-select>
       </el-form-item>
 
@@ -107,14 +107,14 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <el-form-item label="名称"><el-input v-model="pojo.name" style="width:300px;" /></el-form-item>
-        <el-form-item label="参数"><el-input v-model="pojo.args" style="width:300px;" /></el-form-item>
-        <el-form-item label="风险"><el-input v-model="pojo.risk" style="width:300px;" /></el-form-item>
+        <el-form-item label="名称"><el-input v-model="pojo.name" style="width:400px;" /></el-form-item>
+        <el-form-item label="参数"><el-input v-model="pojo.args" style="width:400px;" /></el-form-item>
+        <el-form-item label="风险"><el-input v-model="pojo.risk" style="width:400px;" /></el-form-item>
 
         <el-form-item label="类型">
-          <!-- <el-input v-model="pojo.type" style="width:300px;" /> -->
+          <!-- <el-input v-model="pojo.type" style="width:400px;" /> -->
           <el-radio-group v-model="pojo.type" size="mini">
             <el-radio-button label="nse" />
             <el-radio-button label="selfd" />
@@ -125,11 +125,15 @@
             <el-checkbox-button v-for="check in checks" :key="check" :label="check" />
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="超时"><el-input v-model="pojo.timeout" style="width:300px;" /></el-form-item>
+        <el-form-item label="超时"><el-input v-model="pojo.timeout" style="width:400px;" /></el-form-item>
+        <span v-if="pojo.type === 'selfd'">
+          <el-form-item label="插件代码">
+            <code><el-input v-model="pojo.plugincode" type="textarea" :autosize="{maxRows: 50}" /></code>
+          </el-form-item>
+        </span>
         <!-- <el-form-item label="插件代码"><code><el-input v-model="pojo.plugincode" type="textarea" :autosize="{maxRows: 50}" /></code></el-form-item> -->
-
+        <!--
         <el-form-item label="插件代码">
-          <!-- <code><el-input v-model="pojo.plugincode" type="textarea" :autosize="{maxRows: 50}" /></code> -->
 
           <div class="in-coder-panel">
             <textarea ref="textarea" v-model="nodearea" />
@@ -146,7 +150,7 @@
               />
             </el-select>
           </div>
-        </el-form-item>
+        </el-form-item> -->
 
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -477,7 +481,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',
@@ -520,13 +523,13 @@ export default {
       } else {
         this.pojo.validatetype = null
       }
-      if (this.pojo.plugincode === '') {
-        this.pojo.plugincode = null
-      } else {
-        if (this.coder !== null) {
-          this.pojo.plugincode = this.coder.getValue()
-        }
-      }
+      // if (this.pojo.plugincode === '') {
+      //   this.pojo.plugincode = null
+      // } else {
+      //   if (this.coder !== null) {
+      //     this.pojo.plugincode = this.coder.getValue()
+      //   }
+      // }
       pluginconfigApi.update(this.id, this.pojo).then(response => {
         this.$message({
           message: response.message,

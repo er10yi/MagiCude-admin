@@ -6,22 +6,22 @@
         <!-- 查询条件 -->
         <el-form ref="searchform" inline size="small" :model="searchMap">
           <el-form-item prop="assetip" label="ip">
-            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" />
             </el-select>
           </el-form-item>
           <el-form-item prop="assetport" label="端口">
-            <el-select v-model="searchMap.assetport" style="width:100px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
+            <el-select v-model="searchMap.assetport" style="width:100px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getPortList" :loading="searchLoading">
               <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
           </el-form-item>
 
           <el-form-item prop="vulname" label="漏洞名称">
-            <el-select v-model="searchMap.vulname" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getVulNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.vulname" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getVulNameList" :loading="searchLoading">
               <el-option v-for="item in vulNameList" :key="item.id" :label="item.name" :value="item.name" />
             </el-select></el-form-item>
 
           <el-form-item prop="name" label="插件名称">
-            <el-select v-model="searchMap.name" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
+            <el-select v-model="searchMap.name" allow-create default-first-option filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getNameList" :loading="searchLoading">
               <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" />
             </el-select>
           </el-form-item>
@@ -38,7 +38,7 @@
           </el-form-item>
 
           <el-form-item prop="result" label="检测结果">
-            <el-select v-model="searchMap.result" allow-create default-first-option filterable remote clearable placeholder="请输入" :remote-method="getResultList" :loading="searchLoading">
+            <el-select v-model="searchMap.result" allow-create default-first-option filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getResultList" :loading="searchLoading">
               <el-option v-for="item in resultList" :key="item.id" :label="item.result" :value="item.result" />
             </el-select>
           </el-form-item>
@@ -66,10 +66,10 @@
           <el-form-item>
             <el-button type="danger" icon="el-icon-delete" @click="handleDeleteAll">删除</el-button>
           </el-form-item>
-          <!--
+
           <el-form-item>
             <el-button type="primary" @click="handleEdit('')">新增</el-button>
-          </el-form-item> -->
+          </el-form-item>
         </el-form>
       </el-collapse-item>    </el-collapse>
 
@@ -159,39 +159,41 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
         <el-form-item required label="ip">
           <span>{{ ipv4 }}</span>
           <span v-if="pojo.id==null">
-            <el-select v-model="pojo.assetip" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
-              <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" />
+            <el-select v-model="pojo.assetipid" style="width:400px;" filterable remote :allow-create="false" clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getIpaddressv4List" :loading="searchLoading">
+              <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.id" />
             </el-select>
           </span>
         </el-form-item>
 
         <el-form-item required label="端口">
           <span>{{ assetport }}</span>
-          <span v-if="pojo.id==null">
-            <el-select v-model="pojo.assetport" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getPortList" :loading="searchLoading">
-              <el-option v-for="item in portList" :key="item.id" :label="item.port" :value="item.port" /></el-select>
-          </span>
+          <el-select v-model="pojo.assetportid" style="width:400px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择, 端口不存在会自动新增" :remote-method="getPortList" :loading="searchLoading">
+            <el-option v-for="item in portList" :key="item.id" :label="item.port +' '+ item.protocol+' '+ item.state+' '+ item.service+' '+ item.version+' '+item.uptime+' '+ item.downtime+' '+ item.changedtime+' '+ item.tabbitmap" :value="item.id" /></el-select>
+          <el-tooltip placement="top">
+            <div slot="content">如果漏洞不属于任何端口, 则端口设置为0</div>
+            <i class="el-icon-info" />
+          </el-tooltip>
         </el-form-item>
 
         <el-form-item required label="漏洞名称">
           <span>{{ vulname }}</span>
           <span v-if="pojo.id==null">
-            <el-select v-model="pojo.vulname" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getVulNameList" :loading="searchLoading">
-              <el-option v-for="item in vulNameList" :key="item.id" :label="item.name" :value="item.name" />
+            <el-select v-model="pojo.vulnid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getVulNameList" :loading="searchLoading">
+              <el-option v-for="item in vulNameList" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
           </span>
         </el-form-item>
 
         <el-form-item label="插件名称">
           <!-- <span>{{ pojo.name }}</span> -->
-          <el-input v-model="pojo.name" style="width:300px;" />
+          <el-input v-model="pojo.name" style="width:400px;" />
         </el-form-item>
-        <!-- <el-form-item label="风险"><el-input v-model="pojo.risk" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="风险"><el-input v-model="pojo.risk" style="width:400px;" /></el-form-item> -->
         <el-form-item label="风险">
           <el-radio-group v-model="pojo.risk" size="mini">
             <el-radio-button label="信息" />
@@ -319,11 +321,11 @@ export default {
       }
     },
     getPortList(query) {
-      if (query !== '' && query) {
+      if (query !== '' && query && this.pojo.assetipid) {
         this.searchLoading = true
         setTimeout(() => {
           this.searchLoading = false
-          assetportApi.search(1, 10, { 'port': query }).then(response => {
+          assetportApi.search(1, 10, { 'port': query, 'assetipid': this.pojo.assetipid }).then(response => {
             this.portList = response.data.rows.filter(item => {
               return item.port.toLowerCase().indexOf(query.toLowerCase()) > -1
             })
@@ -404,6 +406,8 @@ export default {
       this.portList = []
       this.nameList = []
       this.dialogFormVisible = false
+      this.vulNameList = []
+      this.nameList = []
     },
 
     handleDeleteAll() {
@@ -485,7 +489,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',
@@ -506,6 +509,7 @@ export default {
       this.ipaddressv4List = []
       this.portList = []
       this.vulNameList = []
+      this.nameList = []
       this.$message({
         message: '已清空搜索条件',
         type: 'info'

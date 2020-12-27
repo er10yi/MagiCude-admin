@@ -71,10 +71,10 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <el-form-item label="项目名称"><el-input v-model="pojo.name" style="width:300px;" /></el-form-item>
-        <el-form-item label="项目描述"><el-input v-model="pojo.description" style="width:300px;" /></el-form-item>
+        <el-form-item label="项目名称"><el-input v-model="pojo.name" style="width:400px;" /></el-form-item>
+        <el-form-item label="项目描述"><el-input v-model="pojo.description" style="width:400px;" /></el-form-item>
 
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -176,7 +176,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

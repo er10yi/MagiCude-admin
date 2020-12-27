@@ -7,13 +7,13 @@
         <el-input v-model="searchMap.departmentid" prop="departmentid" clearable placeholder="部门编号" /></el-form-item> -->
 
       <el-form-item prop="departmentid" label="部门">
-        <el-select v-model="searchMap.departmentid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getDepartmentnameList" :loading="searchLoading">
+        <el-select v-model="searchMap.departmentid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getDepartmentnameList" :loading="searchLoading">
           <el-option v-for="item in departmentnameList" :key="item.id" :label="item.departmentname" :value="item.id" />
         </el-select>
       </el-form-item>
 
-      <el-form-item prop="projectname" label="项目信息">
-        <el-select v-model="searchMap.projectname" style="width:150px;" filterable allow-create remote clearable placeholder="请输入" :remote-method="getProjectNameList" :loading="searchLoading">
+      <el-form-item prop="projectname" label="项目组">
+        <el-select v-model="searchMap.projectname" style="width:150px;" filterable allow-create remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getProjectNameList" :loading="searchLoading">
           <el-option v-for="item in projectnameList" :key="item.id" :label="item.projectname" :value="item.projectname" />
         </el-select>
       </el-form-item>
@@ -67,9 +67,9 @@
       <el-table-column type="selection" align="center" />
       <el-table-column label="序号" type="index" :index="1" align="center" width="50" />
       <!-- <el-table-column sortable prop="id" label="编号" /> -->
-      <el-table-column sortable prop="departmentid" label="部门" />
+      <el-table-column sortable prop="departmentid" label="项目部门" />
 
-      <el-table-column sortable prop="projectname" label="项目信息" />
+      <el-table-column sortable prop="projectname" label="项目组" />
       <el-table-column prop="checkwhitelist" align="center" label="检测白名单">
         <template slot="header">
           <span>检测白名单</span>
@@ -143,26 +143,19 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <!-- <el-form-item required label="部门编号"><el-input v-model="pojo.departmentid" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item required label="部门编号"><el-input v-model="pojo.departmentid" style="width:400px;" /></el-form-item> -->
 
-        <el-form-item prop="departmentid" label="部门">
-          <el-form>
-            <el-form-item label="部门不存在，新增">
-              <el-button type="info" size="mini" icon="el-icon-circle-plus-outline" circle @click="handleEditDepartment('')" />
-            </el-form-item>
-          </el-form>
-          <span v-if="pojo.id">
-            <span>{{ departmentName }}</span>
-            <el-select v-model="pojo.departmentid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getDepartmentnameList" :loading="searchLoading">
-              <el-option v-for="item in departmentnameList" :key="item.id" :label="item.departmentname" :value="item.id" />
-            </el-select>
-          </span>
+        <el-form-item prop="departmentidname" label="项目部门">
+          <span>{{ departmentName }}</span>
+          <el-select v-model="pojo.departmentid" style="width:400px;" filterable allow-create default-first-option remote clearable placeholder="请输入关键词搜索并手动选择, 部门不存在会自动新增" :remote-method="getDepartmentnameList" :loading="searchLoading">
+            <el-option v-for="item in departmentnameList" :key="item.id" :label="item.departmentname" :value="item.id" />
+          </el-select>
         </el-form-item>
 
-        <el-form-item required label="项目信息">
-          <el-select v-model="pojo.projectname" style="width:300px;" filterable allow-create remote clearable placeholder="请输入" :remote-method="getProjectNameList" :loading="searchLoading">
+        <el-form-item required label="项目组">
+          <el-select v-model="pojo.projectname" style="width:400px;" filterable allow-create default-first-option remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getProjectNameList" :loading="searchLoading">
             <el-option v-for="item in projectnameList" :key="item.id" :label="item.projectname" :value="item.projectname" />
           </el-select>
         </el-form-item>
@@ -177,7 +170,7 @@
 
         </el-form-item>
         <el-form-item label="时间">
-          <el-date-picker v-model="pojo.inserttime" style="width:300px;" placeholder="新增时间" type="datetime" />
+          <el-date-picker v-model="pojo.inserttime" style="width:400px;" placeholder="新增时间" type="datetime" />
         </el-form-item>
 
         <span v-if="pojo.id">
@@ -186,19 +179,19 @@
 
           <el-form-item prop="name" label="增加负责人">
             <el-form>
-              <el-form-item label="联系人不存在，新增">
+              <el-form-item label="负责人不存在，新增">
                 <el-button type="info" size="mini" icon="el-icon-circle-plus-outline" circle @click="handleEditContact('')" />
               </el-form-item>
             </el-form>
             <span v-if="pojo.id">
-              <el-select v-model="contactIdAdd" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
+              <el-select v-model="contactIdAdd" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getNameList" :loading="searchLoading">
                 <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.id" /></el-select>
-              <el-button type="info" @click="handleAddContact(pojo.id)">增加</el-button>
+              <el-button type="info" size="small" @click="handleAddContact(pojo.id)">增加</el-button>
             </span>
           </el-form-item>
 
           <el-table :data="contactList" fit>
-            <el-table-column sortable prop="name" label="联系人" />
+            <el-table-column sortable prop="name" label="负责人" />
             <el-table-column sortable prop="email" label="邮箱" />
             <el-table-column sortable prop="phone" label="电话" />
             <el-table-column label="操作" width="100">
@@ -210,7 +203,7 @@
           </el-table>
         </span>
         <span v-else>
-          <div slot="tip" class="el-upload__tip">保存后才能编辑部门和负责人<br>顺序：项目信息 -> 负责人 -> 部门</div>
+          <div slot="tip" class="el-upload__tip">保存后才能编辑负责人</div>
         </span>
         <br>
 
@@ -221,36 +214,20 @@
       </span>
     </el-dialog>
 
-    <!-- 部门编辑框 -->
-    <el-dialog title="编辑" :visible.sync="dialogFormVisibleDepartment" append-to-body width="40%" center :before-close="cleanCache">
-      <el-form label-width="100px">
-        <el-form-item label="部门名称">
-          <el-select v-model="departmentPojo.departmentname" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getDepartmentnameList" :loading="searchLoading">
-            <el-option v-for="item in departmentnameList" :key="item.id" :label="item.departmentname" :value="item.departmentname" />
-          </el-select>
-        </el-form-item>
-
-        <el-button type="primary" @click="handleSaveDepartment()">保存</el-button>
-        <el-button @click="closeDialogFormSecond()">关闭</el-button>
-
-      </el-form>
-
-    </el-dialog>
-
     <!-- 联系人编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisibleContact" append-to-body width="40%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
         <el-form-item prop="name" label="联系人">
-          <el-select v-model="contactPojo.name" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
+          <el-select v-model="contactPojo.name" style="width:400px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getNameList" :loading="searchLoading">
             <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" /></el-select>
         </el-form-item>
 
         <el-form-item prop="email" label="邮箱">
-          <el-select v-model="contactPojo.email" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getEmailList" :loading="searchLoading">
+          <el-select v-model="contactPojo.email" style="width:400px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getEmailList" :loading="searchLoading">
             <el-option v-for="item in emailList" :key="item.id" :label="item.email" :value="item.email" /></el-select>
         </el-form-item>
 
-        <el-form-item label="电话"><el-input v-model="contactPojo.phone" clearable style="width:300px;" /></el-form-item>
+        <el-form-item label="电话"><el-input v-model="contactPojo.phone" clearable style="width:400px;" /></el-form-item>
 
         <el-button type="primary" @click="handleSaveContact()">保存</el-button>
         <el-button @click="closeDialogFormSecond()">关闭</el-button>
@@ -382,7 +359,6 @@ export default {
       this.projectnameList = []
       this.nameList = []
       this.emailList = []
-      this.contactList = []
       this.departmentnameList = []
     },
     handleSaveContact() {
@@ -484,6 +460,7 @@ export default {
       this.emailList = []
       this.phoneList = []
       this.contactIdAdd = ''
+      this.pojo = {}
     },
     getDepartmentnameList(query) {
       if (query !== '' && query) {
@@ -517,7 +494,7 @@ export default {
     },
     handleDeleteAll() {
       if (this.multipleSelection && this.multipleSelection.length) {
-        this.$confirm('此操作将永久删除已选记录, 包括[项目信息, 联系人项目信息管理, 项目信息-端口], 并置空该项目下ip的项目信息, 是否继续?', '警告', {
+        this.$confirm('此操作将永久删除已选记录, 包括[项目组, 联系人项目组管理, 项目组-端口], 并置空该项目下ip的项目组, 是否继续?', '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
@@ -558,7 +535,7 @@ export default {
         import('@/vendor/Export2Excel').then(excel => {
           const tHeader = [
             '部门',
-            '项目信息',
+            '项目组',
             '检测白名单',
             '提醒白名单',
             '覆盖ip白名单',
@@ -590,7 +567,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',
@@ -673,7 +649,7 @@ export default {
       }
     },
     handleDelete(id) {
-      this.$confirm('此操作将永久删除已选记录, 包括[项目信息, 联系人项目信息管理, 项目信息-端口], 并置空该项目下ip的项目信息, 是否继续?', '警告', {
+      this.$confirm('此操作将永久删除已选记录, 包括[项目组, 联系人项目组管理, 项目组-端口], 并置空该项目下ip的项目组, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',

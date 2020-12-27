@@ -8,42 +8,42 @@
       </el-tab-pane> -->
 
       <el-tab-pane label="趋势及漏洞" name="first" lazy>
-        <v-chart :options="polar" autoresize>   <div> <statistics-chart /></div></v-chart>
+        <div> <statistics-chart /></div>
       </el-tab-pane>
 
       <el-tab-pane label="top ip及服务版本" name="second" lazy>
         <el-row type="flex" class="row-bg el-row-two" justify="space-between">
           <el-col :xs="6" :sm="12" :lg="24">
-            <v-chart :options="polar" autoresize><div style="height:300px;minWidth:600px"><ip-port-pie-chart /></div></v-chart>
+            <div style="height:300px;minWidth:600px"><ip-port-pie-chart /></div>
           </el-col>
           <el-col :xs="6" :sm="12" :lg="24">
-            <v-chart :options="polar" autoresize><div style="height:300px;minWidth:600px"><ip-port-online-pie-chart /></div></v-chart>
-          </el-col>
-        </el-row>
-
-        <el-row type="flex" class="row-bg el-row-two" justify="space-between">
-          <el-col :xs="6" :sm="12" :lg="24">
-            <v-chart :options="polar" autoresize><div style="height:300px;minWidth:600px"><service-count-pie-chart /> </div></v-chart>
-          </el-col>
-          <el-col :xs="6" :sm="12" :lg="24">
-            <v-chart :options="polar" autoresize><div style="height:300px;minWidth:600px"><service-count-online-pie-chart /> </div></v-chart>
+            <div style="height:300px;minWidth:600px"><ip-port-online-pie-chart /></div>
           </el-col>
         </el-row>
 
         <el-row type="flex" class="row-bg el-row-two" justify="space-between">
           <el-col :xs="6" :sm="12" :lg="24">
-            <v-chart :options="polar" autoresize>  <div style="height:300px;minWidth:1000px"> <version-count-pie-chart /> </div></v-chart>
+            <div style="height:300px;minWidth:600px"><service-count-pie-chart /> </div>
           </el-col>
-        </el-row>
-        <el-row type="flex" class="row-bg el-row-two" justify="space-between">
           <el-col :xs="6" :sm="12" :lg="24">
-            <v-chart :options="polar" autoresize> <div style="height:300px;minWidth:1000px">  <version-count-online-pie-chart /></div></v-chart>
+            <div style="height:300px;minWidth:600px"><service-count-online-pie-chart /> </div>
           </el-col>
         </el-row>
 
         <el-row type="flex" class="row-bg el-row-two" justify="space-between">
           <el-col :xs="6" :sm="12" :lg="24">
-            <v-chart :options="polar" autoresize>   <div style="height:300px;minWidth:1000px"> <webinfo-count-pie-chart /></div></v-chart>
+            <div style="height:300px;minWidth:1000px"> <version-count-pie-chart /> </div>
+          </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg el-row-two" justify="space-between">
+          <el-col :xs="6" :sm="12" :lg="24">
+            <div style="height:300px;minWidth:1000px">  <version-count-online-pie-chart /></div>
+          </el-col>
+        </el-row>
+
+        <el-row type="flex" class="row-bg el-row-two" justify="space-between">
+          <el-col :xs="6" :sm="12" :lg="24">
+            <div style="height:300px;minWidth:1000px"> <webinfo-count-pie-chart /></div>
           </el-col>
         </el-row>
 
@@ -51,28 +51,28 @@
       <el-tab-pane label="高危统计" name="third" lazy>
         <el-row type="flex" class="row-bg el-row-two" justify="space-between">
           <el-col :xs="6" :sm="12" :lg="24">
-            <v-chart :options="polar" autoresize><div style="height:300px;minWidth:500px"> <risk-port-count-pie-chart /> </div></v-chart>
+            <div style="height:300px;minWidth:500px"> <risk-port-count-pie-chart /> </div>
           </el-col>
           <el-col :xs="6" :sm="12" :lg="24">
-            <v-chart :options="polar" autoresize><div style="height:300px;minWidth:500px"> <risk-port-count-online-pie-chart /> </div></v-chart>
-          </el-col>
-        </el-row>
-
-        <el-row type="flex" class="row-bg el-row-two" justify="space-between">
-          <el-col :xs="6" :sm="12" :lg="24">
-            <v-chart :options="polar" autoresize><div style="height:300px;minWidth:600px"> <risk-service-count-pie-chart /> </div></v-chart>
-          </el-col>
-          <el-col :xs="6" :sm="12" :lg="24">
-            <v-chart :options="polar" autoresize><div style="height:300px;minWidth:600px"> <risk-service-count-online-pie-chart /> </div></v-chart>
+            <div style="height:300px;minWidth:500px"> <risk-port-count-online-pie-chart /> </div>
           </el-col>
         </el-row>
 
         <el-row type="flex" class="row-bg el-row-two" justify="space-between">
           <el-col :xs="6" :sm="12" :lg="24">
-            <v-chart :options="polar" autoresize><div style="height:300px;minWidth:600px"> <risk-version-count-pie-chart /> </div></v-chart>
+            <div style="height:300px;minWidth:600px"> <risk-service-count-pie-chart /> </div>
           </el-col>
           <el-col :xs="6" :sm="12" :lg="24">
-            <v-chart :options="polar" autoresize><div style="height:300px;minWidth:600px"> <risk-version-count-online-pie-chart /> </div></v-chart>
+            <div style="height:300px;minWidth:600px"> <risk-service-count-online-pie-chart /> </div>
+          </el-col>
+        </el-row>
+
+        <el-row type="flex" class="row-bg el-row-two" justify="space-between">
+          <el-col :xs="6" :sm="12" :lg="24">
+            <div style="height:300px;minWidth:600px"> <risk-version-count-pie-chart /> </div>
+          </el-col>
+          <el-col :xs="6" :sm="12" :lg="24">
+            <div style="height:300px;minWidth:600px"> <risk-version-count-online-pie-chart /> </div>
           </el-col>
         </el-row>
       </el-tab-pane>

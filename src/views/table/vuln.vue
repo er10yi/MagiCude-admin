@@ -7,7 +7,7 @@
         <el-input v-model="searchMap.categorysecondid" style="width:150px;" prop="categorysecondid" clearable placeholder="二级分类" /></el-form-item> -->
 
       <el-form-item prop="categorysecondid" label="二级分类">
-        <el-select v-model="searchMap.categorysecondid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getCategorysecondList" :loading="searchLoading">
+        <el-select v-model="searchMap.categorysecondid" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getCategorysecondList" :loading="searchLoading">
           <el-option v-for="item in categorysecondList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -15,23 +15,23 @@
       <!-- <el-form-item label="">
         <el-input v-model="searchMap.name" prop="" style="width:150px;" clearable placeholder="名称" /></el-form-item> -->
       <el-form-item prop="name" label="名称">
-        <el-select v-model="searchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
+        <el-select v-model="searchMap.name" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getNameList" :loading="searchLoading">
           <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" />
         </el-select></el-form-item>
       <el-form-item prop="description" label="描述">
-        <el-select v-model="searchMap.description" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getDescriptionList" :loading="searchLoading">
+        <el-select v-model="searchMap.description" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getDescriptionList" :loading="searchLoading">
           <el-option v-for="item in descriptionList" :key="item.id" :label="item.description" :value="item.description" />
         </el-select></el-form-item>
       <el-form-item prop="risk" label="风险">
-        <el-select v-model="searchMap.risk" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getRiskList" :loading="searchLoading">
+        <el-select v-model="searchMap.risk" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getRiskList" :loading="searchLoading">
           <el-option v-for="item in riskList" :key="item.id" :label="item.risk" :value="item.risk" />
         </el-select></el-form-item>
       <el-form-item prop="refer" label="参考">
-        <el-select v-model="searchMap.refer" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getReferList" :loading="searchLoading">
+        <el-select v-model="searchMap.refer" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getReferList" :loading="searchLoading">
           <el-option v-for="item in referList" :key="item.id" :label="item.refer" :value="item.refer" />
         </el-select></el-form-item>
       <el-form-item prop="impactscope" label="影响范围">
-        <el-select v-model="searchMap.impactscope" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getImpactscopeList" :loading="searchLoading">
+        <el-select v-model="searchMap.impactscope" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getImpactscopeList" :loading="searchLoading">
           <el-option v-for="item in impactscopeList" :key="item.id" :label="item.impactscope" :value="item.impactscope" />
         </el-select></el-form-item>
 
@@ -108,25 +108,25 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <!-- <el-form-item label="二级分类"><el-input v-model="pojo.categorysecondid" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="二级分类"><el-input v-model="pojo.categorysecondid" style="width:400px;" /></el-form-item> -->
 
         <el-form-item required label="二级分类">
           <span>{{ categorysecondName }}</span>
-          <el-select v-model="pojo.categorysecondid" style="width:300px;" filterable remote clearable placeholder="请输入" :remote-method="getCategorysecondList" :loading="searchLoading">
+          <el-select v-model="pojo.categorysecondid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getCategorysecondList" :loading="searchLoading">
             <el-option v-for="item in categorysecondList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
-        <!-- <el-form-item label="名称"><el-input v-model="pojo.name" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="名称"><el-input v-model="pojo.name" style="width:400px;" /></el-form-item> -->
         <el-form-item prop="name" label="名称">
-          <el-select v-model="pojo.name" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getNameList" :loading="searchLoading">
+          <el-select v-model="pojo.name" style="width:400px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getNameList" :loading="searchLoading">
             <el-option v-for="item in nameList" :key="item.id" :label="item.name" :value="item.name" />
           </el-select></el-form-item>
 
         <el-form-item label="描述"><el-input v-model="pojo.description" autosize type="textarea" /></el-form-item>
-        <!-- <el-form-item label="风险"><el-input v-model="pojo.risk" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="风险"><el-input v-model="pojo.risk" style="width:400px;" /></el-form-item> -->
         <el-form-item label="风险">
           <el-radio-group v-model="pojo.risk" size="mini">
             <el-radio-button label="信息" />
@@ -169,7 +169,7 @@
           <span hidden>{{ democodePojo.vulnid = pojo.id }}</span>
           <!-- 编辑框 -->
           <el-dialog title="编辑" :visible.sync="dialogFormVisibleDemocode" append-to-body width="40%">
-            <el-form label-width="100px">
+            <el-form label-width="110px">
               <el-form-item label="漏洞示例代码"><el-input v-model="democodePojo.democode" autosize type="textarea" /></el-form-item>
               <el-form-item label="漏洞poc"><el-input v-model="democodePojo.poc" autosize type="textarea" /></el-form-item>
 
@@ -208,7 +208,7 @@
           <span hidden>{{ solutionPojo.vulnid = pojo.id }}</span>
           <!-- 编辑框 -->
           <el-dialog title="编辑" :visible.sync="dialogFormVisibleSolution" append-to-body width="40%">
-            <el-form label-width="100px">
+            <el-form label-width="110px">
               <el-form-item label="修复方案"><el-input v-model="solutionPojo.solution" autosize type="textarea" /></el-form-item>
               <el-form-item label="修复代码示例"><el-input v-model="solutionPojo.codedemo" autosize type="textarea" /></el-form-item>
               <el-form-item label="修复配置示例"><el-input v-model="solutionPojo.configdemo" autosize type="textarea" /></el-form-item>
@@ -551,7 +551,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

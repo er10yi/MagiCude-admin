@@ -9,38 +9,43 @@
         <el-input v-model="searchMap.assetipid" prop="assetipid" clearable placeholder="资产ip编号" /></el-form-item> -->
 
           <el-form-item prop="assetipid" label="ipv4地址">
-            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="searchMap.assetip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" />
             </el-select>
           </el-form-item>
 
           <el-form-item prop="macaddress" label="mac地址">
-            <el-select v-model="searchMap.macaddress" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getMacaddressList" :loading="searchLoading">
+            <el-select v-model="searchMap.macaddress" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getMacaddressList" :loading="searchLoading">
               <el-option v-for="item in macaddressList" :key="item.id" :label="item.macaddress" :value="item.macaddress" /></el-select>
           </el-form-item>
 
           <el-form-item prop="hostname" label="主机/域名">
-            <el-select v-model="searchMap.hostname" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getHostnameList" :loading="searchLoading">
+            <el-select v-model="searchMap.hostname" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getHostnameList" :loading="searchLoading">
               <el-option v-for="item in hostnameList" :key="item.id" :label="item.hostname" :value="item.hostname" /></el-select>
           </el-form-item>
 
+          <el-form-item prop="hostname" label="子域名">
+            <el-select v-model="searchMap.subdomain" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getSubdomainList" :loading="searchLoading">
+              <el-option v-for="item in subdomainList" :key="item.id" :label="item.subdomain" :value="item.subdomain" /></el-select>
+          </el-form-item>
+
           <el-form-item prop="ostype" label="OS类型">
-            <el-select v-model="searchMap.ostype" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getOstypeList" :loading="searchLoading">
+            <el-select v-model="searchMap.ostype" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getOstypeList" :loading="searchLoading">
               <el-option v-for="item in ostypeList" :key="item.id" :label="item.ostype" :value="item.ostype" /></el-select>
           </el-form-item>
 
           <el-form-item prop="osversion" label="OS版本">
-            <el-select v-model="searchMap.osversion" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getOsversionList" :loading="searchLoading">
+            <el-select v-model="searchMap.osversion" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getOsversionList" :loading="searchLoading">
               <el-option v-for="item in osversionList" :key="item.id" :label="item.osversion" :value="item.osversion" /></el-select>
           </el-form-item>
 
           <el-form-item prop="type" label="类型">
-            <el-select v-model="searchMap.type" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getTypeList" :loading="searchLoading">
+            <el-select v-model="searchMap.type" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getTypeList" :loading="searchLoading">
               <el-option v-for="item in typeList" :key="item.id" :label="item.type" :value="item.type" /></el-select>
           </el-form-item>
 
           <el-form-item prop="owner" label="所有者">
-            <el-select v-model="searchMap.owner" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getOwnerList" :loading="searchLoading">
+            <el-select v-model="searchMap.owner" style="width:130px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getOwnerList" :loading="searchLoading">
               <el-option v-for="item in ownerList" :key="item.id" :label="item.owner" :value="item.owner" /></el-select>
           </el-form-item>
           <el-form-item prop="uptime" label="发现时间">
@@ -88,9 +93,42 @@
       <!-- <el-table-column sortable prop="id" label="主机编号" /> -->
 
       <el-table-column sortable prop="assetipid" label="资产ip" />
-
+      <el-table-column prop="appsysname" label="应用系统">
+        <template slot-scope="scope">
+          <span v-if="scope.row.appsysname">
+            <span
+              v-for="item in scope.row.appsysname.split(',')"
+              :key="item.id"
+              :label="item"
+              :value="item"
+            >
+              <span v-if="item">
+                <el-tag size="mini" type="info" effect="plain">{{ item }}</el-tag>
+              </span>
+            </span>
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column sortable prop="macaddress" label="mac地址" />
       <el-table-column sortable prop="hostname" label="主机/域名" />
+
+      <el-table-column prop="subdomain" label="子域名">
+        <template slot-scope="scope">
+          <span v-if="scope.row.subdomain">
+            <span
+              v-for="item in scope.row.subdomain.split(',')"
+              :key="item.id"
+              :label="item"
+              :value="item"
+            >
+              <span v-if="item">
+                <el-tag size="mini" type="info" effect="plain">{{ item }}</el-tag>
+              </span>
+            </span>
+          </span>
+        </template>
+      </el-table-column>
+
       <el-table-column sortable prop="ostype" label="OS类型" />
       <el-table-column sortable prop="osversion" label="OS版本" />
       <el-table-column sortable prop="type" label="类型" />
@@ -128,14 +166,14 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
         <!-- <el-form-item label="资产ip编号"><el-input v-model="pojo.assetipid" style="width:400px;" /></el-form-item> -->
 
         <el-form-item label="ipv4地址">
           <span>{{ ipv4 }}</span>
           <span v-if="pojo.id==null">
-            <el-select v-model="pojo.assetipid" style="width:400px;" filterable remote clearable placeholder="请输入" :remote-method="getIpaddressv4List" :loading="searchLoading">
+            <el-select v-model="pojo.assetipid" style="width:400px;" filterable remote clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getIpaddressv4List" :loading="searchLoading">
               <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.id" />
             </el-select>
           </span>
@@ -143,6 +181,10 @@
 
         <el-form-item label="mac地址"><el-input v-model="pojo.macaddress" style="width:400px;" /></el-form-item>
         <el-form-item required label="主机/域名"><el-input v-model="pojo.hostname" style="width:400px;" /></el-form-item>
+
+        <el-form-item label="子域名"><el-input v-model="pojo.subdomain" type="textarea" style="width:400px;" placeholder="英文逗号分隔如: sub.domain.com,sub2.domain.org" />
+        </el-form-item>
+
         <el-form-item label="OS类型"><el-input v-model="pojo.ostype" style="width:400px;" /></el-form-item>
         <el-form-item label="OS版本"><el-input v-model="pojo.osversion" style="width:400px;" /></el-form-item>
         <el-form-item label="类型"><el-input v-model="pojo.type" style="width:400px;" /></el-form-item>
@@ -198,6 +240,7 @@ export default {
       typeList: [],
       activeNames: ['1'],
       ipv4: '',
+      subdomainList: [],
 
       pickerOptions: { // 日期选择
         disabledDate(time) {
@@ -243,6 +286,21 @@ export default {
     this.fetchData()
   },
   methods: {
+    getSubdomainList(query) {
+      if (query !== '' && query) {
+        this.searchLoading = true
+        setTimeout(() => {
+          this.searchLoading = false
+          hostApi.search(1, 10, { 'subdomain': query }).then(response => {
+            this.subdomainList = response.data.rows.filter(item => {
+              return item.subdomain.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
+          })
+        }, 200)
+      } else {
+        this.subdomainList = []
+      }
+    },
     cleanCache() {
       this.closeDialogForm()
     },
@@ -399,8 +457,10 @@ export default {
         import('@/vendor/Export2Excel').then(excel => {
           const tHeader = [
             '资产ip',
+            '应用系统',
             'mac地址',
             '主机/域名',
+            '子域名',
             'OS类型',
             'OS版本',
             '类型',
@@ -411,8 +471,10 @@ export default {
           ]
           const filterVal = [
             'assetipid',
+            'appsysname',
             'macaddress',
             'hostname',
+            'subdomain',
             'ostype',
             'osversion',
             'type',
@@ -434,7 +496,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

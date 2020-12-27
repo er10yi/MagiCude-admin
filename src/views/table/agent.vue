@@ -92,16 +92,16 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <el-form-item label="agent名称"><el-input v-model="pojo.name" style="width:300px;" /></el-form-item>
-        <el-form-item label="nmap路径"><el-input v-model="pojo.nmappath" style="width:300px;" /></el-form-item>
-        <el-form-item label="mass路径"><el-input v-model="pojo.masspath" style="width:300px;" /></el-form-item>
+        <el-form-item label="agent名称"><el-input v-model="pojo.name" style="width:400px;" /></el-form-item>
+        <el-form-item label="nmap路径"><el-input v-model="pojo.nmappath" style="width:400px;" /></el-form-item>
+        <el-form-item label="mass路径"><el-input v-model="pojo.masspath" style="width:400px;" /></el-form-item>
         <el-form-item label="ip地址"><el-input v-model="pojo.ipaddress" autosize type="textarea" /></el-form-item>
         <el-form-item label="在线">
           <el-switch v-model="pojo.online" active-text="在线" />
         </el-form-item>
-        <el-form-item label="超时次数"><el-input v-model="pojo.timeouts" style="width:300px;" /></el-form-item>
+        <el-form-item label="超时次数"><el-input v-model="pojo.timeouts" style="width:400px;" /></el-form-item>
 
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -214,7 +214,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',

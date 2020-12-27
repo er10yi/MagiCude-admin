@@ -43,5 +43,25 @@ export default {
       url: `/${group_name}/${api_name}/${id}`,
       method: 'delete'
     })
+  },
+  sendDingTalkTest() {
+    return request({
+      url: `/${group_name}/${api_name}/sendding`,
+      method: 'get'
+    })
+  },
+
+  sendCorWechatTest() {
+    return request({
+      url: `/${group_name}/${api_name}/sendcorwc`,
+      method: 'get'
+    })
+  },
+
+  sendEmailTest() {
+    return request({
+      url: `/${group_name}/${api_name}/sendemail`,
+      method: 'get'
+    })
   }
 }

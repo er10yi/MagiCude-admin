@@ -11,7 +11,7 @@
         <el-input v-model="searchMap.notifywhitelist" prop="notifywhitelist" clearable placeholder="提醒白名单" /></el-form-item> -->
 
       <el-form-item prop="ip" label="ip地址">
-        <el-select v-model="searchMap.ip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入" :remote-method="getIpList" :loading="searchLoading">
+        <el-select v-model="searchMap.ip" style="width:150px;" filterable remote allow-create default-first-option clearable placeholder="请输入关键词搜索并手动选择" :remote-method="getIpList" :loading="searchLoading">
           <el-option v-for="item in ipList" :key="item.id" :label="item.ip" :value="item.ip" /></el-select>
       </el-form-item>
 
@@ -120,12 +120,12 @@
 
     <!-- 编辑框 -->
     <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="50%" center :before-close="cleanCache">
-      <el-form label-width="100px">
+      <el-form label-width="110px">
 
-        <!-- <el-form-item label="ip"><el-input v-model="pojo.ip" style="width:300px;" /></el-form-item> -->
+        <!-- <el-form-item label="ip"><el-input v-model="pojo.ip" style="width:400px;" /></el-form-item> -->
 
         <el-form-item prop="ip" label="ipv4地址">
-          <el-select v-model="pojo.ip" style="width:300px;" filterable remote allow-create default-first-option clearable placeholder="请输入（搜索资产ip）" :remote-method="getIpaddressv4List" :loading="searchLoading">
+          <el-select v-model="pojo.ip" style="width:400px;" filterable remote allow-create default-first-option clearable placeholder="请输入（搜索资产ip）" :remote-method="getIpaddressv4List" :loading="searchLoading">
             <el-option v-for="item in ipaddressv4List" :key="item.id" :label="item.ipaddressv4" :value="item.ipaddressv4" /></el-select>
         </el-form-item>
 
@@ -281,7 +281,6 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.downloadLoading = false
         })
-        this.fetchData()
       } else {
         this.$message({
           message: '^_^至少选择一条记录哦~',
